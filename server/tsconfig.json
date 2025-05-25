@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // Modern JS output
+    "module": "ESNext", // Use ES module resolution
+    "moduleResolution": "Node", // Match Node.js style
+    "lib": ["ES2020"], // Use modern JS APIs
+    "outDir": "dist", // Output dir
+    "rootDir": "src", // Your source files live here
+    "strict": true, // All strict type checks
+    "esModuleInterop": true, // Allow default imports
+    "forceConsistentCasingInFileNames": true, // No case mismatches
+    "skipLibCheck": true, // Faster builds, skip type checking for node_modules
+    "resolveJsonModule": true, // Allows importing JSON
+    "noImplicitAny": true, // Catch undefined types
+    "allowJs": false, // No JS files
+    "allowSyntheticDefaultImports": true,
+    "types": ["node"], // Node types support
+    "baseUrl": ".", // Required for path aliases
+    "paths": {
+      "@/*": ["src/*"] // Optional: alias `@` to `src/`
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
