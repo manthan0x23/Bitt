@@ -136,3 +136,12 @@ code {
     @apply bg-background text-foreground;
   }
 }
+
+
+
+@layer utilities {
+  .screen-full {
+    height: 100vh;
+    width: 100vw;
+  }
+}
