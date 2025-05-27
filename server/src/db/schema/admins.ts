@@ -9,7 +9,9 @@ import {
 import { accountSource } from "./account-source";
 
 export const admins = pgTable("admins", {
-  id: uuid().defaultRandom().unique().primaryKey().notNull(),
+  id: uuid("id").defaultRandom().unique().primaryKey().notNull(),
+
+  name: varchar("name", { length: 256 }),
 
   workEmail: varchar("work_email").notNull().unique(),
   password: text("password"),

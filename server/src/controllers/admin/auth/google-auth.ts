@@ -1,13 +1,13 @@
 import type { Request, Response } from "express";
 import querystring from "querystring";
-import {
-  GOOGLE_AUTH_CLIENT_ID,
-  GOOGLE_AUTH_CLIENT_SECRET,
-  GOOGLE_AUTH_SCOPE,
-  JWT_SECRET,
-} from "../../utils/env";
+import { Env, GOOGLE_AUTH_SCOPE } from "../../../utils/env";
 import axios from "axios";
 import jwt from "jsonwebtoken";
+import { googleJwtPayloadSchema } from "../../../utils/types/google-auth";
+import { admins } from "../../../db/schema";
+import { db } from "../../../db/db";
+import { eq } from "drizzle-orm";
+import { JwtService } from "../../../services/jwt";
 
 export const RedirectGoogleAuthScreen = async (req: Request, res: Response) => {
   const origin = `${req.protocol}://${req.get("host")}`;
@@ -15,7 +15,7 @@ export const RedirectGoogleAuthScreen = async (req: Request, res: Response) => {
   const redirectUri = `${origin}/api/auth/google/callback`;
 
   const params = querystring.stringify({
-    client_id: GOOGLE_AUTH_CLIENT_ID,
+    client_id: Env.GOOGLE_AUTH_CLIENT_ID,
     redirect_uri: redirectUri,
     response_type: "code",
     scope: GOOGLE_AUTH_SCOPE,
@@ -43,8 +43,8 @@ export const LoginWithGoogle = async (req: Request, res: Response) => {
       "https://oauth2.googleapis.com/token",
       querystring.stringify({
         code,
-        client_id: GOOGLE_AUTH_CLIENT_ID,
-        client_secret: GOOGLE_AUTH_CLIENT_SECRET,
+        client_id: Env.GOOGLE_AUTH_CLIENT_ID,
+        client_secret: Env.GOOGLE_AUTH_CLIENT_SECRET,
         redirect_uri: redirectUri,
         grant_type: "authorization_code",
       }),
@@ -59,20 +59,50 @@ export const LoginWithGoogle = async (req: Request, res: Response) => {
       `https://oauth2.googleapis.com/tokeninfo?id_token=${id_token}`
     );
 
-    const payload = verifyRes.data;
+    const payload = googleJwtPayloadSchema.parse(verifyRes.data);
 
-    console.log("Verified user info:", payload);
+    let admin = (
+      await db
+        .selectDistinct()
+        .from(admins)
+        .where(eq(admins.workEmail, payload.email))
+        .limit(1)
+    )[0];
 
-    const myToken = jwt.sign(
-      {
-        email: payload.email,
-        name: payload.name,
-        sub: payload.sub,
-        picture: payload.picture,
-      },
-      JWT_SECRET!,
-      { expiresIn: "7d" }
-    );
+    if (!admin) {
+      admin = (
+        await db
+          .insert(admins)
+          .values({
+            name: payload.name,
+            pictureurl: payload.picture,
+            workEmail: payload.email,
+            emailVerified: true,
+            password: null,
+            accountSource: "google",
+          })
+          .returning()
+      )[0];
+    } else if (payload.email_verified) {
+      (
+        await db
+          .update(admins)
+          .set({
+            emailVerified: true,
+            name: admins.name,
+            pictureurl: payload.picture,
+          })
+          .where(eq(admins.workEmail, payload.email))
+      )[0];
+    }
+
+    const myToken = JwtService.sign({
+      email: admin.workEmail,
+      name: admin.name,
+      id: admin.id,
+      sub: payload.sub,
+      picture: admin.pictureurl,
+    });
 
     res.cookie("token", myToken, {
       httpOnly: true,

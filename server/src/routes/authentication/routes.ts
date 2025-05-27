@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   LoginWithGoogle,
   RedirectGoogleAuthScreen,
-} from "../../controllers/authentication/login-google";
+} from "../../controllers/authentication/google-auth";
 
 const router = Router();
 

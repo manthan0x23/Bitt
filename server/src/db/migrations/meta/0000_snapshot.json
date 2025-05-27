@@ -1,5 +1,5 @@
 {
-  "id": "b421dcdd-8836-4da3-ac98-907155b464b2",
+  "id": "d2cab8de-0756-428f-9b79-6f12708a431c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -14,6 +14,12 @@
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
         },
         "work_email": {
           "name": "work_email",

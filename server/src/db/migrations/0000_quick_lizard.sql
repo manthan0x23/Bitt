@@ -1,6 +1,7 @@
 CREATE TYPE "public"."account_source" AS ENUM('google', 'credentials');--> statement-breakpoint
 CREATE TABLE "admins" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"name" varchar(256),
 	"work_email" varchar NOT NULL,
 	"password" text,
 	"email_verified" boolean DEFAULT false,
