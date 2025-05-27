@@ -3,3 +3,6 @@ dist
 .env
 
 routeTree.gen.ts
+
+.env.server
+docker-compose.prod.yml
