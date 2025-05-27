@@ -1,0 +1,26 @@
+import {
+  boolean,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
+import { accountSource } from "./account-source";
+
+export const admins = pgTable("admins", {
+  id: uuid().defaultRandom().unique().primaryKey().notNull(),
+
+  workEmail: varchar("work_email").notNull().unique(),
+  password: text("password"),
+  emailVerified: boolean("email_verified").default(false),
+
+  pictureurl: text("picture_url"),
+  accountSource: accountSource("account_source")
+    .default("credentials")
+    .notNull(),
+
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  isDeleted: timestamp("is_deleted"),
+  updatedAt: timestamp("update_at").defaultNow().notNull(),
+});

@@ -1,10 +1,22 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "esModuleInterop": true,
     "strict": true,
-    "esModuleInterop": true
-  }
+    "target": "es6",
+    "lib": ["dom", "es2021"],
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["node_modules/*"],
+      "driver": ["../driver/src"]
+    },
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.test.ts", "**/*.spec.ts"]
 }

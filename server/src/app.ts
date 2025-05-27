@@ -1,13 +1,13 @@
 import express from "express";
-import { CLIENT_URL, PORT } from "./utils/env.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { ApiRouter } from "./routes/root.js";
+import { Env } from "./utils/env.js";
 
 const app = express();
 app.use(
   cors({
-    origin: CLIENT_URL,
+    origin: Env.CLIENT_URL,
     credentials: true,
   })
 );
@@ -17,6 +17,6 @@ app.use(cookieParser());
 
 app.use("/api", ApiRouter);
 
-app.listen(PORT, () => {
-  console.info(`Server running on port ${PORT}`);
+app.listen(Env.PORT, () => {
+  console.info(`Server running on port ${Env.PORT}`);
 });

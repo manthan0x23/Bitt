@@ -1,23 +1,26 @@
 import dotenv from "dotenv";
+import { z } from "zod";
 
 dotenv.config();
 
-export const PORT = process.env.PORT;
-export const CLIENT_URL = process.env.CLIENT_URL;
-export const GOOGLE_AUTH_CLIENT_ID = process.env.GOOGLE_AUTH_CLIENT_ID || "";
-export const GOOGLE_AUTH_CLIENT_SECRET =
-  process.env.GOOGLE_AUTH_CLIENT_SECRET || "";
-export const JWT_SECRET = process.env.JWT_SECRET;
+const envSchema = z.object({
+  PORT: z.string().min(1, "PORT is required"),
+  CLIENT_URL: z.string().url("CLIENT_URL must be a valid URL"),
+  GOOGLE_AUTH_CLIENT_ID: z.string().min(1, "GOOGLE_AUTH_CLIENT_ID is required"),
+  GOOGLE_AUTH_CLIENT_SECRET: z
+    .string()
+    .min(1, "GOOGLE_AUTH_CLIENT_SECRET is required"),
+  JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
+  DATABASE_URL: z.string().url("DATABASE_URL must be a valid URL"),
+});
+
+const parsedEnv = envSchema.safeParse(process.env);
+
+if (!parsedEnv.success) {
+  console.error("❌ Invalid environment variables:", parsedEnv.error.format());
+  process.exit(1);
+}
+
+export const Env = parsedEnv.data;
 
 export const GOOGLE_AUTH_SCOPE = ["openid", "email", "profile"].join(" ");
-
-if (!GOOGLE_AUTH_CLIENT_ID || !GOOGLE_AUTH_CLIENT_SECRET) {
-  throw new Error("Missing required Google OAuth environment variables");
-}
-
-if (!PORT) {
-  throw new Error("Missing required server run environment variables");
-}
-if (!JWT_SECRET) {
-  throw new Error("Missing required secret environment variables");
-}
