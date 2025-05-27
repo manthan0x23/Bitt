@@ -4,15 +4,19 @@ import { Env, GOOGLE_AUTH_SCOPE } from "../../../utils/env";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import { googleJwtPayloadSchema } from "../../../utils/types/google-auth";
-import { admins } from "../../../db/schema";
+import { admins, organizations } from "../../../db/schema";
 import { db } from "../../../db/db";
 import { eq } from "drizzle-orm";
 import { JwtService } from "../../../services/jwt";
+import { adminOrganizationRelations } from "../../../db/schema/relations";
 
-export const RedirectGoogleAuthScreen = async (req: Request, res: Response) => {
+export const redirectAdminGoogleAuthScreen = async (
+  req: Request,
+  res: Response
+) => {
   const origin = `${req.protocol}://${req.get("host")}`;
 
-  const redirectUri = `${origin}/api/auth/google/callback`;
+  const redirectUri = `${origin}/api/auth/admin-google/callback`;
 
   const params = querystring.stringify({
     client_id: Env.GOOGLE_AUTH_CLIENT_ID,
@@ -26,7 +30,7 @@ export const RedirectGoogleAuthScreen = async (req: Request, res: Response) => {
   res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
 };
 
-export const LoginWithGoogle = async (req: Request, res: Response) => {
+export const loginAdminWithGoogle = async (req: Request, res: Response) => {
   const code: string = req.query.code as string;
 
   if (!code) {
@@ -102,15 +106,22 @@ export const LoginWithGoogle = async (req: Request, res: Response) => {
       id: admin.id,
       sub: payload.sub,
       picture: admin.pictureurl,
+      type: "admin",
     });
 
     res.cookie("token", myToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: Env.NODE_ENV === "production",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.redirect(`${process.env.CLIENT_URL}`);
+    if (!admin.organizationId) {
+      return res
+        .status(307)
+        .redirect(`${Env.CLIENT_URL}/admin/auth/create-organization`);
+    }
+
+    return res.redirect(`${Env.CLIENT_URL}`);
   } catch (error) {
     console.error(error);
     res.status(500).send("Authentication failed");

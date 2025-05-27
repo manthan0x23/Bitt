@@ -9,7 +9,7 @@ import { db } from "../../db/db";
 import { eq } from "drizzle-orm";
 import { JwtService } from "../../services/jwt";
 
-export const RedirectGoogleAuthScreen = async (req: Request, res: Response) => {
+export const redirectGoogleAuthScreen = async (req: Request, res: Response) => {
   const origin = `${req.protocol}://${req.get("host")}`;
 
   const redirectUri = `${origin}/api/auth/google/callback`;
@@ -26,7 +26,7 @@ export const RedirectGoogleAuthScreen = async (req: Request, res: Response) => {
   res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
 };
 
-export const LoginWithGoogle = async (req: Request, res: Response) => {
+export const loginWithGoogle = async (req: Request, res: Response) => {
   const code: string = req.query.code as string;
 
   if (!code) {

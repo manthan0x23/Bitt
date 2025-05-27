@@ -7,6 +7,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { ArrowLeft } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import { Separator } from '@/components/ui/separator'
+import { Env } from '@/lib/utils'
 
 export const LoginPage = () => {
   const [email, setEmail] = useState('')
@@ -18,7 +19,7 @@ export const LoginPage = () => {
   }
 
   const handleGoogleLogin = () => {
-    // TODO: Trigger Google login flow
+    window.location.assign(`${Env.server_url}/api/auth/google`)
   }
 
   return (
@@ -34,7 +35,7 @@ export const LoginPage = () => {
             >
               <ArrowLeft />
             </Link>
-            <h3 className="text-2xl font-medium">Sign in to your account</h3>
+            <h3 className="text-3xl font-medium">Sign in </h3>
           </span>
           <p className="text-left text-sm text-gray-600">
             Enter your credentials to access your dashboard.
@@ -65,7 +66,7 @@ export const LoginPage = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full cursor-pointer">
+          <Button size={'lg'} type="submit" className="w-full cursor-pointer">
             Sign In
           </Button>
         </form>
@@ -73,6 +74,7 @@ export const LoginPage = () => {
         <Separator />
 
         <Button
+          size={'lg'}
           variant="outline"
           className="w-full flex justify-center items-center gap-2 cursor-pointer"
           onClick={handleGoogleLogin}

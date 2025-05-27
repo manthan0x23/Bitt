@@ -35,7 +35,7 @@ export const RegisterAdmin = () => {
             >
               <ArrowLeft />
             </Link>
-            <h3 className="text-2xl font-medium">Create your work profile</h3>
+            <h3 className="text-3xl font-medium">Create work profile</h3>
           </span>
           <p className="text-left text-sm text-gray-600">
             Sign up with your work credentials to gain access to the admin
@@ -77,7 +77,7 @@ export const RegisterAdmin = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full cursor-pointer">
+          <Button size={'lg'} type="submit" className="w-full cursor-pointer">
             Sign Up
           </Button>
         </form>
@@ -85,6 +85,7 @@ export const RegisterAdmin = () => {
         <Separator />
 
         <Button
+          size={'lg'}
           variant="outline"
           className="w-full flex justify-center items-center gap-2 cursor-pointer"
           onClick={handleGoogleRegister}

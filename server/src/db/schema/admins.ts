@@ -1,5 +1,6 @@
 import {
   boolean,
+  foreignKey,
   pgTable,
   text,
   timestamp,
@@ -7,6 +8,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { accountSource } from "./account-source";
+import { organizations } from "./organizations";
 
 export const admins = pgTable("admins", {
   id: uuid("id").defaultRandom().unique().primaryKey().notNull(),
@@ -25,4 +27,12 @@ export const admins = pgTable("admins", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   isDeleted: timestamp("is_deleted"),
   updatedAt: timestamp("update_at").defaultNow().notNull(),
+
+  organizationId: uuid("organization_id"),
+});
+
+foreignKey({
+  name: "fk_admins_organization",
+  columns: [admins.organizationId],
+  foreignColumns: [organizations.id],
 });

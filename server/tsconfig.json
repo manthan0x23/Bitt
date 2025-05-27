@@ -17,6 +17,6 @@
     },
     "skipLibCheck": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "./index.d.ts"],
   "exclude": ["**/*.test.ts", "**/*.spec.ts"]
 }

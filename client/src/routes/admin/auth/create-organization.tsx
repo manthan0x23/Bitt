@@ -1,9 +1,6 @@
+import { CreateOrganization } from '@/app/admin/auth/create-organization'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/admin/auth/create-organization')({
-  component: RouteComponent,
+  component: CreateOrganization,
 })
-
-function RouteComponent() {
-  return <div>Hello "/admin/auth/create-organization"!</div>
-}

@@ -35,7 +35,7 @@ export const RegisterPage = () => {
             >
               <ArrowLeft />
             </Link>
-            <h3 className="text-2xl font-medium">Create your account</h3>
+            <h3 className="text-3xl font-medium">Create your account</h3>
           </span>
           <p className="text-left text-sm text-gray-600">
             Enter your details to sign up and get started.
@@ -77,7 +77,7 @@ export const RegisterPage = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full cursor-pointer">
+          <Button size={'lg'} type="submit" className="w-full cursor-pointer">
             Sign Up
           </Button>
         </form>
@@ -85,6 +85,7 @@ export const RegisterPage = () => {
         <Separator />
 
         <Button
+          size={'lg'}
           variant="outline"
           className="w-full flex justify-center items-center gap-2 cursor-pointer"
           onClick={handleGoogleRegister}

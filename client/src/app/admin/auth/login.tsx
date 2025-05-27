@@ -34,17 +34,18 @@ export const LoginAdmin = () => {
             >
               <ArrowLeft />
             </Link>
-            <h3 className="font-medium">Sign in with your work profile</h3>
+            <h3 className="font-medium text-3xl">Sign in </h3>
           </span>
           <p className="text-left text-sm text-gray-600">
             Enter your admin credentials to securely access the dashboard.
           </p>
         </div>
         <form onSubmit={handleLogin} className="space-y-6 w-full">
-          <div className="grid w-full max-w-sm items-center gap-1.5">
+          <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="email">Work Email</Label>
             <Input
               autoFocus
+              size={30}
               type="email"
               id="email"
               placeholder="you@company.com"
@@ -53,9 +54,10 @@ export const LoginAdmin = () => {
             />
           </div>
 
-          <div className="grid w-full max-w-sm items-center gap-1.5">
+          <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="password">Password</Label>
             <Input
+              size={30}
               type="password"
               id="password"
               placeholder="••••••••"
@@ -64,7 +66,7 @@ export const LoginAdmin = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full cursor-pointer">
+          <Button size={'lg'} type="submit" className="w-full cursor-pointer">
             Sign In
           </Button>
         </form>
@@ -76,6 +78,7 @@ export const LoginAdmin = () => {
           className="w-full flex justify-center items-center gap-2 cursor-pointer"
           onClick={handleGoogleLogin}
           aria-label="Sign in with Google"
+          size={'lg'}
         >
           <FcGoogle />
           Sign in with Google

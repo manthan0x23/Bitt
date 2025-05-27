@@ -8,6 +8,13 @@
       "when": 1748353523040,
       "tag": "0000_quick_lizard",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1748356777263,
+      "tag": "0001_glorious_thor",
+      "breakpoints": true
     }
   ]
 }

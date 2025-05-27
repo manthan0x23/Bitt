@@ -1,7 +1,7 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import { Env } from "../../utils/env";
 
-interface JwtPayload {
+export interface JwtPayload {
   id: string;
   email: string;
   name?: string | null;

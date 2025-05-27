@@ -1,9 +1,6 @@
+import { JoinOrganization } from '@/app/admin/auth/join-organization'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/admin/auth/join-organization')({
-  component: RouteComponent,
+  component: JoinOrganization,
 })
-
-function RouteComponent() {
-  return <div>Hello "/admin/auth/join-organization"!</div>
-}
