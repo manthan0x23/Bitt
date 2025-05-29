@@ -1,22 +1,13 @@
 {
   "compilerOptions": {
-    "forceConsistentCasingInFileNames": true,
+    "target": "ES2017",
     "module": "commonjs",
-    "esModuleInterop": true,
+    "outDir": "./dist",
+    "rootDirs": ["./src", "./drizzle.config.ts"],
     "strict": true,
-    "target": "es6",
-    "lib": ["dom", "es2021"],
-    "noImplicitAny": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "outDir": "dist",
-    "baseUrl": ".",
-    "paths": {
-      "*": ["node_modules/*"],
-      "driver": ["../driver/src"]
-    },
+    "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "./index.d.ts"],
-  "exclude": ["**/*.test.ts", "**/*.spec.ts"]
+  "include": ["src", "index.d.ts", "index.d.ts"],
+  "exclude": ["node_modules"]
 }

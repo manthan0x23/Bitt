@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { AuthRouter } from "./authentication/routes";
-import { AdminRouter } from "./admin/routes";
+import { authRouter } from "./authentication/routes";
+import { adminRouter } from "./admin/routes";
 
 const router: Router = Router();
 
-router.use("/auth", AuthRouter);
-router.use("/admin", AdminRouter);
+router.use("/auth", authRouter);
+router.use("/admin", adminRouter);
 
 export { router as ApiRouter };

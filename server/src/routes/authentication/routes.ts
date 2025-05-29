@@ -5,11 +5,11 @@ import {
 } from "../../controllers/authentication/google-auth";
 import { verifyAuthenticationUsingCookieToken } from "../../controllers/authentication/verify-auth";
 
-const router = Router();
+const authRouter = Router();
 
-router
+authRouter
   .get("/google/callback", loginWithGoogleOAuth)
   .get("/google", redirectToGoogleAuthScreen)
   .get("/verify", verifyAuthenticationUsingCookieToken);
 
-export { router as AuthRouter };
+export { authRouter };

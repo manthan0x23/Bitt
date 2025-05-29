@@ -1,13 +1,14 @@
-import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
+import { Outlet, createRootRouteWithContext } from '@tanstack/react-router';
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
-import TanStackQueryLayout from '../integrations/tanstack-query/layout.tsx'
+import TanStackQueryLayout from '../integrations/tanstack-query/layout.tsx';
 
-import type { QueryClient } from '@tanstack/react-query'
-import { RouteGuard } from '../integrations/guards/route-guard.tsx'
+import type { QueryClient } from '@tanstack/react-query';
+import { RouteGuard } from '../integrations/guards/route-guard.tsx';
+import { Toaster } from '@/components/ui/sonner.tsx';
 
 interface MyRouterContext {
-  queryClient: QueryClient
+  queryClient: QueryClient;
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
@@ -17,6 +18,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
       <TanStackRouterDevtools />
 
       <TanStackQueryLayout />
+      <Toaster />
     </RouteGuard>
   ),
-})
+});

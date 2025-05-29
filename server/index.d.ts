@@ -1,16 +1,8 @@
-import { Request } from "express";
-
+import { JwtPayload } from "./src/services/jwt/index";
 declare global {
   namespace Express {
     interface Request {
-      user?: {
-        id: string;
-        email: string;
-        name?: string | null;
-        picture?: string | null;
-      };
+      user: JwtPayload;
     }
   }
 }
-
-export {};

@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { JwtService } from "../services/jwt";
+import { JwtPayload, JwtService } from "../services/jwt";
 import { db } from "../db/db";
 import { users } from "../db/schema";
 import { and, eq } from "drizzle-orm";

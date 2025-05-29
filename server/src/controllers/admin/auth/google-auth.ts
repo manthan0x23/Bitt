@@ -124,6 +124,8 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
     return res.redirect(`${Env.CLIENT_URL}`);
   } catch (error) {
     console.error(error);
-    res.status(500).send("Authentication failed");
+    res.status(500).json({
+      error: "Internal server error",
+    });
   }
 };
