@@ -7,6 +7,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { ArrowLeft } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import { Separator } from '@/components/ui/separator'
+import { Env } from '@/lib/utils'
 
 export const RegisterAdmin = () => {
   const [email, setEmail] = useState('')
@@ -19,7 +20,7 @@ export const RegisterAdmin = () => {
   }
 
   const handleGoogleRegister = () => {
-    // TODO: Initiate Google sign-up flow
+    window.location.assign(`${Env.server_url}/api/admin/auth/google`)
   }
 
   return (
@@ -38,7 +39,7 @@ export const RegisterAdmin = () => {
             <h3 className="text-3xl font-medium">Create work profile</h3>
           </span>
           <p className="text-left text-sm text-gray-600">
-            Sign up with your work credentials to gain access to the admin
+            Register with your work credentials to gain access to the admin
             dashboard.
           </p>
         </div>

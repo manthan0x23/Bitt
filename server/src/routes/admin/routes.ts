@@ -4,13 +4,14 @@ import {
   redirectAdminGoogleAuthScreen,
 } from "../../controllers/admin/auth/google-auth";
 
-const adminRouter = Router();
+const AdminRouter = Router();
 
 // auth
-adminRouter
-  .get("/admin-google", redirectAdminGoogleAuthScreen)
-  .get("/admin-google/callback", loginAdminWithGoogle);
+AdminRouter.get("/auth/google/callback", loginAdminWithGoogle).get(
+  "/auth/google",
+  redirectAdminGoogleAuthScreen
+);
 
 // organization
 
-export { adminRouter };
+export { AdminRouter };

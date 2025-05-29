@@ -20,20 +20,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Link } from '@tanstack/react-router'
+import { Link, useRouter } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
+import countries from 'world-countries'
+import { useStore } from '@tanstack/react-store'
+import { authStore } from '@/store/authStore'
 
 export const CreateOrganization = () => {
-  const [orgName, setOrgName] = useState('')
-  const [url, setUrl] = useState('')
+  const [user] = useStore(authStore, (state) => [state.user])
+  const router = useRouter()
+
+  const companyExt = user?.email.split('@')[1]
+  const companyUrl = 'https://' + companyExt
+
+  const [orgName, setOrgName] = useState(companyExt?.toUpperCase() || '')
+  const [url, setUrl] = useState(companyUrl || '')
   const [description, setDescription] = useState('')
-  const [billingEmail, setBillingEmail] = useState('')
+  const [billingEmail, setBillingEmail] = useState(user?.email || '')
   const [origin, setOrigin] = useState('')
   const [startDate, setStartDate] = useState<Date | undefined>()
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     // TODO: Handle organization creation
+  }
+
+  if (!user) {
+    return null
+  }
+
+  if (user.type != 'admin') {
+    router.navigate({
+      to: '/admin/auth/login-admin',
+    })
   }
 
   return (
@@ -75,9 +94,11 @@ export const CreateOrganization = () => {
               <Input
                 id="url"
                 value={url}
+                disabled
                 onChange={(e) => setUrl(e.target.value)}
                 placeholder="your-org.bittt.dev"
                 required
+                className="cursor-not-allowed"
               />
             </div>
           </div>
@@ -114,13 +135,13 @@ export const CreateOrganization = () => {
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a country" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="us">United States</SelectItem>
-                  <SelectItem value="in">India</SelectItem>
-                  <SelectItem value="uk">United Kingdom</SelectItem>
-                  <SelectItem value="de">Germany</SelectItem>
-                  <SelectItem value="au">Australia</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
+                <SelectContent className="max-h-[20rem] max-w-[100%]">
+                  {countries.map((country) => (
+                    <SelectItem key={country.cca2} value={country.cca2}>
+                      <span style={{ marginRight: '4px' }}>{country.flag}</span>
+                      {country.name.common}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

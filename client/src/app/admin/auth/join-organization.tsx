@@ -93,10 +93,10 @@ export const JoinOrganization = () => {
           <div className="flex justify-end items-center pt-2">
             <Button
               type="submit"
-              className="tracking-wide text-sm font-normal"
-              disabled={!inviteLink.trim() && inviteCode.length < 9}
+              className="tracking-wide text-sm font-normal cursor-pointer"
+              disabled={!inviteLink.trim() && inviteCode.length < 8}
             >
-              Join Organization
+              Join
             </Button>
           </div>
         </form>

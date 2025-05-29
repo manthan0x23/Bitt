@@ -4,11 +4,10 @@ import { Env, GOOGLE_AUTH_SCOPE } from "../../../utils/env";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import { googleJwtPayloadSchema } from "../../../utils/types/google-auth";
-import { admins, organizations } from "../../../db/schema";
+import { admins } from "../../../db/schema";
 import { db } from "../../../db/db";
 import { eq } from "drizzle-orm";
 import { JwtService } from "../../../services/jwt";
-import { adminOrganizationRelations } from "../../../db/schema/relations";
 
 export const redirectAdminGoogleAuthScreen = async (
   req: Request,
@@ -16,7 +15,7 @@ export const redirectAdminGoogleAuthScreen = async (
 ) => {
   const origin = `${req.protocol}://${req.get("host")}`;
 
-  const redirectUri = `${origin}/api/auth/admin-google/callback`;
+  const redirectUri = `${origin}/api/admin/auth/google/callback`;
 
   const params = querystring.stringify({
     client_id: Env.GOOGLE_AUTH_CLIENT_ID,
@@ -28,6 +27,7 @@ export const redirectAdminGoogleAuthScreen = async (
   });
 
   res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params}`);
+  return;
 };
 
 export const loginAdminWithGoogle = async (req: Request, res: Response) => {
@@ -41,7 +41,7 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
   try {
     const origin = `${req.protocol}://${req.get("host")}`;
 
-    const redirectUri = `${origin}/api/auth/google/callback`;
+    const redirectUri = `${origin}/api/admin/auth/google/callback`;
 
     const tokenRes = await axios.post(
       "https://oauth2.googleapis.com/token",
@@ -118,7 +118,7 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
     if (!admin.organizationId) {
       return res
         .status(307)
-        .redirect(`${Env.CLIENT_URL}/admin/auth/create-organization`);
+        .redirect(`${Env.CLIENT_URL}/admin/auth/organization-ladder`);
     }
 
     return res.redirect(`${Env.CLIENT_URL}`);

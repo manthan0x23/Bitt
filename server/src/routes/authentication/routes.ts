@@ -1,13 +1,15 @@
 import { Router } from "express";
 import {
-  loginWithGoogle,
-  redirectGoogleAuthScreen,
+  redirectToGoogleAuthScreen,
+  loginWithGoogleOAuth,
 } from "../../controllers/authentication/google-auth";
+import { verifyAuthenticationUsingCookieToken } from "../../controllers/authentication/verify-auth";
 
 const router = Router();
 
 router
-  .get("/google", redirectGoogleAuthScreen)
-  .get("/google/callback", loginWithGoogle);
+  .get("/google/callback", loginWithGoogleOAuth)
+  .get("/google", redirectToGoogleAuthScreen)
+  .get("/verify", verifyAuthenticationUsingCookieToken);
 
 export { router as AuthRouter };

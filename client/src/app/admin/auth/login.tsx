@@ -7,6 +7,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { ArrowLeft } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
 import { Separator } from '@/components/ui/separator'
+import { Env } from '@/lib/utils'
 
 export const LoginAdmin = () => {
   const [email, setEmail] = useState('')
@@ -18,7 +19,7 @@ export const LoginAdmin = () => {
   }
 
   const handleGoogleLogin = () => {
-    // TODO: Trigger Google authentication
+    window.location.assign(`${Env.server_url}/api/admin/auth/google`)
   }
 
   return (
@@ -37,7 +38,7 @@ export const LoginAdmin = () => {
             <h3 className="font-medium text-3xl">Sign in </h3>
           </span>
           <p className="text-left text-sm text-gray-600">
-            Enter your admin credentials to securely access the dashboard.
+            Login with your work credentials to securely access the dashboard.
           </p>
         </div>
         <form onSubmit={handleLogin} className="space-y-6 w-full">

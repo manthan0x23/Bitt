@@ -15,6 +15,13 @@
       "when": 1748356777263,
       "tag": "0001_glorious_thor",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1748506387040,
+      "tag": "0002_clever_sabretooth",
+      "breakpoints": true
     }
   ]
 }
