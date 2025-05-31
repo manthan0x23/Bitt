@@ -118,7 +118,7 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
     if (!admin.organizationId) {
       return res
         .status(307)
-        .redirect(`${Env.CLIENT_URL}/admin/auth/organization-ladder`);
+        .redirect(`${Env.CLIENT_URL}/auth/admin/organization-ladder`);
     }
 
     return res.redirect(`${Env.CLIENT_URL}`);

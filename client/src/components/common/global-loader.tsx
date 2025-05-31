@@ -1,12 +1,12 @@
-import type React from 'react'
-import { Spinner } from '@/components/ui/spinner'
+import type React from 'react';
+// import { Spinner } from '@/components/ui/spinner'
 
 export const GlobalLoadingPage = ({
   isLoading = false,
   children,
 }: {
-  isLoading?: boolean
-  children: React.ReactNode
+  isLoading?: boolean;
+  children: React.ReactNode;
 }) => {
   if (isLoading) {
     return (
@@ -16,8 +16,8 @@ export const GlobalLoadingPage = ({
         </div>
         {children}
       </div>
-    )
+    );
   }
 
-  return <>{children}</>
-}
+  return <>{children}</>;
+};
