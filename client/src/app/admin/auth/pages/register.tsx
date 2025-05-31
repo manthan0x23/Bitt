@@ -99,7 +99,7 @@ export const RegisterAdmin = () => {
         <p className="text-sm text-gray-500 text-center mt-4">
           Already have an account?{' '}
           <Link
-            to="/admin/auth/login-admin"
+            to="/auth/admin/login-admin"
             className="underline text-black hover:text-blue-600"
           >
             Sign in here

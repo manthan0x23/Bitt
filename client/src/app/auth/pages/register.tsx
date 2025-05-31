@@ -1,26 +1,27 @@
-import { LogoHeader } from '@/components/ui/logo-header'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
-import { ArrowLeft } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
-import { Separator } from '@/components/ui/separator'
+import { LogoHeader } from '@/components/ui/logo-header';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useState } from 'react';
+import { FcGoogle } from 'react-icons/fc';
+import { ArrowLeft } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
+import { Separator } from '@/components/ui/separator';
+import { Env } from '@/lib/utils';
 
 export const RegisterPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirm, setConfirmPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirmPassword] = useState('');
 
   const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     // TODO: Call your register API here
-  }
+  };
 
   const handleGoogleRegister = () => {
-    // TODO: Trigger Google OAuth registration
-  }
+    window.location.assign(`${Env.server_url}/api/auth/google`);
+  };
 
   return (
     <div className="screen-full bg-white text-black flex justify-center items-center relative">
@@ -106,5 +107,5 @@ export const RegisterPage = () => {
         </p>
       </div>
     </div>
-  )
-}
+  );
+};

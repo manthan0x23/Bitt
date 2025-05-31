@@ -1,26 +1,26 @@
-import { LogoHeader } from '@/components/ui/logo-header'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
-import { ArrowLeft } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
-import { Separator } from '@/components/ui/separator'
-import { Env } from '@/lib/utils'
+import { LogoHeader } from '@/components/ui/logo-header';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useState } from 'react';
+import { FcGoogle } from 'react-icons/fc';
+import { ArrowLeft } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
+import { Separator } from '@/components/ui/separator';
+import { Env } from '@/lib/utils';
 
 export const LoginPage = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const handleCredentialLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     // TODO: Call your login API here
-  }
+  };
 
   const handleGoogleLogin = () => {
-    window.location.assign(`${Env.server_url}/api/auth/google`)
-  }
+    window.location.assign(`${Env.server_url}/api/auth/google`);
+  };
 
   return (
     <div className="screen-full bg-white text-black flex justify-center items-center relative">
@@ -42,7 +42,7 @@ export const LoginPage = () => {
           </p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-6 w-full">
+        <form onSubmit={handleCredentialLogin} className="space-y-6 w-full">
           <div className="grid w-full max-w-sm items-center gap-1.5">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -95,5 +95,5 @@ export const LoginPage = () => {
         </p>
       </div>
     </div>
-  )
-}
+  );
+};

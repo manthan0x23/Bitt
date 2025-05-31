@@ -1,14 +1,14 @@
-import { useCallback, useState } from 'react'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Button } from '@/components/ui/button'
-import { BsBuildingsFill } from 'react-icons/bs'
-import { IoMdLink } from 'react-icons/io'
-import { ShieldCheck, Lock, CheckCircle, ArrowLeft } from 'lucide-react'
-import { twMerge } from 'tailwind-merge'
-import { LogoHeader } from '@/components/ui/logo-header'
-import { GoArrowRight } from 'react-icons/go'
-import { Link, useNavigate } from '@tanstack/react-router'
+import { useCallback, useState } from 'react';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Button } from '@/components/ui/button';
+import { BsBuildingsFill } from 'react-icons/bs';
+import { IoMdLink } from 'react-icons/io';
+import { ShieldCheck, Lock, CheckCircle, ArrowLeft } from 'lucide-react';
+import { twMerge } from 'tailwind-merge';
+import { LogoHeader } from '@/components/ui/logo-header';
+import { GoArrowRight } from 'react-icons/go';
+import { Link, useNavigate } from '@tanstack/react-router';
 
 const roles = [
   {
@@ -21,19 +21,19 @@ const roles = [
     label: 'Join via Invite Code/Link',
     icon: <IoMdLink className="w-5 h-5" />,
   },
-]
+];
 
 export const OrganizationLadder = () => {
-  const [selected, setSelected] = useState<string | null>(null)
-  const navigate = useNavigate()
+  const [selected, setSelected] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const nextPage = useCallback(() => {
     if (selected === 'create') {
-      navigate({ to: '/admin/auth/create-organization', resetScroll: true })
+      navigate({ to: '/auth/admin/create-organization', resetScroll: true });
     } else {
-      navigate({ to: '/admin/auth/join-organization', resetScroll: true })
+      navigate({ to: '/auth/admin/join-organization', resetScroll: true });
     }
-  }, [selected, navigate])
+  }, [selected, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-white px-6 py-10 relative">
@@ -110,5 +110,5 @@ export const OrganizationLadder = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

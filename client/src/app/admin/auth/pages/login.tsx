@@ -88,7 +88,7 @@ export const LoginAdmin = () => {
         <p className="text-sm text-gray-500 text-center mt-4">
           Don&#39;t have an admin account?{' '}
           <Link
-            to="/admin/auth/register-admin"
+            to="/auth/admin/register-admin"
             className="underline text-black hover:text-blue-600"
           >
             Create one

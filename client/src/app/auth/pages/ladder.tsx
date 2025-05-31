@@ -29,7 +29,7 @@ export const Ladder = () => {
   const nextPage = useCallback(() => {
     if (selected == 'organization') {
       navigate({
-        to: '/admin/auth/login-admin',
+        to: '/auth/admin/login-admin',
         resetScroll: true,
       })
     } else {

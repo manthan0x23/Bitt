@@ -14,7 +14,7 @@ export const CreateOrganizationPage = () => {
   }
 
   if (user.type !== 'admin') {
-    router.navigate({ to: '/admin/auth/login-admin' });
+    router.navigate({ to: '/auth/admin/login-admin' });
     return null;
   }
 
@@ -26,7 +26,7 @@ export const CreateOrganizationPage = () => {
         <div className="flex flex-col items-start gap-2">
           <span className="flex items-center gap-3 relative">
             <Link
-              to="/admin/auth/organization-ladder"
+              to="/auth/admin/organization-ladder"
               className="absolute -left-9 text-muted-foreground"
             >
               <ArrowLeft />
