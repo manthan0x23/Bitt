@@ -37,7 +37,7 @@
     "jsdom": "^26.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
-    "nanoid": "^5.1.5",
+    "nanoid": "3",
     "postgres": "^3.4.7",
     "uuid": "^11.1.0",
     "zod": "^3.25.30"
