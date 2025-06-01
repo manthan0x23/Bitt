@@ -1,1 +1,0 @@
-ALTER TABLE "admins" ADD COLUMN "organization_id" uuid;

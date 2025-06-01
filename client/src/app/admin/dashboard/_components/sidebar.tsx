@@ -78,8 +78,6 @@ export const SideBar = () => {
     setOpen(false);
   }, []);
 
-  console.log(location);
-
   return (
     <Sidebar className="border-none " collapsible="icon">
       <SidebarHeader className="bg-accent">
@@ -94,9 +92,9 @@ export const SideBar = () => {
                 <TooltipTrigger>
                   <Link to={url} className="w-full ">
                     {location.pathname == url ? (
-                      <IconFill className="text-2xl  text-primary/85" />
+                      <IconFill className="text-2xl  " />
                     ) : (
-                      <Icon className="text-2xl  text-primary/40" />
+                      <Icon className="text-2xl text-accent-foreground" />
                     )}
                   </Link>
                 </TooltipTrigger>

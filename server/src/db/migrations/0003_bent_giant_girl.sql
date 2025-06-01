@@ -1,1 +1,0 @@
-ALTER TABLE "organizations" ADD COLUMN "start_date" date;

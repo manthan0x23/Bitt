@@ -12,7 +12,10 @@ const envSchema = z.object({
     .min(1, "GOOGLE_AUTH_CLIENT_SECRET is required"),
   JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
   DATABASE_URL: z.string().url("DATABASE_URL must be a valid URL"),
-  NODE_ENV: z.string(),
+  NODE_ENV: z.string().optional().default("prod"),
+  AWS_ACCESS_KEY: z.string().min(1, "AWS_ACCESS_KEY is required"),
+  AWS_SECRET_KEY: z.string().min(1, "AWS_SECRET_KEY is required"),
+  AWS_CLOUD_FRONT_URL: z.string().url("AWS_CLOUD_FRONT_URL is required"),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

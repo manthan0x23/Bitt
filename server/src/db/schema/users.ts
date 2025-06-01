@@ -3,21 +3,28 @@ import {
   pgTable,
   text,
   timestamp,
-  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { accountSource } from "./account-source";
+import { accountSourceEnum } from "./enums/account-source";
+import { nanoid } from "nanoid";
 
 export const users = pgTable("users", {
-  id: uuid("id").unique().primaryKey().notNull().defaultRandom(),
+  id: varchar("id")
+    .unique()
+    .primaryKey()
+    .notNull()
+    .$defaultFn(() => nanoid(8)),
+
   name: varchar("name", { length: 256 }),
   email: varchar("email", { length: 256 }).notNull().unique(),
   password: text("password"),
   pictureurl: text("picture_url"),
   emailVerified: boolean("email_verified").default(false).notNull(),
-  accountSource: accountSource("account_source")
+  accountSource: accountSourceEnum("account_source")
     .default("credentials")
     .notNull(),
+
+  resume: varchar("resume", { length: 256 }),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   isDeleted: timestamp("is_deleted"),

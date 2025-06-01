@@ -1,18 +1,19 @@
 import {
   boolean,
-  foreignKey,
   pgTable,
   text,
   timestamp,
-  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { accountSource } from "./account-source";
-import { organizations } from "./organizations";
+import { accountSourceEnum } from "./enums/account-source";
+import { shortId } from "../../utils/integrations/short-id";
 
 export const admins = pgTable("admins", {
-  id: uuid("id").defaultRandom().unique().primaryKey().notNull(),
-
+  id: varchar("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => shortId(8)),
   name: varchar("name", { length: 256 }),
 
   workEmail: varchar("work_email").notNull().unique(),
@@ -20,7 +21,7 @@ export const admins = pgTable("admins", {
   emailVerified: boolean("email_verified").default(false),
 
   pictureurl: text("picture_url"),
-  accountSource: accountSource("account_source")
+  accountSource: accountSourceEnum("account_source")
     .default("credentials")
     .notNull(),
 
@@ -28,11 +29,5 @@ export const admins = pgTable("admins", {
   isDeleted: timestamp("is_deleted"),
   updatedAt: timestamp("update_at").defaultNow().notNull(),
 
-  organizationId: uuid("organization_id"),
-});
-
-foreignKey({
-  name: "fk_admins_organization",
-  columns: [admins.organizationId],
-  foreignColumns: [organizations.id],
+  organizationId: varchar("organization_id", { length: 256 }),
 });

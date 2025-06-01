@@ -3,12 +3,16 @@ import {
   pgTable,
   text,
   timestamp,
-  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import { shortId } from "../../utils/integrations/short-id";
 
 export const organizations = pgTable("organizations", {
-  id: uuid("id").primaryKey().unique().notNull().defaultRandom(),
+  id: varchar("id")
+    .primaryKey()
+    .unique()
+    .notNull()
+    .$defaultFn(() => shortId(8)),
   name: varchar("name").notNull(),
   slug: text("slug").notNull(),
 
@@ -22,5 +26,5 @@ export const organizations = pgTable("organizations", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 
-  createdBy: uuid("created_by").notNull(),
+  createdBy: varchar("created_by", { length: 256 }).notNull(),
 });

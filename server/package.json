@@ -37,6 +37,7 @@
     "jsdom": "^26.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
+    "nanoid": "^5.1.5",
     "postgres": "^3.4.7",
     "uuid": "^11.1.0",
     "zod": "^3.25.30"
@@ -51,6 +52,7 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.15.21",
     "@types/pg": "^8.15.2",
+    "@types/shortid": "^2.2.0",
     "drizzle-kit": "^0.31.1",
     "nodemon": "^3.1.10",
     "rimraf": "^6.0.1",

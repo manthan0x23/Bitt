@@ -32,7 +32,7 @@ export const LogoHeader = ({
               className,
             )}
           >
-            <p className="text-sm text-black font-semibold tracking-tight">
+            <p className="text-sm text-primary font-semibold tracking-tight">
               01.
             </p>
           </div>
@@ -45,7 +45,7 @@ export const LogoHeader = ({
     <div className={twMerge('flex flex-col gap-1', className)}>
       <h1
         className={twMerge(
-          'overflow-hidden whitespace-nowrap pr-5 text-black font-bold',
+          'overflow-hidden whitespace-nowrap pr-5 font-bold text-primary',
           textSizes[size],
           'animate-typing',
         )}
