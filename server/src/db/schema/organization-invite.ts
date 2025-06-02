@@ -7,7 +7,10 @@ import {
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
 import { organizations } from "./organizations";
-import { organizationInviteTypeEnum } from "./enums";
+import {
+  organizationInviteStatusEnum,
+  organizationInviteTypeEnum,
+} from "./enums";
 import { admins } from "./admins";
 
 export const organizationInvite = pgTable(
@@ -29,7 +32,8 @@ export const organizationInvite = pgTable(
 
     allowedOrigins: varchar("allowed_origins", { length: 512 })
       .array()
-      .default([]),
+      .default([])
+      .notNull(),
 
     inviteType: organizationInviteTypeEnum("invite_type")
       .default("strict")
@@ -42,8 +46,12 @@ export const organizationInvite = pgTable(
       .references(() => admins.id, { onDelete: "set null" })
       .notNull(),
 
+    status: organizationInviteStatusEnum("status").default("active").notNull(),
+
+    endDate: timestamp("end_date").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
+    updatedAt: timestamp("update_at"),
   },
   (table) => ({
     organizationIdIdx: index("organization_invite_organizationId_idx").on(
@@ -53,5 +61,6 @@ export const organizationInvite = pgTable(
     createdByIdx: index("organization_invite_createdBy_idx").on(
       table.createdBy
     ),
+    statusIdx: index("organization_invite_status_idx").on(table.status),
   })
 );

@@ -5,6 +5,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import { ApiRouter } from "./routes/root";
 import { Env } from "./utils/env";
+import errorHandler from "./middlewares/handlers/error-handler";
 
 const app = express();
 
@@ -21,6 +22,8 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api", ApiRouter);
+
+app.use(errorHandler);
 
 app.listen(Env.PORT, () => {
   console.info(`Server running on port ${Env.PORT}`);

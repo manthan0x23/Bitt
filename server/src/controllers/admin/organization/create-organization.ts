@@ -4,6 +4,12 @@ import { admins, organizations } from "../../../db/schema";
 import { and, eq } from "drizzle-orm";
 import { scrapeLogoUrl } from "../../../utils/integrations/logo-scrapper";
 import { zCreateOrganizationBodyParser } from "./types/create-organization.input";
+import {
+  AppError,
+  BadRequestError,
+  InternalServerError,
+  UnauthorizedError,
+} from "../../../utils/errors";
 
 export const createOrganization = async (
   req: Request,
@@ -11,13 +17,11 @@ export const createOrganization = async (
 ): Promise<any> => {
   const parsed = zCreateOrganizationBodyParser.safeParse(req.body);
   if (!parsed.success) {
-    return res.status(400).json({ error: parsed.error.flatten().fieldErrors });
+    throw new BadRequestError(JSON.stringify(parsed.error.errors.flat()));
   }
 
   if (!req.user || req.user.type !== "admin") {
-    return res
-      .status(401)
-      .json({ error: "Unauthorized action to create organization" });
+    throw new UnauthorizedError("Unauthorized action to create organization");
   }
 
   try {
@@ -30,9 +34,9 @@ export const createOrganization = async (
     )[0];
 
     if (existingAdmin?.organizationId) {
-      return res.status(400).json({
-        error: "User is already associated with an existing organization",
-      });
+      throw new BadRequestError(
+        "User is already associated with an existing organization"
+      );
     }
 
     const logoUrl = await scrapeLogoUrl(parsed.data.url);
@@ -61,23 +65,23 @@ export const createOrganization = async (
         .where(and(eq(admins.id, user.id), eq(admins.workEmail, user.email)))
         .returning();
 
+      if (!result.updatedAdmins.length) {
+        throw new InternalServerError(
+          "Failed to update admin with organization"
+        );
+      }
+
       return { newOrg, updatedAdmins };
     });
-
-    if (!result.updatedAdmins.length) {
-      return res.status(500).json({
-        error: "Failed to update admin with organization",
-      });
-    }
 
     return res.status(201).json({
       message: "Organization created successfully",
       organization: result.newOrg,
     });
   } catch (error) {
-    console.error("Error creating organization:", error);
-    return res.status(500).json({
-      error: "Internal server error",
-    });
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new InternalServerError();
   }
 };
