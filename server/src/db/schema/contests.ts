@@ -7,6 +7,7 @@ import {
   timestamp,
   varchar,
   unique,
+  bigint,
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
 import {
@@ -36,7 +37,7 @@ export const contests = pgTable(
     startAt: timestamp("start_at").notNull(),
     endAt: timestamp("end_at").notNull(),
 
-    duration: integer("duration").notNull().default(90), // in minutes
+    duration: bigint("duration", { mode: "number" }).default(10).notNull(),
 
     contestType: contestTypeEnum("contest_type").default("live").notNull(),
     accessibility: contestAccessEnum("accessibility")

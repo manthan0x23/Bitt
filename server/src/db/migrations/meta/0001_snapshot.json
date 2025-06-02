@@ -1,6 +1,6 @@
 {
-  "id": "1428900f-d14f-42fb-94df-e62e40a90c04",
-  "prevId": "94df3229-ffc3-4d77-911a-cbe192530c66",
+  "id": "d9af2ac3-025a-4227-afa8-4149ccd45fbd",
+  "prevId": "4fbc7c70-e055-499c-bdb0-52d66f54abd4",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -340,10 +340,10 @@
         },
         "duration": {
           "name": "duration",
-          "type": "integer",
+          "type": "bigint",
           "primaryKey": false,
           "notNull": true,
-          "default": 90
+          "default": 10
         },
         "contest_type": {
           "name": "contest_type",
@@ -476,7 +476,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "contests_stage_job_id_idx": {
+          "name": "contests_stage_job_id_idx",
+          "nullsNotDistinct": false,
+          "columns": [
+            "stage",
+            "job_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -618,13 +627,20 @@
           "name": "billing_email_address",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
+        },
+        "billing_email_verified": {
+          "name": "billing_email_verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "origin": {
           "name": "origin",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "start_date": {
           "name": "start_date",
@@ -1489,7 +1505,7 @@
           "name": "allowed_origins",
           "type": "varchar(512)[]",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "'{}'"
         },
         "invite_type": {
@@ -1520,6 +1536,20 @@
           "primaryKey": false,
           "notNull": true
         },
+        "status": {
+          "name": "status",
+          "type": "organization_invite_status_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -1529,6 +1559,12 @@
         },
         "deleted_at": {
           "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "update_at": {
+          "name": "update_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
@@ -1570,6 +1606,21 @@
           "columns": [
             {
               "expression": "created_by",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "organization_invite_status_idx": {
+          "name": "organization_invite_status_idx",
+          "columns": [
+            {
+              "expression": "status",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1647,7 +1698,8 @@
       "schema": "public",
       "values": [
         "draft",
-        "published"
+        "published",
+        "archived"
       ]
     },
     "public.contest_type": {
@@ -1655,7 +1707,9 @@
       "schema": "public",
       "values": [
         "live",
-        "take-home"
+        "take-home",
+        "practise",
+        "upsolve"
       ]
     },
     "public.job_status": {
@@ -1754,6 +1808,17 @@
         "rejected",
         "idle",
         "expired"
+      ]
+    },
+    "public.organization_invite_status_enum": {
+      "name": "organization_invite_status_enum",
+      "schema": "public",
+      "values": [
+        "active",
+        "closed",
+        "expired",
+        "limit_reached",
+        "deleted"
       ]
     },
     "public.organization_invite_type_enum": {
