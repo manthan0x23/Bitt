@@ -7,5 +7,5 @@ export const organizationInviteTypeEnum = pgEnum(
 
 export const organizationInviteStatusEnum = pgEnum(
   "organization_invite_status_enum",
-  ["active", "closed", "expired", "limit_reached"]
+  ["active", "closed", "expired", "limit_reached", "deleted"]
 );

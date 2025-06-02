@@ -3,6 +3,7 @@ import { JwtPayload, JwtService } from "../services/jwt";
 import { db } from "../db/db";
 import { users } from "../db/schema";
 import { and, eq } from "drizzle-orm";
+import { UnauthorizedError } from "../utils/errors";
 
 export const authenticateUserMiddleware = async (
   req: Request,
@@ -19,25 +20,12 @@ export const authenticateUserMiddleware = async (
     const decoded = JwtService.verify(token);
 
     if (typeof decoded !== "object" || !decoded.id || !decoded.email) {
-      return res.status(401).json({ message: "Invalid token payload" });
-    }
-
-    const checkUser = (
-      await db
-        .selectDistinct()
-        .from(users)
-        .where(and(eq(users.id, decoded.id), eq(users.email, decoded.email)))
-        .limit(1)
-    )[0];
-
-    if (!checkUser) {
-      return res.status(403).json({ message: "Forbidden" });
+      throw new UnauthorizedError("Invalid token payload");
     }
 
     req.user = decoded;
     next();
   } catch (error) {
-    console.error("Auth error:", error);
-    return res.status(401).json({ message: "Invalid or expired token" });
+    throw new UnauthorizedError("Invalid or expired token");
   }
 };

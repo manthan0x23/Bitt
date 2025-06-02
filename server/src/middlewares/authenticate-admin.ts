@@ -1,5 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { JwtPayload, JwtService } from "../services/jwt";
+import { UnauthorizedError } from "../utils/errors";
 
 export const authenticateAdminMiddleware = (
   req: Request,
@@ -16,16 +17,16 @@ export const authenticateAdminMiddleware = (
     const decoded: JwtPayload = JwtService.verify(token);
 
     if (typeof decoded !== "object" || !decoded.id || !decoded.email) {
-      return res.status(401).json({ message: "Invalid token payload" });
+      throw new UnauthorizedError("Invalid token payload");
     }
 
     if (!decoded || decoded.type != "admin") {
-      return res.status(403).json({ message: "Forbidden" });
+      throw new UnauthorizedError("Forbidden");
     }
 
     req.user = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Invalid or expired token" });
+    throw new UnauthorizedError("Invalid or expired token");
   }
 };

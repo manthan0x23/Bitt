@@ -6,6 +6,7 @@ import {
   text,
   timestamp,
   varchar,
+  unique,
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
 import {
@@ -54,7 +55,13 @@ export const contests = pgTable(
     jobIndex: index("contests_job_idx").on(table.jobId),
     startAtIndex: index("contests_start_at_idx").on(table.startAt),
     endAtIndex: index("contests_end_at_idx").on(table.endAt),
-    publishStateIndex: index("contests_publish_state_idx").on(table.publishState),
+    publishStateIndex: index("contests_publish_state_idx").on(
+      table.publishState
+    ),
     createdAtIndex: index("contests_created_at_idx").on(table.createdAt),
+    stageJobIdIndex: unique("contests_stage_job_id_idx").on(
+      table.stage,
+      table.jobId
+    ),
   })
 );

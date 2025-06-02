@@ -63,16 +63,25 @@ export const joinOrganization = async (
     const now = new Date();
 
     if (
-      !searchInvite ||
-      searchInvite.status === "expired" ||
-      searchInvite.status === "closed" ||
-      searchInvite.usageLimit === searchInvite.usageCount ||
-      new Date(searchInvite.endDate) < now ||
       searchInvite.allowedOrigins.findIndex(
         (mail) => mail === req.user.email
-      ) === -1
+      ) === -1 &&
+      searchInvite.inviteType != "open-for-all"
     ) {
-      throw new BadRequestError("Invalid invite code/link");
+      throw new BadRequestError("Invite restricted for org users only.");
+    }
+
+    if (searchInvite.status == "limit_reached") {
+      throw new BadRequestError("Invite limit exhausted.");
+    }
+
+    if (
+      !searchInvite ||
+      searchInvite.status != "active" ||
+      searchInvite.usageLimit === searchInvite.usageCount ||
+      new Date(searchInvite.endDate) < now
+    ) {
+      throw new BadRequestError("Invalid invite code/link.");
     }
 
     await db.transaction(async (tx) => {

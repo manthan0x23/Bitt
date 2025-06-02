@@ -4,6 +4,7 @@ import {
   text,
   timestamp,
   varchar,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
 
@@ -18,9 +19,13 @@ export const organizations = pgTable("organizations", {
 
   description: text("description"),
   logoUrl: text("logo_url"),
-  billingEmailAddress: text("billing_email_address"),
 
-  origin: text("origin"),
+  billingEmailAddress: text("billing_email_address").notNull(),
+  billingEmailVerified: boolean("billing_email_verified")
+    .default(false)
+    .notNull(),
+
+  origin: text("origin").notNull(),
   startDate: date("start_date"),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),

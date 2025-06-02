@@ -3,7 +3,7 @@ import { db } from "../../../db/db";
 import { admins, organizations } from "../../../db/schema";
 import { and, eq } from "drizzle-orm";
 import { scrapeLogoUrl } from "../../../utils/integrations/logo-scrapper";
-import { zCreateOrganizationBodyParser } from "./types/create-organization.input";
+import { zCreateOrganizationInput } from "./types/create-organization.input";
 import {
   AppError,
   BadRequestError,
@@ -15,7 +15,7 @@ export const createOrganization = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  const parsed = zCreateOrganizationBodyParser.safeParse(req.body);
+  const parsed = zCreateOrganizationInput.safeParse(req.body);
   if (!parsed.success) {
     throw new BadRequestError(JSON.stringify(parsed.error.errors.flat()));
   }

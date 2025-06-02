@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const zCreateOrganizationBodyParser = z.object({
+export const zCreateOrganizationInput = z.object({
   name: z.string(),
   url: z.string(),
   description: z.string().optional(),
