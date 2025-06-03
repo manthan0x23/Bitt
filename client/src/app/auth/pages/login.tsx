@@ -23,7 +23,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="screen-full bg-white text-black flex justify-center items-center relative">
+    <div className="screen-full bg-primary-foreground text-primary flex justify-center items-center relative">
       <LogoHeader size="xl" className="absolute m-10 top-0 left-0" />
 
       <div className="w-full max-w-md p-8 rounded-xl flex flex-col items-start gap-6">
@@ -37,7 +37,7 @@ export const LoginPage = () => {
             </Link>
             <h3 className="text-3xl font-medium">Sign in </h3>
           </span>
-          <p className="text-left text-sm text-gray-600">
+          <p className="text-left text-sm text-primary/60">
             Enter your credentials to access your dashboard.
           </p>
         </div>
@@ -54,7 +54,6 @@ export const LoginPage = () => {
               required
             />
           </div>
-
           <div className="grid w-full max-w-sm items-center gap-1.5">
             <Label htmlFor="password">Password</Label>
             <Input
@@ -84,11 +83,11 @@ export const LoginPage = () => {
           Sign in with Google
         </Button>
 
-        <p className="text-sm text-gray-500 text-center mt-4">
+        <p className="text-sm text-primary/60 text-center mt-4">
           Don&#39;t have an account?{' '}
           <Link
             to="/auth/register"
-            className="underline text-black hover:text-blue-600"
+            className="underline text-primary hover:text-blue-600"
           >
             Create one here
           </Link>

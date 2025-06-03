@@ -24,7 +24,7 @@ export const JoinOrganization = () => {
   }
 
   return (
-    <div className="screen-full bg-white text-black flex justify-center items-center relative px-4 py-10">
+    <div className="screen-full bg-primary-foreground text-primary flex justify-center items-center relative px-4 py-10">
       <LogoHeader size="xl" className="absolute m-10 top-0 left-0" />
 
       <div className="w-full max-w-md p-8 rounded-xl flex flex-col items-start gap-6 ">
@@ -38,7 +38,7 @@ export const JoinOrganization = () => {
             </Link>
             <h3 className="text-3xl font-medium">Join Organization</h3>
           </span>
-          <p className="text-left text-sm text-gray-600">
+          <p className="text-left text-sm text-primary/60">
             Use either an invite link or a code to join your team.
           </p>
         </div>
@@ -57,7 +57,7 @@ export const JoinOrganization = () => {
 
           <div className="my-8">
             <Separator className="relative">
-              <span className="bg-white px-2 text-sm text-muted-foreground absolute -top-2.5 left-[50%] -translate-x-1/2">
+              <span className="bg-primary-foreground px-2 text-sm text-muted-foreground absolute -top-2.5 left-[50%] -translate-x-1/2">
                 or
               </span>
             </Separator>

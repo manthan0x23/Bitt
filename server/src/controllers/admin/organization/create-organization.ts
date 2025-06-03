@@ -65,7 +65,7 @@ export const createOrganization = async (
         .where(and(eq(admins.id, user.id), eq(admins.workEmail, user.email)))
         .returning();
 
-      if (!result.updatedAdmins.length) {
+      if (!updatedAdmins.length) {
         throw new InternalServerError(
           "Failed to update admin with organization"
         );
@@ -81,7 +81,7 @@ export const createOrganization = async (
   } catch (error) {
     if (error instanceof AppError) {
       throw error;
-    }
+    } else console.error(error);
     throw new InternalServerError();
   }
 };

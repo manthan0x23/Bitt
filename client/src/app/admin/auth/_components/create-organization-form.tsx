@@ -32,7 +32,7 @@ type Props = {
 };
 
 const createOrganizationCall = (body: CreateOrganizationInputT) => {
-  return axios.post(`${Env.server_url}/api/admin/create-organization`, body, {
+  return axios.post(`${Env.server_url}/api/admin/organization/create`, body, {
     withCredentials: true,
     headers: {
       'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ export const CreateOrganizationForm = ({ email }: Props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 w-full">
+    <form onSubmit={handleSubmit} className="space-y-6 w-full bg-primary-foreground">
       <div className="flex justify-between items-center w-full gap-4">
         <div className="grid w-full gap-2">
           <Label htmlFor="org-name">Organization Name</Label>

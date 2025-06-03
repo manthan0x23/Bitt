@@ -15,7 +15,10 @@ const envSchema = z.object({
   NODE_ENV: z.string().optional().default("prod"),
   AWS_ACCESS_KEY: z.string().min(1, "AWS_ACCESS_KEY is required"),
   AWS_SECRET_KEY: z.string().min(1, "AWS_SECRET_KEY is required"),
-  AWS_CLOUD_FRONT_URL: z.string().url("AWS_CLOUD_FRONT_URL is required"),
+  AWS_CLOUD_FRONT_DISTRIBUTION_URL: z
+    .string()
+    .url("AWS_CLOUD_FRONT_DISTRIBUTION_URL is required"),
+  AWS_S3_BUCKET_NAME: z.string().min(1, "AWS_S3_BUCKET_NAME is required"),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

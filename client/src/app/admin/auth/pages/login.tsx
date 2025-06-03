@@ -23,7 +23,7 @@ export const LoginAdmin = () => {
   }
 
   return (
-    <div className="screen-full bg-white text-black flex justify-center items-center relative">
+    <div className="screen-full bg-primary-foreground text-primary flex justify-center items-center relative">
       <LogoHeader size="xl" className="absolute m-10 top-0 left-0" />
 
       <div className="w-full max-w-md p-8 rounded-xl flex flex-col items-start gap-6">
@@ -33,11 +33,11 @@ export const LoginAdmin = () => {
               to="/auth/ladder"
               className="absolute -left-9 text-muted-foreground"
             >
-              <ArrowLeft />
+              <ArrowLeft className='text-primary' />
             </Link>
             <h3 className="font-medium text-3xl">Sign in </h3>
           </span>
-          <p className="text-left text-sm text-gray-600">
+          <p className="text-left text-sm text-primary/60">
             Login with your work credentials to securely access the dashboard.
           </p>
         </div>
@@ -85,11 +85,11 @@ export const LoginAdmin = () => {
           Sign in with Google
         </Button>
 
-        <p className="text-sm text-gray-500 text-center mt-4">
+        <p className="text-sm text-primary/60 text-center mt-4">
           Don&#39;t have an admin account?{' '}
           <Link
             to="/auth/admin/register-admin"
-            className="underline text-black hover:text-blue-600"
+            className="underline text-primary hover:text-blue-600"
           >
             Create one
           </Link>

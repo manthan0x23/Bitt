@@ -36,7 +36,7 @@ export const OrganizationLadder = () => {
   }, [selected, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white px-6 py-10 relative">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-primary-foreground px-6 py-10 relative">
       <LogoHeader size="xl" className="mb-4 absolute m-10 top-0 left-0" />
 
       <div className="text-left max-w-lg mb-10 px-7 relative">
@@ -46,13 +46,14 @@ export const OrganizationLadder = () => {
         >
           <ArrowLeft />
         </Link>
-        <h2 className="text-4xl font-medium text-black">Manage with Bittt.</h2>
-        <p className="text-gray-700 mt-2 text-sm">
+        <h2 className="text-4xl font-medium text-primary">
+          Manage with Bittt.
+        </h2>
+        <p className="text-primary/60 mt-2 text-sm">
           Whether you're starting fresh or joining an existing workspace, Bittt
           makes it easy to manage and collaborate within your organization.
         </p>
       </div>
-
       <div className="w-full max-w-md space-y-6">
         <RadioGroup
           value={selected ?? ''}
@@ -63,10 +64,10 @@ export const OrganizationLadder = () => {
             <div
               key={role.id}
               className={twMerge(
-                'cursor-pointer h-[6rem] text-6xl flex items-center justify-between border rounded-md px-6 py-4 transition-all duration-200 hover:scale-[1.01]',
+                'cursor-pointer h-[6rem] text-6xl flex items-center justify-between border rounded-md px-6 py-4 transition-all duration-200 hover:scale-[1.007]',
                 selected === role.id
-                  ? 'border-black bg-neutral-100 shadow-sm'
-                  : 'border-gray-300 bg-white hover:border-black/20',
+                  ? 'border-primary/80 bg-secondary shadow-sm'
+                  : 'border-primary/40 bg-secondary hover:border-primary/70',
               )}
               onClick={() => setSelected(role.id)}
             >
@@ -80,7 +81,7 @@ export const OrganizationLadder = () => {
         </RadioGroup>
       </div>
 
-      <div className="mt-10 w-full max-w-md space-y-4 text-sm text-gray-700">
+      <div className="mt-10 w-full max-w-md space-y-4 text-sm text-primary/60">
         <div className="flex items-start gap-2">
           <Lock className="w-5 h-5 text-orange-600 mt-0.5" />
           <p>We use AES-256 encryption to secure all organizational data.</p>

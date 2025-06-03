@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -12,6 +12,24 @@
     <link rel="apple-touch-icon" href="/logo192.png" />
     <link rel="manifest" href="/manifest.json" />
     <title>Create TanStack App - client</title>
+
+    <!-- 👇 Preload theme before Tailwind CSS or App loads -->
+    <script>
+      (function () {
+        try {
+          const theme = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('theme='))
+            ?.split('=')[1];
+
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {
+          console.error('Theme preload error:', e);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>
