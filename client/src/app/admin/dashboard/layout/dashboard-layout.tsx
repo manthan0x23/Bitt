@@ -15,9 +15,9 @@ export const AdminDashBoardLayout = ({ children }: PropsWithChildren) => {
     >
       <SideBar variant="inset" />
       <SidebarInset>
-        <section className="h-full w-full p-2">
+        <section className="h-full w-full flex flex-col items-center justify-center p-2">
           <NavBar />
-          {children}
+          <div className="w-full h-[95%] p-4 ">{children}</div>
         </section>
       </SidebarInset>
     </SidebarProvider>

@@ -5,6 +5,7 @@ export const jobTypeEnum = pgEnum("job_type", [
   "full-time",
   "part-time",
 ]);
+
 export const jobStatusEnum = pgEnum("job_status", [
   "draft",
   "open",
@@ -12,7 +13,7 @@ export const jobStatusEnum = pgEnum("job_status", [
   "archived",
 ]);
 export const screeningTypeEnum = pgEnum("screening_type", [
-  "manual",
-  "auto-cutoff",
+  "application",
+  "single-stage",
   "multi-stage",
 ]);

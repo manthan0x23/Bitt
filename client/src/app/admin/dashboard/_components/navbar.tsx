@@ -10,7 +10,7 @@ export const NavBar = () => {
   const { user } = useStore(authStore);
 
   return (
-    <nav className="h-[5vh] flex justify-between items-center pr-8">
+    <nav className="h-[5%] w-full flex justify-between items-center pr-8">
       <div className="h-full w-auto flex items-center justify-start">
         <SidebarTrigger size={'lg'} className="cursor-pointer" />
       </div>

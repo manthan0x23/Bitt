@@ -28,7 +28,7 @@ export const jobs = pgTable(
     type: jobTypeEnum("type").notNull(),
     status: jobStatusEnum("status").default("draft").notNull(),
     screeningType: screeningTypeEnum("screening_type")
-      .default("manual")
+      .default("single-stage")
       .notNull(),
 
     tags: jsonb("tags").$type<string[]>().default([]),

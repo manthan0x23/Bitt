@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
+import { themeStore, type ThemeType } from '@/store/themeStore';
+import { useStore } from '@tanstack/react-store';
+import { useEffect } from 'react';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
 
 export const ThemeSwitch = () => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const { theme } = useStore(themeStore);
 
   useEffect(() => {
     const savedTheme =
@@ -12,7 +14,9 @@ export const ThemeSwitch = () => {
         .find((row) => row.startsWith('theme='))
         ?.split('=')[1] ?? 'light';
 
-    setTheme(savedTheme as 'light' | 'dark');
+    const thusTheme: ThemeType = savedTheme == 'dark' ? 'dark' : 'light';
+
+    themeStore.setState(() => ({ theme: thusTheme }));
     if (savedTheme === 'dark') {
       document.documentElement.classList.add('dark');
     } else {
@@ -24,7 +28,9 @@ export const ThemeSwitch = () => {
     const nextTheme = theme === 'dark' ? 'light' : 'dark';
 
     document.cookie = `theme=${nextTheme}; path=/; max-age=31536000`;
-    setTheme(nextTheme);
+    themeStore.setState(() => ({
+      theme: nextTheme,
+    }));
 
     if (nextTheme === 'dark') {
       document.documentElement.classList.add('dark');
