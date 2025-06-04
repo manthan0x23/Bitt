@@ -16,6 +16,10 @@ export const CreateJobFormSchema = z.object({
   status: zJobStatusEnum.default('open').optional(),
   screeningType: zScreeningTypeEnum,
   tags: z.array(z.string()).default([]),
-  endDate: z.iso.datetime('Please specify the application End Date'),
-  resumeRequired: z.boolean().default(false),
+  endDate: z.iso
+    .datetime()
+    .optional()
+    .default(Date() + 5),
+  resumeRequired: z.boolean().default(true),
+  coverLetterRequired: z.boolean().default(true),
 });

@@ -39,11 +39,18 @@ export const createJob = async (req: Request, res: Response): Promise<any> => {
           description: parsed.data.description,
           location: parsed.data.location,
           type: parsed.data.type,
-          status: parsed.data.status,
+          status:
+            parsed.data.screeningType != "application"
+              ? "draft"
+              : parsed.data.status,
           screeningType: parsed.data.screeningType,
           tags: parsed.data.tags,
           organizationId: admin.organizationId,
           endDate: parsed.data.endDate,
+          resumeRequired: parsed.data.resumeRequired,
+          coverLetterRequired: parsed.data.coverLetterRequired,
+          isCreationComplete:
+            parsed.data.screeningType == "application" ? true : false,
         })
         .returning()
     )[0];

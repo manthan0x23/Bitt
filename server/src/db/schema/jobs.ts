@@ -37,6 +37,13 @@ export const jobs = pgTable(
     tags: jsonb("tags").$type<string[]>().default([]),
 
     resumeRequired: boolean("resume_required").default(false).notNull(),
+    coverLetterRequired: boolean("cover_letter_required")
+      .default(false)
+      .notNull(),
+
+    isCreationComplete: boolean("is_creation_complete")
+      .default(false)
+      .notNull(),
 
     organizationId: varchar("organization_id", { length: 256 })
       .notNull()

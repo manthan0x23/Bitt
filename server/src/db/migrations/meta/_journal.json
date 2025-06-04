@@ -36,6 +36,20 @@
       "when": 1749023386724,
       "tag": "0004_complex_the_hand",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1749042870537,
+      "tag": "0005_amusing_sentry",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1749044869967,
+      "tag": "0006_sticky_sentry",
+      "breakpoints": true
     }
   ]
 }

@@ -20,10 +20,20 @@ import { MultiSelect } from '@/components/ui/multi-select';
 import { JobTags } from '@/integrations/data/job-tags';
 import { CreateJobFormSchema } from '../schemas';
 import { useMutation } from '@tanstack/react-query';
-import { createJobCall } from '../server-calls';
+import { createJobCall, type CreateJobResponse } from '../server-calls';
 import { toast } from 'sonner';
 import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { Switch } from '@/components/ui/switch';
+import { useRouter } from '@tanstack/react-router';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { useState } from 'react';
 
 const InitialFormState: Partial<z.infer<typeof CreateJobFormSchema>> = {
   title: '',
@@ -34,19 +44,15 @@ const InitialFormState: Partial<z.infer<typeof CreateJobFormSchema>> = {
   screeningType: 'single-stage',
   tags: [],
   endDate: '',
-  resumeRequired: false,
+  resumeRequired: true,
+  coverLetterRequired: true,
 };
 
 export const CreateJobForm = () => {
-  const { mutate } = useMutation({
-    mutationFn: createJobCall,
-    onError: (e) => {
-      toast.error(e.message, { richColors: true });
-    },
-    onSuccess: () => {
-      toast.success('Job created successfully', { richColors: true });
-    },
-  });
+  const [showDialog, setShowDialog] = useState(false);
+  const [jobId, setJobId] = useState('');
+
+  const router = useRouter();
 
   const form = useForm({
     defaultValues: InitialFormState,
@@ -64,9 +70,62 @@ export const CreateJobForm = () => {
   });
 
   const values = useStore(form.store, (state) => state.values);
+  const { mutate } = useMutation({
+    mutationFn: createJobCall,
+    onError: (e) => {
+      toast.error(e.message, { richColors: true });
+    },
+    onSuccess: ({ data }: { data: CreateJobResponse }) => {
+      setJobId(data.data.id);
+
+      if (values.screeningType === 'application') {
+        setTimeout(() => {
+          router.navigate({ to: '/admin', resetScroll: true, replace: true });
+        }, 1500);
+      } else {
+        setShowDialog(true);
+      }
+    },
+  });
+
+  console.log(form.state.errors);
 
   return (
     <div className="w-full flex items-start justify-between gap-6">
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-sm">Job Saved as Draft</DialogTitle>
+            <DialogDescription className="text-primary/70">
+              This job requires a contest to be created before it can be
+              published. You can create the contest now or do it later from the
+              admin panel.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-2 justify-end">
+            <Button
+              size={'sm'}
+              variant="outline"
+              onClick={() => {
+                setShowDialog(false);
+                router.navigate({ to: '/admin' });
+              }}
+            >
+              Make Contest Later
+            </Button>
+            <Button
+              size={'sm'}
+              onClick={() => {
+                setShowDialog(false);
+                router.navigate({ to: `/admin/jobs/${jobId}/create-contest` });
+              }}
+            >
+              Make Contest Now
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <form
         className="w-1/2 space-y-6"
         onSubmit={(e) => {
@@ -205,7 +264,6 @@ export const CreateJobForm = () => {
             )}
           </form.Field>
 
-          {/* Screening Type */}
           <form.Field name="screeningType">
             {(field) => (
               <div className="space-y-2 w-1/2">
@@ -246,19 +304,34 @@ export const CreateJobForm = () => {
           )}
         </form.Field>
 
-        <form.Field name="resumeRequired">
-          {(field) => (
-            <div className="flex justify-start items-center gap-2">
-              <Switch
-                id="resume-required"
-                checked={field.state.value}
-                onCheckedChange={(checked) => field.handleChange(checked)}
-                className="cursor-pointer"
-              />
-              <Label htmlFor="resume-required">Require Resume</Label>
-            </div>
-          )}
-        </form.Field>
+        <span className="w-full flex gap-4 items-center justify-start">
+          <form.Field name="resumeRequired">
+            {(field) => (
+              <div className="flex justify-start items-center gap-2">
+                <Switch
+                  id="resume-required"
+                  checked={field.state.value}
+                  onCheckedChange={(checked) => field.handleChange(checked)}
+                  className="cursor-pointer"
+                />
+                <Label htmlFor="resume-required">Requires Resume</Label>
+              </div>
+            )}
+          </form.Field>
+          <form.Field name="coverLetterRequired">
+            {(field) => (
+              <div className="flex justify-start items-center gap-2">
+                <Switch
+                  id="cover-letter-required"
+                  checked={field.state.value}
+                  onCheckedChange={(checked) => field.handleChange(checked)}
+                  className="cursor-pointer"
+                />
+                <Label htmlFor="resume-required">Requires Cover letter</Label>
+              </div>
+            )}
+          </form.Field>
+        </span>
 
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}

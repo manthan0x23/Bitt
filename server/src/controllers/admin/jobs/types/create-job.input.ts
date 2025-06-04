@@ -19,4 +19,5 @@ export const zCreateJobInput = z.object({
   tags: z.array(z.string()).default([]),
   endDate: z.iso.datetime().transform((d) => new Date(d)),
   resumeRequired: z.boolean().default(false),
+  coverLetterRequired: z.boolean().default(false),
 });
