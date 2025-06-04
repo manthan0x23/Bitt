@@ -6,6 +6,7 @@ import {
   jsonb,
   pgEnum,
   index,
+  boolean,
 } from "drizzle-orm/pg-core";
 import { organizations } from "./organizations";
 import { shortId } from "../../utils/integrations/short-id";
@@ -31,7 +32,11 @@ export const jobs = pgTable(
       .default("single-stage")
       .notNull(),
 
+    endDate: timestamp("end_date").notNull(),
+
     tags: jsonb("tags").$type<string[]>().default([]),
+
+    resumeRequired: boolean("resume_required").default(false).notNull(),
 
     organizationId: varchar("organization_id", { length: 256 })
       .notNull()
@@ -53,5 +58,9 @@ export const jobs = pgTable(
       table.screeningType
     ),
     createdAtIndex: index("jobs_created_at_idx").on(table.createdAt),
+
+    resumeRequiredIndex: index("jobs_resume_required_idx").on(
+      table.resumeRequired
+    ),
   })
 );

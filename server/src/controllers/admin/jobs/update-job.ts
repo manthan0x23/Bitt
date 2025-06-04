@@ -20,7 +20,7 @@ export const updateJob = async (req: Request, res: Response): Promise<any> => {
 
   const parsed = zUpdateJobInput.safeParse(req.body);
   if (parsed.error) {
-    throw new BadRequestError(JSON.stringify(parsed.error.errors.flat()));
+    throw new BadRequestError(JSON.stringify(parsed.error.message));
   }
 
   if (!req.user || req.user.type !== "admin") {

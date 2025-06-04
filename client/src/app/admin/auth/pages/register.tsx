@@ -1,31 +1,31 @@
-import { LogoHeader } from '@/components/ui/logo-header'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
-import { ArrowLeft } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
-import { Separator } from '@/components/ui/separator'
-import { Env } from '@/lib/utils'
+import { LogoHeader } from '@/components/ui/logo-header';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useState } from 'react';
+import { FcGoogle } from 'react-icons/fc';
+import { ArrowLeft } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
+import { Separator } from '@/components/ui/separator';
+import { Env } from '@/lib/utils';
 
 export const RegisterAdmin = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirm, setConfirmPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirm, setConfirmPassword] = useState('');
 
   const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     // TODO: Trigger registration API with email and password
-  }
+  };
 
   const handleGoogleRegister = () => {
-    window.location.assign(`${Env.server_url}/api/admin/auth/google`)
-  }
+    window.location.assign(`${Env.server_url}/api/admin/auth/google`);
+  };
 
   return (
     <div className="screen-full bg-primary-foreground text-primary flex justify-center items-center relative">
-      <LogoHeader size="xl" className="absolute m-10 top-0 left-0" />
+      <LogoHeader className="absolute m-10 top-0 left-0" />
 
       <div className="w-full max-w-md p-8 rounded-xl flex flex-col items-start gap-6">
         <div className=" flex flex-col items-start justify-center gap-2">
@@ -36,7 +36,9 @@ export const RegisterAdmin = () => {
             >
               <ArrowLeft />
             </Link>
-            <h3 className="text-3xl font-medium text-primary">Create work profile</h3>
+            <h3 className="text-3xl font-medium text-primary">
+              Create work profile
+            </h3>
           </span>
           <p className="text-left text-sm text-primary/60">
             Register with your work credentials to gain access to the admin
@@ -107,5 +109,5 @@ export const RegisterAdmin = () => {
         </p>
       </div>
     </div>
-  )
-}
+  );
+};

@@ -1,6 +1,6 @@
-import { JobsInteract } from '../_components/jobs-interact';
+import { JobsInteract } from './_components/jobs-interact';
 
-export const JobsPannel = () => {
+export const JobsPannelAdmin = () => {
   return (
     <div className="h-full w-full ">
       <section className="flex flex-col gap-2">

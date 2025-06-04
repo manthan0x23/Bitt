@@ -1,30 +1,30 @@
-import { LogoHeader } from '@/components/ui/logo-header'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { useState } from 'react'
-import { FcGoogle } from 'react-icons/fc'
-import { ArrowLeft } from 'lucide-react'
-import { Link } from '@tanstack/react-router'
-import { Separator } from '@/components/ui/separator'
-import { Env } from '@/lib/utils'
+import { LogoHeader } from '@/components/ui/logo-header';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useState } from 'react';
+import { FcGoogle } from 'react-icons/fc';
+import { ArrowLeft } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
+import { Separator } from '@/components/ui/separator';
+import { Env } from '@/lib/utils';
 
 export const LoginAdmin = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     // TODO: Authenticate with email and password
-  }
+  };
 
   const handleGoogleLogin = () => {
-    window.location.assign(`${Env.server_url}/api/admin/auth/google`)
-  }
+    window.location.assign(`${Env.server_url}/api/admin/auth/google`);
+  };
 
   return (
     <div className="screen-full bg-primary-foreground text-primary flex justify-center items-center relative">
-      <LogoHeader size="xl" className="absolute m-10 top-0 left-0" />
+      <LogoHeader className="absolute m-10 top-0 left-0" />
 
       <div className="w-full max-w-md p-8 rounded-xl flex flex-col items-start gap-6">
         <div className=" flex flex-col items-start justify-center gap-2">
@@ -33,7 +33,7 @@ export const LoginAdmin = () => {
               to="/auth/ladder"
               className="absolute -left-9 text-muted-foreground"
             >
-              <ArrowLeft className='text-primary' />
+              <ArrowLeft className="text-primary" />
             </Link>
             <h3 className="font-medium text-3xl">Sign in </h3>
           </span>
@@ -96,5 +96,5 @@ export const LoginAdmin = () => {
         </p>
       </div>
     </div>
-  )
-}
+  );
+};

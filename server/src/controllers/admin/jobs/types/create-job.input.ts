@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export const zJobTypeEnum = z.enum(["internship", "full-time", "part-time"]);
 export const zJobStatusEnum = z.enum(["draft", "open", "closed", "archived"]);
@@ -17,4 +17,6 @@ export const zCreateJobInput = z.object({
   status: zJobStatusEnum.default("draft"),
   screeningType: zScreeningTypeEnum,
   tags: z.array(z.string()).default([]),
+  endDate: z.iso.datetime().transform((d) => new Date(d)),
+  resumeRequired: z.boolean().default(false),
 });

@@ -24,7 +24,7 @@ export const LoginPage = () => {
 
   return (
     <div className="screen-full bg-primary-foreground text-primary flex justify-center items-center relative">
-      <LogoHeader size="xl" className="absolute m-10 top-0 left-0" />
+      <LogoHeader className="absolute m-10 top-0 left-0" />
 
       <div className="w-full max-w-md p-8 rounded-xl flex flex-col items-start gap-6">
         <div className=" flex flex-col items-start justify-center gap-2">

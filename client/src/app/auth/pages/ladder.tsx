@@ -42,7 +42,7 @@ export const Ladder = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-primary-foreground px-6 py-10 relative">
-      <LogoHeader size="xl" className="mb-4 absolute m-10 top-0 left-0" />
+      <LogoHeader className="mb-4 absolute m-10 top-0 left-0" />
 
       <div className="text-left max-w-lg mb-10 px-7">
         <h2 className="text-4xl font-medium text-primary">Welcome to Bittt.</h2>

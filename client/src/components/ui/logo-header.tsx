@@ -1,17 +1,19 @@
 import { twMerge } from 'tailwind-merge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { TbInnerShadowTopFilled } from 'react-icons/tb';
+import { ThemeSwitch } from '@/integrations/theme/theme-switch';
 
 const textSizes: Record<string, string> = {
   sm: 'text-sm',
-  md: 'text-xl',
-  lg: 'text-3xl',
-  xl: 'text-4xl',
-  '2xl': 'text-5xl',
-  '3xl': 'text-6xl',
+  md: 'text-normal',
+  lg: 'text-lg',
+  xl: 'text-xl',
+  '2xl': 'text-2xl',
+  '3xl': 'text-3xl',
 };
 
 export const LogoHeader = ({
-  size = '2xl',
+  size = 'sm',
   collapsed = false,
   className,
   img,
@@ -42,16 +44,14 @@ export const LogoHeader = ({
   }
 
   return (
-    <div className={twMerge('flex flex-col gap-1', className)}>
-      <h1
-        className={twMerge(
-          'overflow-hidden whitespace-nowrap pr-5 font-bold text-primary',
-          textSizes[size],
-          'animate-typing',
-        )}
-      >
-        Bittt.
-      </h1>
-    </div>
+    <>
+      <div className="data-[slot=sidebar-menu-button]:!p-1.5 absolute top-0 left-0 m-10">
+        <a href="/" className="text-2xl flex gap-2 items-center justify-center">
+          <TbInnerShadowTopFilled className="" />
+          <span className=" font-semibold">Bittt.</span>
+        </a>
+      </div>
+      <ThemeSwitch className="absolute top-0 right-0 m-10" />
+    </>
   );
 };

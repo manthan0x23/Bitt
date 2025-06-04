@@ -93,7 +93,7 @@ export const SideBar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="#">
+              <a href="/">
                 <TbInnerShadowTopFilled className="!size-5" />
                 <span className="text-base font-semibold">Bittt.</span>
               </a>

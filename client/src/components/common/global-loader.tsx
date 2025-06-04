@@ -11,7 +11,7 @@ export const GlobalLoadingPage = ({
   if (isLoading) {
     return (
       <div className="screen-full relative">
-        <div className="z-10 screen-full absolute cursor-not-allowed bg-white/40 flex items-center justify-center">
+        <div className="z-10 screen-full absolute cursor-not-allowed bg-secondary/70 flex items-center justify-center">
           {/* <Spinner /> */}
         </div>
         {children}

@@ -8,6 +8,7 @@ interface MarkdownEditorProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  preview?: boolean;
 }
 
 export const MarkdownEditor = ({
@@ -15,6 +16,7 @@ export const MarkdownEditor = ({
   value,
   onChange,
   placeholder = 'Write your job description here...',
+  preview = true,
 }: MarkdownEditorProps) => {
   const { theme } = useStore(themeStore);
 
@@ -29,7 +31,7 @@ export const MarkdownEditor = ({
           value={value}
           onChange={(val = '') => onChange(val)}
           height={300}
-          preview="edit"
+          preview={preview ? 'live' : 'edit'}
           textareaProps={{
             placeholder,
           }}

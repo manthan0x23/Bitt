@@ -12,8 +12,9 @@ import { zCreateJobInput } from "./types/create-job.input";
 
 export const createJob = async (req: Request, res: Response): Promise<any> => {
   const parsed = zCreateJobInput.safeParse(req.body);
+
   if (!parsed.success) {
-    throw new BadRequestError(JSON.stringify(parsed.error.errors.flat()));
+    throw new BadRequestError(JSON.stringify(parsed.error.message));
   }
 
   if (!req.user || req.user.type !== "admin") {
@@ -42,6 +43,7 @@ export const createJob = async (req: Request, res: Response): Promise<any> => {
           screeningType: parsed.data.screeningType,
           tags: parsed.data.tags,
           organizationId: admin.organizationId,
+          endDate: parsed.data.endDate,
         })
         .returning()
     )[0];
@@ -54,6 +56,9 @@ export const createJob = async (req: Request, res: Response): Promise<any> => {
     if (error instanceof AppError) {
       throw error;
     }
+
+    console.error(error);
+
     throw new InternalServerError();
   }
 };

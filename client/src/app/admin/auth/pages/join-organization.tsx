@@ -1,31 +1,31 @@
-import { useState } from 'react'
-import { LogoHeader } from '@/components/ui/logo-header'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Link } from '@tanstack/react-router'
-import { ArrowLeft } from 'lucide-react'
-import { Separator } from '@/components/ui/separator'
+import { useState } from 'react';
+import { LogoHeader } from '@/components/ui/logo-header';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Link } from '@tanstack/react-router';
+import { ArrowLeft } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSeparator,
   InputOTPSlot,
-} from '@/components/ui/input-otp'
+} from '@/components/ui/input-otp';
 
 export const JoinOrganization = () => {
-  const [inviteLink, setInviteLink] = useState('')
-  const [inviteCode, setInviteCode] = useState('')
+  const [inviteLink, setInviteLink] = useState('');
+  const [inviteCode, setInviteCode] = useState('');
 
   const handleJoin = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     // TODO: Handle organization joining logic
-    console.log({ inviteLink, inviteCode })
-  }
+    console.log({ inviteLink, inviteCode });
+  };
 
   return (
     <div className="screen-full bg-primary-foreground text-primary flex justify-center items-center relative px-4 py-10">
-      <LogoHeader size="xl" className="absolute m-10 top-0 left-0" />
+      <LogoHeader className="absolute m-10 top-0 left-0" />
 
       <div className="w-full max-w-md p-8 rounded-xl flex flex-col items-start gap-6 ">
         <div className="flex flex-col items-start gap-2">
@@ -102,5 +102,5 @@ export const JoinOrganization = () => {
         </form>
       </div>
     </div>
-  )
-}
+  );
+};

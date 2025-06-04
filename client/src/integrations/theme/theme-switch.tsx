@@ -3,8 +3,9 @@ import { themeStore, type ThemeType } from '@/store/themeStore';
 import { useStore } from '@tanstack/react-store';
 import { useEffect } from 'react';
 import { MdDarkMode, MdLightMode } from 'react-icons/md';
+import { twMerge } from 'tailwind-merge';
 
-export const ThemeSwitch = () => {
+export const ThemeSwitch = ({ className }: { className?: string }) => {
   const { theme } = useStore(themeStore);
 
   useEffect(() => {
@@ -44,7 +45,10 @@ export const ThemeSwitch = () => {
       onClick={toggleTheme}
       size={'icon'}
       variant={'ghost'}
-      className="p-2 rounded-full transition cursor-pointer"
+      className={twMerge(
+        'p-2 rounded-full transition cursor-pointer',
+        className,
+      )}
       title="Toggle theme"
     >
       {theme === 'dark' ? <MdLightMode size={26} /> : <MdDarkMode size={26} />}

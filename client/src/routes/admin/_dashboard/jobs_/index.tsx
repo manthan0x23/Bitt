@@ -1,6 +1,6 @@
-import { JobsPannel } from '@/app/admin/dashboard/pages/jobs/pages/main';
+import { JobsPannelAdmin } from '@/app/admin/dashboard/pages/jobs';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/admin/_dashboard/jobs_/')({
-  component: JobsPannel,
+  component: JobsPannelAdmin,
 });
