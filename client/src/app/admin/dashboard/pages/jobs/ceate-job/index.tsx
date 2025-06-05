@@ -11,7 +11,7 @@ const CreateJob = () => {
       <motion.div
         animate={{ width: open ? '100%' : '85%' }}
         transition={{ duration: 0.1, ease: 'backInOut' }}
-        className="h-full rounded-2xl p-6 transition-all"
+        className="h-full max-w-full rounded-2xl p-6 transition-all"
       >
         <header className="mb-6">
           <h2 className="text-2xl font-semibold">Create a New Job Listing</h2>

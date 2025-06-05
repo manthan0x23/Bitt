@@ -1,0 +1,1 @@
+ALTER TABLE "stages" ALTER COLUMN "description" SET DATA TYPE text;

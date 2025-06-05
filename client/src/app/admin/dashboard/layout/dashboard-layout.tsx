@@ -14,10 +14,10 @@ export const AdminDashBoardLayout = ({ children }: PropsWithChildren) => {
       }
     >
       <SideBar variant="inset" />
-      <SidebarInset>
+      <SidebarInset className='h-auto'>
         <section className="h-full w-full flex flex-col items-center justify-center p-2">
           <NavBar />
-          <div className="w-full h-[95%] p-4 ">{children}</div>
+          <div className="w-full min-h-[95%] p-4 ">{children}</div>
         </section>
       </SidebarInset>
     </SidebarProvider>

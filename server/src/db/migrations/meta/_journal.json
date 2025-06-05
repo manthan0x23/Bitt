@@ -50,6 +50,27 @@
       "when": 1749044869967,
       "tag": "0006_sticky_sentry",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1749126516542,
+      "tag": "0007_dark_puff_adder",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1749129029673,
+      "tag": "0008_stormy_screwball",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1749129189513,
+      "tag": "0009_thankful_marvel_zombies",
+      "breakpoints": true
     }
   ]
 }

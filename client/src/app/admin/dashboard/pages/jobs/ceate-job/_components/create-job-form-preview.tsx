@@ -5,6 +5,7 @@ import { MarkdownPreview } from '@/components/common/markdown-preview';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CreateJobFormSchema } from '../schemas';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface Props {
   state: Partial<z.infer<typeof CreateJobFormSchema>>;
@@ -14,7 +15,7 @@ export const CreateJobFormPreview = ({ state }: Props) => {
   const [visible, setVisible] = useState(true);
 
   return (
-    <div className="w-1/2 h-auto  space-y-4">
+    <div className="w-1/2 h-auto  space-y-4 text-wrap" >
       <Button
         variant="ghost"
         size="icon"

@@ -18,7 +18,7 @@ export class UnauthorizedError extends AppError {
 export class InternalServerError extends AppError {
   constructor(message?: string) {
     if (message) super(500, message);
-    super(500, "Internal Server Error");
+    else super(500, "Internal Server Error");
   }
 }
 

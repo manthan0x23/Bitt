@@ -11,10 +11,16 @@ import {
   UnauthorizedError,
 } from "../../../utils/errors";
 import { stages } from "../../../db/schema/stages";
+import z from "zod/v4";
 
-export const getJobById = async (req: Request, res: Response): Promise<any> => {
-  const { id: jobId } = req.params;
-  if (!jobId) {
+export const getStagesByJobId = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  const { jobId } = req.params;
+  const parsed = z.string().safeParse(jobId);
+
+  if (parsed.error) {
     throw new BadRequestError("Job ID is required in path parameters.");
   }
 
@@ -38,7 +44,14 @@ export const getJobById = async (req: Request, res: Response): Promise<any> => {
     }
 
     const job = (
-      await db.select().from(jobs).where(eq(jobs.id, jobId)).limit(1)
+      await db
+        .select({
+          id: jobs.id,
+          organizationId: jobs.organizationId,
+        })
+        .from(jobs)
+        .where(eq(jobs.id, jobId))
+        .limit(1)
     )[0];
 
     if (!job) {
@@ -55,14 +68,9 @@ export const getJobById = async (req: Request, res: Response): Promise<any> => {
       .where(eq(stages.jobId, jobId))
       .orderBy(asc(stages.stageIndex));
 
-    const jobWithContests = {
-      ...job,
-      stages: jobStages,
-    };
-
     return res.status(200).json({
       message: "Job fetched successfully",
-      data: jobWithContests,
+      data: jobStages,
     });
   } catch (error) {
     if (error instanceof AppError) {

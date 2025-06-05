@@ -48,14 +48,13 @@ export const updateContest = async (
       await db
         .select({
           id: contests.id,
-          jobId: contests.jobId,
-          stage: contests.stage,
+          jobId: contests.stageId,
           startAt: contests.startAt,
           endAt: contests.endAt,
           jobOrganizationId: jobs.organizationId,
         })
         .from(contests)
-        .leftJoin(jobs, eq(contests.jobId, jobs.id))
+        .leftJoin(jobs, eq(contests.stageId, jobs.id))
         .where(eq(contests.id, parsed.data.id))
         .limit(1)
     )[0];

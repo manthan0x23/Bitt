@@ -46,7 +46,7 @@ export const deleteContest = async (
           jobOrganizationId: jobs.organizationId,
         })
         .from(contests)
-        .leftJoin(jobs, eq(contests.jobId, jobs.id))
+        .leftJoin(jobs, eq(contests.stageId, jobs.id))
         .where(eq(contests.id, contestId))
         .limit(1)
     )[0];

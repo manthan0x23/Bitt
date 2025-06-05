@@ -10,7 +10,11 @@ export const CreateJobFormSchema = z.object({
   slug: z.string().min(1),
   description: z
     .string()
-    .min(10, 'Please provide a job description (min 10 characters).'),
+    .min(10, 'Description must be at least 10 characters')
+    .refine((val) => val.split(/\s+/).filter(Boolean).length <= 400, {
+      message: 'Description must be 400 words or fewer',
+    }),
+
   location: z.string().min(1, 'Please specify a job location.'),
   type: zJobTypeEnum,
   status: zJobStatusEnum.default('open').optional(),

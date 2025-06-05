@@ -34,6 +34,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 const InitialFormState: Partial<z.infer<typeof CreateJobFormSchema>> = {
   title: '',
@@ -88,14 +89,12 @@ export const CreateJobForm = () => {
     },
   });
 
-  console.log(form.state.errors);
-
   return (
-    <div className="w-full flex items-start justify-between gap-6">
+    <div className="w-full flex items-start justify-between gap-6 pb-15">
       <Dialog open={showDialog} onOpenChange={setShowDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="text-sm">Job Saved as Draft</DialogTitle>
+            <h4>Job Saved as Draft</h4>
             <DialogDescription className="text-primary/70">
               This job requires a contest to be created before it can be
               published. You can create the contest now or do it later from the
@@ -117,7 +116,7 @@ export const CreateJobForm = () => {
               size={'sm'}
               onClick={() => {
                 setShowDialog(false);
-                router.navigate({ to: `/admin/jobs/${jobId}/create-contest` });
+                router.navigate({ to: `/admin/jobs/${jobId}/edit` });
               }}
             >
               Make Contest Now
@@ -137,7 +136,14 @@ export const CreateJobForm = () => {
         <form.Field name="title">
           {(field) => (
             <div className="space-y-2">
-              <Label htmlFor="title">Job Title</Label>
+              <Label
+                className={cn(
+                  field.state.meta.errors.length > 0 && ' text-destructive',
+                )}
+                htmlFor="title"
+              >
+                Job Title
+              </Label>
               <Textarea
                 id="title"
                 minLength={2}
@@ -148,7 +154,7 @@ export const CreateJobForm = () => {
                 aria-invalid={field.state.meta.errors.length > 0}
               />
               {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {field.state.meta.errors[0]?.message}
                 </p>
               )}
@@ -159,15 +165,33 @@ export const CreateJobForm = () => {
         <form.Field name="description">
           {(field) => (
             <div className="space-y-2">
-              <Label htmlFor="description">Job Description</Label>
+              <Label
+                className={cn(
+                  field.state.meta.errors.length > 0 && ' text-destructive',
+                )}
+                htmlFor="description"
+              >
+                Job Description
+              </Label>
               <MarkdownEditor
                 preview={false}
+                aria-invalid={field.state.meta.errors.length > 0}
                 value={field.state.value || ''}
-                onChange={(v) => field.handleChange(v)}
+                onChange={(v) => {
+                  const wordCount = v
+                    .trim()
+                    .split(/\s+/)
+                    .filter(Boolean).length;
+                  if (wordCount <= 400) field.handleChange(v);
+                }}
                 placeholder="Describe the job responsibilities..."
               />
+              <p className="text-sm text-muted-foreground text-right">
+                {field.state.value?.split(/\s+/).filter(Boolean).length || 0}
+                /400 words
+              </p>
               {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {field.state.meta.errors[0]?.message}
                 </p>
               )}
@@ -178,16 +202,24 @@ export const CreateJobForm = () => {
         <form.Field name="location">
           {(field) => (
             <div className="space-y-2 ">
-              <Label htmlFor="location">Location</Label>
+              <Label
+                className={cn(
+                  field.state.meta.errors.length > 0 && ' text-destructive',
+                )}
+                htmlFor="location"
+              >
+                Location
+              </Label>
               <Input
                 id="location"
                 placeholder="e.g., Remote, Bengaluru, New York"
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
+                aria-invalid={field.state.meta.errors.length > 0}
               />
               {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {field.state.meta.errors[0]?.message}
                 </p>
               )}
@@ -197,20 +229,24 @@ export const CreateJobForm = () => {
         <form.Field name="endDate">
           {(field) => (
             <div className="space-y-2 ">
-              <Label htmlFor="endDate">Application Ends At</Label>
+              <Label
+                className={cn(
+                  field.state.meta.errors.length > 0 && ' text-destructive',
+                )}
+                htmlFor="endDate"
+              >
+                Application Ends At
+              </Label>
               <DateTimePicker
-                value={
-                  field.state.value ? new Date(field.state.value) : undefined
-                }
-                onValueChange={(date) => {
-                  field.handleChange(date?.toISOString() || '');
-                }}
+                value={field.state.value ?? undefined}
+                onChange={(date) => field.handleChange(date)}
                 placeholder="Select application deadline"
                 minDate={new Date()}
                 className="w-full"
+                aria-invalid={field.state.meta.errors.length > 0}
               />
               {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {field.state.meta.errors[0]?.message}
                 </p>
               )}
@@ -233,7 +269,7 @@ export const CreateJobForm = () => {
                 onValueChange={field.handleChange}
               />
               {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-red-500">
+                <p className="text-sm text-destructive">
                   {field.state.meta.errors[0]?.message}
                 </p>
               )}
@@ -291,7 +327,7 @@ export const CreateJobForm = () => {
         <form.Field name="slug">
           {(field) => (
             <div className="space-y-2">
-              <Label htmlFor="slug">Slug (Auto-generated)</Label>
+              <Label htmlFor="slug">Job Id (Auto-generated)</Label>
               <p className="text-xs text-inherit">
                 Enter your company's referenced Job-Id or just leave it to us.
               </p>

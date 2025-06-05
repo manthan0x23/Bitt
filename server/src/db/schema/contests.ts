@@ -28,11 +28,10 @@ export const contests = pgTable(
     title: varchar("title", { length: 256 }),
     description: text("descriptions"),
 
-    stage: integer("stage").default(1).notNull(),
-
-    jobId: varchar("job_id", { length: 256 })
+    stageId: varchar("stage_id", { length: 256 })
       .references(() => jobs.id, { onDelete: "cascade" })
-      .notNull(),
+      .notNull()
+      .unique(),
 
     startAt: timestamp("start_at").notNull(),
     endAt: timestamp("end_at").notNull(),
@@ -53,16 +52,11 @@ export const contests = pgTable(
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => ({
-    jobIndex: index("contests_job_idx").on(table.jobId),
     startAtIndex: index("contests_start_at_idx").on(table.startAt),
     endAtIndex: index("contests_end_at_idx").on(table.endAt),
     publishStateIndex: index("contests_publish_state_idx").on(
       table.publishState
     ),
     createdAtIndex: index("contests_created_at_idx").on(table.createdAt),
-    stageJobIdIndex: unique("contests_stage_job_id_idx").on(
-      table.stage,
-      table.jobId
-    ),
   })
 );
