@@ -14,4 +14,5 @@ export const zUpdateJobInput = z.object({
   status: zJobStatusEnum.optional(),
   screeningType: zScreeningTypeEnum.optional(),
   tags: z.array(z.string()).optional(),
+  experience: z.number().optional(),
 });

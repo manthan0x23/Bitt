@@ -10,11 +10,7 @@ import {
   bigint,
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
-import {
-  contestTypeEnum,
-  contestAccessEnum,
-  contestPublishStateEnum,
-} from "./enums";
+import { contestTypeEnum, contestAccessEnum, contestStateEnum } from "./enums";
 import { jobs } from "./jobs";
 
 export const contests = pgTable(
@@ -47,7 +43,7 @@ export const contests = pgTable(
       .notNull()
       .default(true),
 
-    publishState: contestPublishStateEnum("publish_state").notNull(),
+    publishState: contestStateEnum("publish_state").notNull(),
 
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },

@@ -2,11 +2,7 @@ import { z } from 'zod/v4';
 
 export const zJobTypeEnum = z.enum(['internship', 'full-time', 'part-time']);
 export const zJobStatusEnum = z.enum(['draft', 'open', 'closed', 'archived']);
-export const zScreeningTypeEnum = z.enum([
-  'application',
-  'single-stage',
-  'multi-stage',
-]);
+export const zScreeningTypeEnum = z.enum(['application', 'multi-stage']);
 
 export const zJobsSchema = z.object({
   id: z.string().min(1),
@@ -17,9 +13,9 @@ export const zJobsSchema = z.object({
 
   type: zJobTypeEnum,
   status: zJobStatusEnum.default('draft'),
-  screeningType: zScreeningTypeEnum.default('single-stage'),
+  screeningType: zScreeningTypeEnum.default('multi-stage'),
 
-  endDate: z.iso.date(),
+  endDate: z.coerce.date(),
 
   tags: z.array(z.string()).default([]),
 
@@ -28,6 +24,9 @@ export const zJobsSchema = z.object({
   isCreationComplete: z.boolean().default(false),
 
   organizationId: z.string().min(1),
+
+  experience: z.number(),
+  openings: z.number().default(1),
 
   createdAt: z.coerce.date().default(new Date()),
   updatedAt: z.coerce.date().default(new Date()),

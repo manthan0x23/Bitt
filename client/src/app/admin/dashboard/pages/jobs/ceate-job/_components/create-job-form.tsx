@@ -31,10 +31,10 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
 } from '@/components/ui/dialog';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { Slider } from '@/components/ui/slider';
 
 const InitialFormState: Partial<z.infer<typeof CreateJobFormSchema>> = {
   title: '',
@@ -42,11 +42,13 @@ const InitialFormState: Partial<z.infer<typeof CreateJobFormSchema>> = {
   description: '',
   location: '',
   type: 'full-time',
-  screeningType: 'single-stage',
+  screeningType: 'multi-stage',
+  experience: 0,
   tags: [],
   endDate: '',
   resumeRequired: true,
   coverLetterRequired: true,
+  openings: 1,
 };
 
 export const CreateJobForm = () => {
@@ -198,23 +200,26 @@ export const CreateJobForm = () => {
             </div>
           )}
         </form.Field>
-
-        <form.Field name="location">
+        <form.Field name="experience">
           {(field) => (
-            <div className="space-y-2 ">
+            <div className="space-y-4 ">
               <Label
                 className={cn(
                   field.state.meta.errors.length > 0 && ' text-destructive',
+                  'flex justify-between items-center',
                 )}
-                htmlFor="location"
+                htmlFor="experience"
               >
-                Location
+                <p>Experience Level (years)</p>
+                <p>{field.state.value ?? 0} years</p>
               </Label>
-              <Input
-                id="location"
-                placeholder="e.g., Remote, Bengaluru, New York"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
+              <Slider
+                step={1}
+                min={0}
+                max={15}
+                id="experience"
+                value={[field.state.value || 0]}
+                onValueChange={(v) => field.handleChange(v[0])}
                 onBlur={field.handleBlur}
                 aria-invalid={field.state.meta.errors.length > 0}
               />
@@ -226,6 +231,65 @@ export const CreateJobForm = () => {
             </div>
           )}
         </form.Field>
+
+        <span className="flex items-center justify-between gap-4 w-full">
+          <form.Field name="location">
+            {(field) => (
+              <div className="space-y-2 w-1/2">
+                <Label
+                  className={cn(
+                    field.state.meta.errors.length > 0 && ' text-destructive',
+                  )}
+                  htmlFor="location"
+                >
+                  Location
+                </Label>
+                <Input
+                  id="location"
+                  placeholder="e.g., Remote, Bengaluru, New York"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  onBlur={field.handleBlur}
+                  aria-invalid={field.state.meta.errors.length > 0}
+                />
+                {field.state.meta.errors.length > 0 && (
+                  <p className="text-sm text-destructive">
+                    {field.state.meta.errors[0]?.message}
+                  </p>
+                )}
+              </div>
+            )}
+          </form.Field>
+          <form.Field name="openings">
+            {(field) => (
+              <div className="space-y-2 w-1/2">
+                <Label
+                  className={cn(
+                    field.state.meta.errors.length > 0 && ' text-destructive',
+                  )}
+                  htmlFor="openings"
+                >
+                  Openings
+                </Label>
+                <Input
+                  id="openings"
+                  type="number"
+                  placeholder="1"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(Number(e.target.value))}
+                  onBlur={field.handleBlur}
+                  aria-invalid={field.state.meta.errors.length > 0}
+                />
+                {field.state.meta.errors.length > 0 && (
+                  <p className="text-sm text-destructive">
+                    {field.state.meta.errors[0]?.message}
+                  </p>
+                )}
+              </div>
+            )}
+          </form.Field>
+        </span>
+
         <form.Field name="endDate">
           {(field) => (
             <div className="space-y-2 ">
@@ -315,7 +379,6 @@ export const CreateJobForm = () => {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="application">Application</SelectItem>
-                    <SelectItem value="single-stage">Single-stage</SelectItem>
                     <SelectItem value="multi-stage">Multi-stage</SelectItem>
                   </SelectContent>
                 </Select>

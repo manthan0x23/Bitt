@@ -1,14 +1,14 @@
 import { JobsInteract } from './_components/jobs-interact';
 
-export const JobsPannelAdmin = () => {
+export const JobsPanelAdmin = () => {
   return (
-    <div className="h-full w-full ">
+    <div className="h-full w-full">
       <section className="flex flex-col gap-2">
-        <h2>Your Job Postings</h2>
+        <h2 className="text-xl font-semibold">Job Postings</h2>
         <p className="text-primary/60 w-1/2">
-          Manage all the jobs posted by your organization. Track status,
-          screening methods, and linked contests. Quickly edit, clone, or close
-          a job as needed.
+          View and manage all jobs posted by your organization. Track job status,
+          screening methods, and associated contests. Edit, duplicate, or close
+          job listings as needed.
         </p>
       </section>
       <JobsInteract />

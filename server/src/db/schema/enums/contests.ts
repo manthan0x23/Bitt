@@ -13,8 +13,9 @@ export const contestAccessEnum = pgEnum("contest_access", [
   "invite-only",
 ]);
 
-export const contestPublishStateEnum = pgEnum("contest_publish_state_enum", [
+export const contestStateEnum = pgEnum("contest_publish_state_enum", [
   "draft",
-  "published",
+  "open",
+  "closed",
   "archived",
 ]);

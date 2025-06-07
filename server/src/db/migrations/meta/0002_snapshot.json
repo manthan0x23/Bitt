@@ -1,6 +1,6 @@
 {
-  "id": "4e8b64bb-669a-4f86-ada4-58d121c01dd8",
-  "prevId": "d9af2ac3-025a-4227-afa8-4149ccd45fbd",
+  "id": "de6ae3de-d89e-4ba5-a253-61171fb2adf1",
+  "prevId": "a9581e8c-7f4d-494c-bffb-405d689550a9",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -313,15 +313,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "stage": {
-          "name": "stage",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 1
-        },
-        "job_id": {
-          "name": "job_id",
+        "stage_id": {
+          "name": "stage_id",
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": true
@@ -384,21 +377,6 @@
         }
       },
       "indexes": {
-        "contests_job_idx": {
-          "name": "contests_job_idx",
-          "columns": [
-            {
-              "expression": "job_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "contests_start_at_idx": {
           "name": "contests_start_at_idx",
           "columns": [
@@ -461,12 +439,12 @@
         }
       },
       "foreignKeys": {
-        "contests_job_id_jobs_id_fk": {
-          "name": "contests_job_id_jobs_id_fk",
+        "contests_stage_id_jobs_id_fk": {
+          "name": "contests_stage_id_jobs_id_fk",
           "tableFrom": "contests",
           "tableTo": "jobs",
           "columnsFrom": [
-            "job_id"
+            "stage_id"
           ],
           "columnsTo": [
             "id"
@@ -477,12 +455,11 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "contests_stage_job_id_idx": {
-          "name": "contests_stage_job_id_idx",
+        "contests_stage_id_unique": {
+          "name": "contests_stage_id_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "stage",
-            "job_id"
+            "stage_id"
           ]
         }
       },
@@ -740,7 +717,13 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'single-stage'"
+          "default": "'multi-stage'"
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
         },
         "tags": {
           "name": "tags",
@@ -748,6 +731,41 @@
           "primaryKey": false,
           "notNull": false,
           "default": "'[]'::jsonb"
+        },
+        "resume_required": {
+          "name": "resume_required",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "cover_letter_required": {
+          "name": "cover_letter_required",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "is_creation_complete": {
+          "name": "is_creation_complete",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "experience": {
+          "name": "experience",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "openings": {
+          "name": "openings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
         },
         "organization_id": {
           "name": "organization_id",
@@ -860,6 +878,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "jobs_resume_required_idx": {
+          "name": "jobs_resume_required_idx",
+          "columns": [
+            {
+              "expression": "resume_required",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -905,23 +938,29 @@
           "primaryKey": false,
           "notNull": true
         },
+        "problem_index": {
+          "name": "problem_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "input_description": {
           "name": "input_description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "output_description": {
           "name": "output_description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "constraints": {
           "name": "constraints",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "hint": {
           "name": "hint",
@@ -950,10 +989,10 @@
         },
         "difficulty": {
           "name": "difficulty",
-          "type": "integer",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": true,
-          "default": 1
+          "default": "'1.0'"
         },
         "time_limit_ms": {
           "name": "time_limit_ms",
@@ -977,6 +1016,12 @@
         },
         "contest_id": {
           "name": "contest_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "quiz_id": {
+          "name": "quiz_id",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -1117,7 +1162,20 @@
           "columnsTo": [
             "contests"
           ],
-          "onDelete": "cascade",
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "problems_quiz_id_quizes_id_fk": {
+          "name": "problems_quiz_id_quizes_id_fk",
+          "tableFrom": "problems",
+          "tableTo": "quizes",
+          "columnsFrom": [
+            "quiz_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
@@ -1673,6 +1731,419 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.stages": {
+      "name": "stages",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stage_index": {
+          "name": "stage_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "type": {
+          "name": "type",
+          "type": "stage_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'contest'"
+        },
+        "inflow": {
+          "name": "inflow",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 2000
+        },
+        "outflow": {
+          "name": "outflow",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 100
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "selectionCriteria": {
+          "name": "selectionCriteria",
+          "type": "stage_flow_criteria",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'automatic'"
+        },
+        "selectType": {
+          "name": "selectType",
+          "type": "stage_select_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'relax'"
+        },
+        "is_final": {
+          "name": "is_final",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "start_at": {
+          "name": "start_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_at": {
+          "name": "end_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "job_id": {
+          "name": "job_id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "stage_job_id_index": {
+          "name": "stage_job_id_index",
+          "columns": [
+            {
+              "expression": "job_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "stage_index",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "stages_job_id_jobs_id_fk": {
+          "name": "stages_job_id_jobs_id_fk",
+          "tableFrom": "stages",
+          "tableTo": "jobs",
+          "columnsFrom": [
+            "job_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "stages_id_unique": {
+          "name": "stages_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.interviews": {
+      "name": "interviews",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stage_id": {
+          "name": "stage_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_at": {
+          "name": "start_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_at": {
+          "name": "end_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "interviews_stage_id_stages_id_fk": {
+          "name": "interviews_stage_id_stages_id_fk",
+          "tableFrom": "interviews",
+          "tableTo": "stages",
+          "columnsFrom": [
+            "stage_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "interviews_id_unique": {
+          "name": "interviews_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        },
+        "interviews_stage_id_unique": {
+          "name": "interviews_stage_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "stage_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.quizes": {
+      "name": "quizes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stage_id": {
+          "name": "stage_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "duration": {
+          "name": "duration",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_at": {
+          "name": "end_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "quiz_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'live'"
+        },
+        "status": {
+          "name": "status",
+          "type": "quiz_status_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'draft'"
+        },
+        "state": {
+          "name": "state",
+          "type": "contest_access",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'public'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "quiz_type_index": {
+          "name": "quiz_type_index",
+          "columns": [
+            {
+              "expression": "type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "quiz_status_index": {
+          "name": "quiz_status_index",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "quiz_state_index": {
+          "name": "quiz_state_index",
+          "columns": [
+            {
+              "expression": "state",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "quizes_stage_id_stages_id_fk": {
+          "name": "quizes_stage_id_stages_id_fk",
+          "tableFrom": "quizes",
+          "tableTo": "stages",
+          "columnsFrom": [
+            "stage_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "quizes_id_unique": {
+          "name": "quizes_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        },
+        "quizes_stage_id_unique": {
+          "name": "quizes_stage_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "stage_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -1698,7 +2169,8 @@
       "schema": "public",
       "values": [
         "draft",
-        "published",
+        "open",
+        "closed",
         "archived"
       ]
     },
@@ -1736,7 +2208,6 @@
       "schema": "public",
       "values": [
         "application",
-        "single-stage",
         "multi-stage"
       ]
     },
@@ -1827,6 +2298,61 @@
       "values": [
         "open-for-all",
         "strict"
+      ]
+    },
+    "public.stage_select_type": {
+      "name": "stage_select_type",
+      "schema": "public",
+      "values": [
+        "strict",
+        "relax"
+      ]
+    },
+    "public.stage_flow_criteria": {
+      "name": "stage_flow_criteria",
+      "schema": "public",
+      "values": [
+        "automatic",
+        "manual"
+      ]
+    },
+    "public.stage_status_enum": {
+      "name": "stage_status_enum",
+      "schema": "public",
+      "values": [
+        "upcomming",
+        "ongoing",
+        "completed"
+      ]
+    },
+    "public.stage_type_enum": {
+      "name": "stage_type_enum",
+      "schema": "public",
+      "values": [
+        "contest",
+        "mcq_test",
+        "resume_filter",
+        "interview"
+      ]
+    },
+    "public.quiz_status_enum": {
+      "name": "quiz_status_enum",
+      "schema": "public",
+      "values": [
+        "draft",
+        "open",
+        "closed",
+        "archived"
+      ]
+    },
+    "public.quiz_type_enum": {
+      "name": "quiz_type_enum",
+      "schema": "public",
+      "values": [
+        "live",
+        "take-home",
+        "practise",
+        "upsolve"
       ]
     }
   },

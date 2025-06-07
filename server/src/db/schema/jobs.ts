@@ -7,6 +7,7 @@ import {
   pgEnum,
   index,
   boolean,
+  integer,
 } from "drizzle-orm/pg-core";
 import { organizations } from "./organizations";
 import { shortId } from "../../utils/integrations/short-id";
@@ -29,7 +30,7 @@ export const jobs = pgTable(
     type: jobTypeEnum("type").notNull(),
     status: jobStatusEnum("status").default("draft").notNull(),
     screeningType: screeningTypeEnum("screening_type")
-      .default("single-stage")
+      .default("multi-stage")
       .notNull(),
 
     endDate: timestamp("end_date").notNull(),
@@ -44,6 +45,9 @@ export const jobs = pgTable(
     isCreationComplete: boolean("is_creation_complete")
       .default(false)
       .notNull(),
+
+    experience: integer("experience").default(0).notNull(),
+    openings: integer("openings").default(1).notNull(),
 
     organizationId: varchar("organization_id", { length: 256 })
       .notNull()

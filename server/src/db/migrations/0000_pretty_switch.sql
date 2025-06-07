@@ -1,10 +1,10 @@
 CREATE TYPE "public"."account_source" AS ENUM('google', 'credentials');--> statement-breakpoint
 CREATE TYPE "public"."contest_access" AS ENUM('public', 'private', 'invite-only');--> statement-breakpoint
-CREATE TYPE "public"."contest_publish_state_enum" AS ENUM('draft', 'published', 'archived');--> statement-breakpoint
+CREATE TYPE "public"."contest_publish_state_enum" AS ENUM('draft', 'open', 'closed', 'archived');--> statement-breakpoint
 CREATE TYPE "public"."contest_type" AS ENUM('live', 'take-home', 'practise', 'upsolve');--> statement-breakpoint
 CREATE TYPE "public"."job_status" AS ENUM('draft', 'open', 'closed', 'archived');--> statement-breakpoint
 CREATE TYPE "public"."job_type" AS ENUM('internship', 'full-time', 'part-time');--> statement-breakpoint
-CREATE TYPE "public"."screening_type" AS ENUM('manual', 'auto-cutoff', 'multi-stage');--> statement-breakpoint
+CREATE TYPE "public"."screening_type" AS ENUM('application', 'multi-stage');--> statement-breakpoint
 CREATE TYPE "public"."problem_state" AS ENUM('draft', 'live');--> statement-breakpoint
 CREATE TYPE "public"."code_language_enum" AS ENUM('cpp20', 'python3', 'java', 'javascript');--> statement-breakpoint
 CREATE TYPE "public"."submission_status_enum" AS ENUM('PD', 'QU', 'RN', 'AC', 'WA', 'TLE', 'MLE', 'RE', 'CE', 'OLE', 'PE', 'IE', 'SE', 'RJ');--> statement-breakpoint
@@ -12,6 +12,12 @@ CREATE TYPE "public"."code_verdict_enum" AS ENUM('Accepted', 'Wrong Answer', 'Ti
 CREATE TYPE "public"."contest_invite_status_enum" AS ENUM('accepted', 'rejected', 'idle', 'expired');--> statement-breakpoint
 CREATE TYPE "public"."organization_invite_status_enum" AS ENUM('active', 'closed', 'expired', 'limit_reached', 'deleted');--> statement-breakpoint
 CREATE TYPE "public"."organization_invite_type_enum" AS ENUM('open-for-all', 'strict');--> statement-breakpoint
+CREATE TYPE "public"."stage_select_type" AS ENUM('strict', 'relax');--> statement-breakpoint
+CREATE TYPE "public"."stage_flow_criteria" AS ENUM('automatic', 'manual');--> statement-breakpoint
+CREATE TYPE "public"."stage_status_enum" AS ENUM('upcomming', 'ongoing', 'completed');--> statement-breakpoint
+CREATE TYPE "public"."stage_type_enum" AS ENUM('contest', 'mcq_test', 'resume_filter', 'interview');--> statement-breakpoint
+CREATE TYPE "public"."quiz_status_enum" AS ENUM('draft', 'open', 'closed', 'archived');--> statement-breakpoint
+CREATE TYPE "public"."quiz_type_enum" AS ENUM('live', 'take-home', 'practise', 'upsolve');--> statement-breakpoint
 CREATE TABLE "admins" (
 	"id" varchar PRIMARY KEY NOT NULL,
 	"name" varchar(256),
@@ -48,17 +54,16 @@ CREATE TABLE "contests" (
 	"contests" varchar(256) PRIMARY KEY NOT NULL,
 	"title" varchar(256),
 	"descriptions" text,
-	"stage" integer DEFAULT 1 NOT NULL,
-	"job_id" varchar(256) NOT NULL,
+	"stage_id" varchar(256) NOT NULL,
 	"start_at" timestamp NOT NULL,
 	"end_at" timestamp NOT NULL,
-	"duration" integer DEFAULT 90 NOT NULL,
+	"duration" bigint DEFAULT 10 NOT NULL,
 	"contest_type" "contest_type" DEFAULT 'live' NOT NULL,
 	"accessibility" "contest_access" DEFAULT 'public' NOT NULL,
 	"available_for_practise" boolean DEFAULT true NOT NULL,
 	"publish_state" "contest_publish_state_enum" NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "contests_stage_job_id_idx" UNIQUE("stage","job_id")
+	CONSTRAINT "contests_stage_id_unique" UNIQUE("stage_id")
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
@@ -101,8 +106,12 @@ CREATE TABLE "jobs" (
 	"location" varchar(128) NOT NULL,
 	"type" "job_type" NOT NULL,
 	"status" "job_status" DEFAULT 'draft' NOT NULL,
-	"screening_type" "screening_type" DEFAULT 'manual' NOT NULL,
+	"screening_type" "screening_type" DEFAULT 'multi-stage' NOT NULL,
+	"end_date" timestamp NOT NULL,
 	"tags" jsonb DEFAULT '[]'::jsonb,
+	"resume_required" boolean DEFAULT false NOT NULL,
+	"cover_letter_required" boolean DEFAULT false NOT NULL,
+	"is_creation_complete" boolean DEFAULT false NOT NULL,
 	"organization_id" varchar(256) NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
@@ -112,18 +121,20 @@ CREATE TABLE "problems" (
 	"id" varchar(256) PRIMARY KEY NOT NULL,
 	"title" varchar(256) NOT NULL,
 	"description" text NOT NULL,
-	"input_description" text NOT NULL,
-	"output_description" text NOT NULL,
-	"constraints" text NOT NULL,
+	"problem_index" integer NOT NULL,
+	"input_description" text,
+	"output_description" text,
+	"constraints" text,
 	"hint" text,
 	"sample_input" text,
 	"sample_output" text,
 	"points" integer DEFAULT 100 NOT NULL,
-	"difficulty" integer DEFAULT 1 NOT NULL,
+	"difficulty" numeric DEFAULT '1.0' NOT NULL,
 	"time_limit_ms" integer DEFAULT 1000 NOT NULL,
 	"memory_limit_mb" integer DEFAULT 256 NOT NULL,
 	"author_id" varchar,
 	"contest_id" varchar,
+	"quiz_id" varchar,
 	"tags" varchar(256),
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp
@@ -174,22 +185,59 @@ CREATE TABLE "organization_invite" (
 	CONSTRAINT "organization_invite_code_unique" UNIQUE("code")
 );
 --> statement-breakpoint
+CREATE TABLE "stages" (
+	"id" varchar(256) NOT NULL,
+	"stage_index" integer DEFAULT 1 NOT NULL,
+	"type" "stage_type_enum" DEFAULT 'contest' NOT NULL,
+	"inflow" integer DEFAULT 2000 NOT NULL,
+	"outflow" integer DEFAULT 100 NOT NULL,
+	"description" text NOT NULL,
+	"selectionCriteria" "stage_flow_criteria" DEFAULT 'automatic' NOT NULL,
+	"selectType" "stage_select_type" DEFAULT 'relax' NOT NULL,
+	"is_final" boolean DEFAULT false,
+	"start_at" timestamp with time zone NOT NULL,
+	"end_at" timestamp with time zone NOT NULL,
+	"job_id" varchar(256) NOT NULL,
+	"created_at" timestamp DEFAULT now(),
+	"updated_at" timestamp DEFAULT now(),
+	CONSTRAINT "stages_id_unique" UNIQUE("id")
+);
+--> statement-breakpoint
+CREATE TABLE "quizes" (
+	"id" varchar(256) NOT NULL,
+	"title" varchar NOT NULL,
+	"description" text NOT NULL,
+	"stage_id" varchar NOT NULL,
+	"started_at" timestamp NOT NULL,
+	"duration" time NOT NULL,
+	"end_at" timestamp NOT NULL,
+	"type" "quiz_type_enum" DEFAULT 'live',
+	"status" "quiz_status_enum" DEFAULT 'draft',
+	"state" "contest_access" DEFAULT 'public',
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "quizes_id_unique" UNIQUE("id"),
+	CONSTRAINT "quizes_stage_id_unique" UNIQUE("stage_id")
+);
+--> statement-breakpoint
 ALTER TABLE "contest_invite" ADD CONSTRAINT "contest_invite_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "contest_invite" ADD CONSTRAINT "contest_invite_contest_id_contests_contests_fk" FOREIGN KEY ("contest_id") REFERENCES "public"."contests"("contests") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "contest_registrations" ADD CONSTRAINT "contest_registrations_contest_id_contests_contests_fk" FOREIGN KEY ("contest_id") REFERENCES "public"."contests"("contests") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "contest_registrations" ADD CONSTRAINT "contest_registrations_registered_user_id_users_id_fk" FOREIGN KEY ("registered_user_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "contests" ADD CONSTRAINT "contests_job_id_jobs_id_fk" FOREIGN KEY ("job_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "contests" ADD CONSTRAINT "contests_stage_id_jobs_id_fk" FOREIGN KEY ("stage_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "jobs" ADD CONSTRAINT "jobs_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "problems" ADD CONSTRAINT "problems_author_id_admins_id_fk" FOREIGN KEY ("author_id") REFERENCES "public"."admins"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "problems" ADD CONSTRAINT "problems_contest_id_contests_contests_fk" FOREIGN KEY ("contest_id") REFERENCES "public"."contests"("contests") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "problems" ADD CONSTRAINT "problems_contest_id_contests_contests_fk" FOREIGN KEY ("contest_id") REFERENCES "public"."contests"("contests") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "problems" ADD CONSTRAINT "problems_quiz_id_quizes_id_fk" FOREIGN KEY ("quiz_id") REFERENCES "public"."quizes"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "testcases" ADD CONSTRAINT "testcases_problem_id_problems_id_fk" FOREIGN KEY ("problem_id") REFERENCES "public"."problems"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "submissions" ADD CONSTRAINT "submissions_author_id_contest_registrations_id_fk" FOREIGN KEY ("author_id") REFERENCES "public"."contest_registrations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "submissions" ADD CONSTRAINT "submissions_problem_id_problems_id_fk" FOREIGN KEY ("problem_id") REFERENCES "public"."problems"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "organization_invite" ADD CONSTRAINT "organization_invite_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "organization_invite" ADD CONSTRAINT "organization_invite_created_by_admins_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."admins"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "stages" ADD CONSTRAINT "stages_job_id_jobs_id_fk" FOREIGN KEY ("job_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "quizes" ADD CONSTRAINT "quizes_stage_id_stages_id_fk" FOREIGN KEY ("stage_id") REFERENCES "public"."stages"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 CREATE UNIQUE INDEX "contest_invite_contest_user_idx" ON "contest_invite" USING btree ("contest_id","user_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "contest_registrations_unique_contest_user_registration" ON "contest_registrations" USING btree ("contest_id","registered_user_id");--> statement-breakpoint
-CREATE INDEX "contests_job_idx" ON "contests" USING btree ("job_id");--> statement-breakpoint
 CREATE INDEX "contests_start_at_idx" ON "contests" USING btree ("start_at");--> statement-breakpoint
 CREATE INDEX "contests_end_at_idx" ON "contests" USING btree ("end_at");--> statement-breakpoint
 CREATE INDEX "contests_publish_state_idx" ON "contests" USING btree ("publish_state");--> statement-breakpoint
@@ -200,6 +248,7 @@ CREATE INDEX "jobs_status_idx" ON "jobs" USING btree ("status");--> statement-br
 CREATE INDEX "jobs_type_idx" ON "jobs" USING btree ("type");--> statement-breakpoint
 CREATE INDEX "jobs_screening_type_idx" ON "jobs" USING btree ("screening_type");--> statement-breakpoint
 CREATE INDEX "jobs_created_at_idx" ON "jobs" USING btree ("created_at");--> statement-breakpoint
+CREATE INDEX "jobs_resume_required_idx" ON "jobs" USING btree ("resume_required");--> statement-breakpoint
 CREATE INDEX "problems_title_idx" ON "problems" USING btree ("title");--> statement-breakpoint
 CREATE INDEX "problems_author_id_idx" ON "problems" USING btree ("author_id");--> statement-breakpoint
 CREATE INDEX "problems_difficulty_idx" ON "problems" USING btree ("difficulty");--> statement-breakpoint
@@ -218,4 +267,8 @@ CREATE INDEX "idx_submissions_plagiarized" ON "submissions" USING btree ("is_pla
 CREATE INDEX "organization_invite_organizationId_idx" ON "organization_invite" USING btree ("organization_id");--> statement-breakpoint
 CREATE INDEX "organization_invite_code_idx" ON "organization_invite" USING btree ("code");--> statement-breakpoint
 CREATE INDEX "organization_invite_createdBy_idx" ON "organization_invite" USING btree ("created_by");--> statement-breakpoint
-CREATE INDEX "organization_invite_status_idx" ON "organization_invite" USING btree ("status");
+CREATE INDEX "organization_invite_status_idx" ON "organization_invite" USING btree ("status");--> statement-breakpoint
+CREATE UNIQUE INDEX "stage_job_id_index" ON "stages" USING btree ("job_id","stage_index");--> statement-breakpoint
+CREATE INDEX "quiz_type_index" ON "quizes" USING btree ("type");--> statement-breakpoint
+CREATE INDEX "quiz_status_index" ON "quizes" USING btree ("status");--> statement-breakpoint
+CREATE INDEX "quiz_state_index" ON "quizes" USING btree ("state");

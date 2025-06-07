@@ -14,6 +14,5 @@ export const jobStatusEnum = pgEnum("job_status", [
 ]);
 export const screeningTypeEnum = pgEnum("screening_type", [
   "application",
-  "single-stage",
   "multi-stage",
 ]);

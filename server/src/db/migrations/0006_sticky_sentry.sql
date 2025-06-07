@@ -1,1 +1,0 @@
-ALTER TABLE "jobs" ADD COLUMN "is_creation_complete" boolean DEFAULT false NOT NULL;

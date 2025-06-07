@@ -44,6 +44,8 @@ export const getOrganizationJobs = async (
       data: organizationJobs,
     });
   } catch (error) {
+    console.log(error);
+
     if (error instanceof AppError) {
       throw error;
     }

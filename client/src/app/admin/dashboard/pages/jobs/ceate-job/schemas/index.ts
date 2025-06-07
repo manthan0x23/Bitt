@@ -20,10 +20,10 @@ export const CreateJobFormSchema = z.object({
   status: zJobStatusEnum.default('open').optional(),
   screeningType: zScreeningTypeEnum,
   tags: z.array(z.string()).default([]),
-  endDate: z.iso
-    .datetime()
-    .optional()
-    .default(Date() + 5),
   resumeRequired: z.boolean().default(true),
   coverLetterRequired: z.boolean().default(true),
+  experience: z.number(),
+
+  endDate: z.string(),
+  openings: z.number().default(1),
 });

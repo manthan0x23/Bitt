@@ -5,10 +5,12 @@ import {
   timestamp,
   integer,
   index,
+  decimal,
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
 import { admins } from "./admins";
 import { contests } from "./contests";
+import { quizes } from "./quiz";
 
 export const problems = pgTable(
   "problems",
@@ -21,9 +23,11 @@ export const problems = pgTable(
     title: varchar("title", { length: 256 }).notNull(),
     description: text("description").notNull(),
 
-    inputDescription: text("input_description").notNull(),
-    outputDescription: text("output_description").notNull(),
-    constraints: text("constraints").notNull(),
+    problemIdx: integer("problem_index").notNull(),
+
+    inputDescription: text("input_description"),
+    outputDescription: text("output_description"),
+    constraints: text("constraints"),
 
     hint: text("hint"),
 
@@ -31,7 +35,7 @@ export const problems = pgTable(
     sampleOutput: text("sample_output"),
 
     points: integer("points").notNull().default(100),
-    difficulty: integer("difficulty").notNull().default(1),
+    difficulty: decimal("difficulty").notNull().default("1.0"),
 
     timeLimitMs: integer("time_limit_ms").notNull().default(1000),
     memoryLimitMb: integer("memory_limit_mb").notNull().default(256),
@@ -39,9 +43,9 @@ export const problems = pgTable(
     authorId: varchar("author_id").references(() => admins.id, {
       onDelete: "set null",
     }),
-    contestId: varchar("contest_id").references(() => contests.id, {
-      onDelete: "cascade",
-    }),
+
+    contestId: varchar("contest_id").references(() => contests.id),
+    quizId: varchar("quiz_id").references(() => quizes.id),
 
     tags: varchar("tags", { length: 256 }),
 

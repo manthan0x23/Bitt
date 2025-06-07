@@ -6,3 +6,4 @@ export * from "./submissions";
 export * from "./contest-invite";
 export * from "./organization-invite";
 export * from "./stages";
+export * from "./quizes";

@@ -11,8 +11,9 @@ export const zContestTypeEnum = z.enum([
 export const zContestAccessEnum = z.enum(["public", "private", "invite-only"]);
 export const zContestPublishStateEnum = z.enum([
   "draft",
-  "published",
   "archived",
+  "open",
+  "closed",
 ]);
 
 export const zCreateContestInput = z
