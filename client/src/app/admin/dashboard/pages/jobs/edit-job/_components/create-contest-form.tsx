@@ -80,7 +80,7 @@ export const EditStagesForm = ({ job }: Props) => {
               {stages?.map((stage) => (
                 <div
                   key={stage.id}
-                  className="h-auto relative w-full cursor-pointer rounded-lg border border-border bg-background px-4 py-3 flex flex-col gap-1 transition-all hover:border-primary/20 hover:shadow-sm hover:scale-[1.01]"
+                  className="h-auto relative w-full cursor-pointer rounded-lg border border-border bg-background px-4 py-3 flex flex-col gap-1 transition-all hover:border-primary/20  hover:scale-[1.01] hover:bg-muted"
                 >
                   <span
                     className="absolute -left-3 top-1/2 -translate-y-1/2 text-xs bg-accent font-normal text-primary border border-border rounded-full w-5 h-5 flex items-center justify-center shadow-sm"
