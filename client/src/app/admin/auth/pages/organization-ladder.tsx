@@ -36,7 +36,7 @@ export const OrganizationLadder = () => {
   }, [selected, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-primary-foreground px-6 py-10 relative">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6 py-10 relative">
       <LogoHeader className="mb-4 absolute m-10 top-0 left-0" />
 
       <div className="text-left max-w-lg mb-10 px-7 relative">
@@ -46,10 +46,10 @@ export const OrganizationLadder = () => {
         >
           <ArrowLeft />
         </Link>
-        <h2 className="text-4xl font-medium text-primary">
+        <h2 className="text-4xl font-medium">
           Manage with Bittt.
         </h2>
-        <p className="text-primary/60 mt-2 text-sm">
+        <p className="text-muted-foreground mt-2 text-sm">
           Whether you're starting fresh or joining an existing workspace, Bittt
           makes it easy to manage and collaborate within your organization.
         </p>
@@ -81,17 +81,17 @@ export const OrganizationLadder = () => {
         </RadioGroup>
       </div>
 
-      <div className="mt-10 w-full max-w-md space-y-4 text-sm text-primary/60">
+      <div className="mt-10 w-full max-w-md space-y-4 text-sm text-muted-foreground">
         <div className="flex items-start gap-2">
-          <Lock className="w-5 h-5 text-orange-600 mt-0.5" />
+          <Lock className="w-5 h-5  mt-0.5 text-primary" />
           <p>We use AES-256 encryption to secure all organizational data.</p>
         </div>
         <div className="flex items-start gap-2">
-          <ShieldCheck className="w-5 h-5 text-orange-600 mt-0.5" />
+          <ShieldCheck className="w-5 h-5 mt-0.5 text-primary" />
           <p>Your organizational credentials are never stored in plain text.</p>
         </div>
         <div className="flex items-start gap-2">
-          <CheckCircle className="w-5 h-5 text-orange-600 mt-0.5" />
+          <CheckCircle className="w-5 h-5 mt-0.5 text-primary" />
           <p>
             Fully compliant with SOC 2, GDPR, and enterprise-grade policies.
           </p>

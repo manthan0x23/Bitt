@@ -24,7 +24,7 @@ export const RegisterAdmin = () => {
   };
 
   return (
-    <div className="screen-full bg-primary-foreground text-primary flex justify-center items-center relative">
+    <div className="screen-full flex justify-center items-center relative">
       <LogoHeader className="absolute m-10 top-0 left-0" />
 
       <div className="w-full max-w-md p-8 rounded-xl flex flex-col items-start gap-6">
@@ -32,15 +32,15 @@ export const RegisterAdmin = () => {
           <span className="flex justify-start items-center gap-3 relative">
             <Link
               to="/auth/ladder"
-              className="absolute -left-9 text-muted-foreground"
+              className="absolute -left-9"
             >
               <ArrowLeft />
             </Link>
-            <h3 className="text-3xl font-medium text-primary">
+            <h3 className="text-3xl font-medium">
               Create work profile
             </h3>
           </span>
-          <p className="text-left text-sm text-primary/60">
+          <p className="text-left text-sm text-muted-foreground">
             Register with your work credentials to gain access to the admin
             dashboard.
           </p>
@@ -98,7 +98,7 @@ export const RegisterAdmin = () => {
           Sign up with Google
         </Button>
 
-        <p className="text-sm text-primary/60 text-center mt-4">
+        <p className="text-sm text-muted-foreground text-center mt-4">
           Already have an account?{' '}
           <Link
             to="/auth/admin/login-admin"

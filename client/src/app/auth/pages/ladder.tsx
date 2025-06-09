@@ -14,12 +14,12 @@ const roles = [
   {
     id: 'organization',
     label: 'Continue as Organization',
-    icon: <BsBuildingsFill className="w-5 h-5 text-primary/60" />,
+    icon: <BsBuildingsFill className="w-5 h-5 text-muted-foreground" />,
   },
   {
     id: 'user',
     label: 'Continue as User',
-    icon: <FaUserAlt className="w-5 h-5 text-primary/60" />,
+    icon: <FaUserAlt className="w-5 h-5  text-muted-foreground" />,
   },
 ];
 
@@ -41,12 +41,12 @@ export const Ladder = () => {
   }, [selected]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-primary-foreground px-6 py-10 relative">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background px-6 py-10 relative">
       <LogoHeader className="mb-4 absolute m-10 top-0 left-0" />
 
       <div className="text-left max-w-lg mb-10 px-7">
         <h2 className="text-4xl font-medium text-primary">Welcome to Bittt.</h2>
-        <p className="text-primary/65 mt-2 text-sm">
+        <p className="text-muted-foreground mt-2 text-sm">
           Whether you're managing a company or solving coding challenges, we
           tailor the experience for your needs. Choose your identity to get
           started.
@@ -80,25 +80,23 @@ export const Ladder = () => {
         </RadioGroup>
       </div>
 
-      <div className="mt-10 w-full max-w-md space-y-4 text-sm text-gray-700">
+      <div className="mt-10 w-full max-w-md space-y-4 text-sm text-muted-foreground">
         <div className="flex items-start gap-2">
           <Lock className="w-5 h-5 text-green-500 mt-0.5" />
-          <p className="text-primary">
+          <p>
             Your credentials are encrypted using AES-256 military-grade
             encryption.
           </p>
         </div>
         <div className="flex items-start gap-2">
           <ShieldCheck className="w-5 h-5 text-green-500 mt-0.5" />
-          <p className="text-primary">
+          <p>
             Zero-knowledge architecture – we never store plain text passwords.
           </p>
         </div>
         <div className="flex items-start gap-2">
           <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-          <p className="text-primary">
-            Compliant with GDPR and international security standards.
-          </p>
+          <p>Compliant with GDPR and international security standards.</p>
         </div>
 
         <div className="w-full flex justify-end items-center">

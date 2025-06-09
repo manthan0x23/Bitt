@@ -85,12 +85,15 @@ export const EditStagesForm = ({ job }: Props) => {
                   onClick={() => {
                     router.navigate({
                       to: `/admin/jobs/${jobId}/stages/${stage.id}/${stage.type}`,
+                      search: {
+                        topic: 1,
+                      },
                     });
                   }}
                   className="h-auto relative w-full cursor-pointer rounded-lg border border-border bg-background px-4 py-3 flex flex-col gap-1 transition-all hover:border-primary/20  hover:scale-[1.01] hover:bg-muted"
                 >
                   <span
-                    className="absolute -left-3 top-1/2 -translate-y-1/2 text-xs bg-accent font-normal text-primary border border-border rounded-full w-5 h-5 flex items-center justify-center shadow-sm"
+                    className="absolute -left-3 top-1/2 -translate-y-1/2 text-xs bg-accent font-normal border border-border rounded-full w-5 h-5 flex items-center justify-center shadow-sm"
                     title={`Stage ${stage.stageIndex}`}
                   >
                     {stage.stageIndex}
@@ -142,7 +145,7 @@ export const EditStagesForm = ({ job }: Props) => {
 
         <div className="w-1/3 h-full ">
           <div className="h-[90%] w-full">
-            <Card className="w-full bg-primary-foreground">
+            <Card className="w-full bg-background">
               <CardContent className="flex flex-col gap-2 text-sm text-muted-foreground">
                 <h4 className="text-base font-semibold text-foreground">
                   {job.title}
@@ -180,6 +183,12 @@ export const EditStagesForm = ({ job }: Props) => {
           </div>
           {stages && (
             <div className="mt-5">
+              {stages.length == 0 ||
+                (stages.filter((st) => !st.isFinal).length > 0 && (
+                  <p className="mb-2 text-sm text-muted-foreground italic">
+                    Every stage needs to be ready , before launching the job.
+                  </p>
+                ))}
               <Button
                 className="w-full cursor-pointer"
                 disabled={

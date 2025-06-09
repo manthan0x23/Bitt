@@ -91,7 +91,7 @@ export const CreateOrganizationForm = ({ email }: Props) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 w-full bg-primary-foreground">
+    <form onSubmit={handleSubmit} className="space-y-6 w-full">
       <div className="flex justify-between items-center w-full gap-4">
         <div className="grid w-full gap-2">
           <Label htmlFor="org-name">Organization Name</Label>
