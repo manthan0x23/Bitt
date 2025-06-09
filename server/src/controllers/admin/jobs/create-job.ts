@@ -1,6 +1,12 @@
 import type { Request, Response } from "express";
 import { db } from "../../../db/db";
-import { admins, jobs, stages } from "../../../db/schema";
+import {
+  admins,
+  interviews,
+  jobs,
+  resumeFilters,
+  stages,
+} from "../../../db/schema";
 import { eq } from "drizzle-orm";
 import {
   AppError,
@@ -57,34 +63,72 @@ export const createJob = async (req: Request, res: Response): Promise<any> => {
     if (parsed.data.screeningType === "application") {
       const anYearLater__ = anYearLater();
       await db.transaction(async (tx) => {
-        await tx.insert(stages).values([
-          {
-            jobId: job.id,
-            startAt: new Date(),
+        const [resumeFilterStage, interviewStage] = await tx
+          .insert(stages)
+          .values([
+            {
+              jobId: job.id,
+              startAt: new Date(),
+              endAt: anYearLater__,
+              stageIndex: 1,
+              type: "resume_filter",
+              selectType: "strict",
+              isFinal: true,
+              inflow: 2000,
+              outflow: 100,
+              description: "AI based resume filteration",
+              selectionCriteria: "automatic",
+            },
+            {
+              jobId: job.id,
+              startAt: new Date(),
+              endAt: anYearLater__,
+              stageIndex: 2,
+              type: "interview",
+              selectType: "relax",
+              isFinal: true,
+              inflow: 100,
+              outflow: job.openings,
+              description: "Final candidates interview",
+              selectionCriteria: "automatic",
+            },
+          ])
+          .returning();
+
+        const [resumeFilterRecord] = await tx
+          .insert(resumeFilters)
+          .values({
+            stageId: resumeFilterStage.id,
             endAt: anYearLater__,
-            stageIndex: 1,
-            type: "resume_filter",
-            selectType: "strict",
-            isFinal: true,
-            inflow: 2000,
-            outflow: 100,
-            description: "AI based resume filteration",
-            selectionCriteria: "automatic",
-          },
-          {
-            jobId: job.id,
+          })
+          .returning();
+
+        const [interviewRecord] = await tx
+          .insert(interviews)
+          .values({
+            title: "Final candidates interview",
+            description: "",
+            stageId: interviewStage.id,
             startAt: new Date(),
-            endAt: anYearLater__,
-            stageIndex: 2,
-            type: "interview",
-            selectType: "relax",
-            isFinal: true,
-            inflow: 100,
-            outflow: job.openings,
-            description: "Final candidates interview",
-            selectionCriteria: "automatic",
-          },
-        ]);
+            endAt: new Date(),
+          })
+          .returning();
+
+        await tx
+          .update(stages)
+          .set({
+            secondTableId: resumeFilterRecord.id,
+            updatedAt: new Date(),
+          })
+          .where(eq(stages.id, resumeFilterStage.id));
+
+        await tx
+          .update(stages)
+          .set({
+            secondTableId: interviewRecord.id,
+            updatedAt: new Date(),
+          })
+          .where(eq(stages.id, interviewStage.id));
 
         await tx
           .update(jobs)

@@ -6,7 +6,7 @@ import {
   getStagesByJobId,
   type GetStagesByJobIdResponseT,
 } from '../server-calls/get-job-stages';
-import { useParams } from '@tanstack/react-router';
+import { useParams, useRouter } from '@tanstack/react-router';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AddStageDialog } from './add-stage-dialouge';
 import { useState } from 'react';
@@ -22,6 +22,7 @@ type Props = {
 };
 
 export const EditStagesForm = ({ job }: Props) => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const { jobId } = useParams({
     from: '/admin/_dashboard/jobs_/$jobId/edit',
@@ -81,6 +82,11 @@ export const EditStagesForm = ({ job }: Props) => {
               {stages?.map((stage) => (
                 <div
                   key={stage.id}
+                  onClick={() => {
+                    router.navigate({
+                      to: `/admin/jobs/${jobId}/stages/${stage.id}/${stage.type}`,
+                    });
+                  }}
                   className="h-auto relative w-full cursor-pointer rounded-lg border border-border bg-background px-4 py-3 flex flex-col gap-1 transition-all hover:border-primary/20  hover:scale-[1.01] hover:bg-muted"
                 >
                   <span
@@ -172,9 +178,19 @@ export const EditStagesForm = ({ job }: Props) => {
               </CardContent>
             </Card>
           </div>
-          <div className="mt-5">
-            <Button className="w-full cursor-pointer">Launch</Button>
-          </div>
+          {stages && (
+            <div className="mt-5">
+              <Button
+                className="w-full cursor-pointer"
+                disabled={
+                  stages.length == 0 ||
+                  stages.filter((st) => !st.isFinal).length > 0
+                }
+              >
+                Launch
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </>
