@@ -65,6 +65,8 @@ export const getJobById = async (req: Request, res: Response): Promise<any> => {
       data: jobWithContests,
     });
   } catch (error) {
+    console.log(error);
+
     if (error instanceof AppError) {
       throw error;
     }

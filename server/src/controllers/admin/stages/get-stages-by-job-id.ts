@@ -20,6 +20,8 @@ export const getStagesByJobId = async (
   const { jobId } = req.params;
   const parsed = z.string().safeParse(jobId);
 
+  console.log({ jobId: parsed });
+
   if (parsed.error) {
     throw new BadRequestError("Job ID is required in path parameters.");
   }

@@ -43,6 +43,8 @@ export const stages = pgTable(
 
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow(),
+
+    secondTableId: varchar("second_table_id"),
   },
   (table) => ({
     stageJobIdIndex: uniqueIndex("stage_job_id_index").on(

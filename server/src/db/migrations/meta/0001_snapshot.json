@@ -1,6 +1,6 @@
 {
-  "id": "a9581e8c-7f4d-494c-bffb-405d689550a9",
-  "prevId": "729e0090-d8e2-4752-a75c-f6941d0ad5b1",
+  "id": "7569ca49-86d4-4e5b-b702-b3b601a5590a",
+  "prevId": "ed346dfe-0ae2-49b0-b361-f586be9a6a22",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -335,8 +335,8 @@
           "name": "duration",
           "type": "bigint",
           "primaryKey": false,
-          "notNull": true,
-          "default": 10
+          "notNull": false,
+          "default": 0
         },
         "contest_type": {
           "name": "contest_type",
@@ -439,10 +439,10 @@
         }
       },
       "foreignKeys": {
-        "contests_stage_id_jobs_id_fk": {
-          "name": "contests_stage_id_jobs_id_fk",
+        "contests_stage_id_stages_id_fk": {
+          "name": "contests_stage_id_stages_id_fk",
           "tableFrom": "contests",
-          "tableTo": "jobs",
+          "tableTo": "stages",
           "columnsFrom": [
             "stage_id"
           ],
@@ -760,6 +760,13 @@
           "notNull": true,
           "default": 0
         },
+        "openings": {
+          "name": "openings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
         "organization_id": {
           "name": "organization_id",
           "type": "varchar(256)",
@@ -904,7 +911,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "slud_org_unique_idx": {
+          "name": "slud_org_unique_idx",
+          "nullsNotDistinct": false,
+          "columns": [
+            "organization_id",
+            "slug"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1824,6 +1840,12 @@
           "primaryKey": false,
           "notNull": false,
           "default": "now()"
+        },
+        "second_table_id": {
+          "name": "second_table_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -1878,6 +1900,122 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.interviews": {
+      "name": "interviews",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "stage_id": {
+          "name": "stage_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_at": {
+          "name": "start_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_at": {
+          "name": "end_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "interview_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'manual'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "interview_type_index": {
+          "name": "interview_type_index",
+          "columns": [
+            {
+              "expression": "type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "interviews_stage_id_stages_id_fk": {
+          "name": "interviews_stage_id_stages_id_fk",
+          "tableFrom": "interviews",
+          "tableTo": "stages",
+          "columnsFrom": [
+            "stage_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "interviews_id_unique": {
+          "name": "interviews_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        },
+        "interviews_stage_id_unique": {
+          "name": "interviews_stage_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "stage_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.quizes": {
       "name": "quizes",
       "schema": "",
@@ -1892,13 +2030,13 @@
           "name": "title",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "description": {
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "stage_id": {
           "name": "stage_id",
@@ -1910,19 +2048,22 @@
           "name": "started_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
         "duration": {
           "name": "duration",
-          "type": "time",
+          "type": "bigint",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "default": 0
         },
         "end_at": {
           "name": "end_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
         "type": {
           "name": "type",
@@ -1947,6 +2088,13 @@
           "primaryKey": false,
           "notNull": false,
           "default": "'public'"
+        },
+        "available_for_practise": {
+          "name": "available_for_practise",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "created_at": {
           "name": "created_at",
@@ -1998,7 +2146,7 @@
           "name": "quiz_state_index",
           "columns": [
             {
-              "expression": "state",
+              "expression": "status",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2036,6 +2184,89 @@
         },
         "quizes_stage_id_unique": {
           "name": "quizes_stage_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "stage_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.resume_filters": {
+      "name": "resume_filters",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stage_id": {
+          "name": "stage_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_at": {
+          "name": "end_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "resumeFilterType": {
+          "name": "resumeFilterType",
+          "type": "resume_filters_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'hybrid'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "resume_filters_stage_id_stages_id_fk": {
+          "name": "resume_filters_stage_id_stages_id_fk",
+          "tableFrom": "resume_filters",
+          "tableTo": "stages",
+          "columnsFrom": [
+            "stage_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "resume_filters_id_unique": {
+          "name": "resume_filters_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id"
+          ]
+        },
+        "resume_filters_stage_id_unique": {
+          "name": "resume_filters_stage_id_unique",
           "nullsNotDistinct": false,
           "columns": [
             "stage_id"
@@ -2231,7 +2462,7 @@
       "schema": "public",
       "values": [
         "contest",
-        "mcq_test",
+        "quiz",
         "resume_filter",
         "interview"
       ]
@@ -2254,6 +2485,23 @@
         "take-home",
         "practise",
         "upsolve"
+      ]
+    },
+    "public.interview_type_enum": {
+      "name": "interview_type_enum",
+      "schema": "public",
+      "values": [
+        "ai",
+        "manual"
+      ]
+    },
+    "public.resume_filters_type_enum": {
+      "name": "resume_filters_type_enum",
+      "schema": "public",
+      "values": [
+        "ai",
+        "manual",
+        "hybrid"
       ]
     }
   },

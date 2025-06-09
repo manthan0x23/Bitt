@@ -2,7 +2,7 @@ import { pgEnum } from "drizzle-orm/pg-core";
 
 export const stageTypeEnum = pgEnum("stage_type_enum", [
   "contest",
-  "mcq_test",
+  "quiz",
   "resume_filter",
   "interview",
 ]);

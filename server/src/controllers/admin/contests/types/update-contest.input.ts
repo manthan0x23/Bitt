@@ -19,7 +19,7 @@ export const zUpdateContestInput = z
     contestType: zContestTypeEnum.optional(),
     accessibility: zContestAccessEnum.optional(),
     availableForPractise: z.boolean().optional(),
-    publishState: zContestPublishStateEnum.optional(),
+    state: zContestPublishStateEnum.optional(),
   })
   .strict()
   .refine(

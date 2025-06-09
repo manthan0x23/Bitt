@@ -14,20 +14,21 @@ export const EditJob = () => {
   });
 
   const query = useQuery({
-    queryKey: ['admin', 'jobs', jobId, 'create-contest'],
+    queryKey: ['admin', 'jobs', 'get', jobId, 'edit'],
     queryFn: () => getJobByIdCall(jobId),
     select: ({ data }: { data: GetJobByIdResponseT }) => data,
   });
 
   if (query.isFetched && query.error) {
-    toast.error('You is not authorized to edit the Job', { richColors: true });
-
-    setTimeout(() => {
-      router.navigate({
-        to: '/admin/jobs',
-        reloadDocument: false,
-      });
-    }, 1500);
+    toast.error('You are not authorized to edit the Job', {
+      richColors: true,
+      onAutoClose() {
+        router.navigate({
+          to: '/admin/jobs',
+          reloadDocument: false,
+        });
+      },
+    });
   }
 
   return (

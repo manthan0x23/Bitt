@@ -32,7 +32,7 @@ export const zCreateContestInput = z
     contestType: zContestTypeEnum.default("live"),
     accessibility: zContestAccessEnum.default("public"),
     availableForPractise: z.boolean().default(true),
-    publishState: zContestPublishStateEnum.default("draft"),
+    state: zContestPublishStateEnum.default("draft"),
   })
   .refine((data) => new Date(data.startAt) < new Date(data.endAt), {
     message: "End date must be after start date",

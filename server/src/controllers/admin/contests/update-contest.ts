@@ -71,6 +71,10 @@ export const updateContest = async (
 
     const updateData: Partial<typeof contests.$inferInsert> = {
       ...parsed.data,
+      duration:
+        parsed.data.duration !== undefined && parsed.data.duration !== null
+          ? parsed.data.duration
+          : undefined,
       startAt: parsed.data.startAt
         ? new Date(parsed.data.startAt)
         : existingContestData.startAt,

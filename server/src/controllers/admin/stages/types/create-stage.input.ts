@@ -4,7 +4,7 @@ export const zStageTypeEnum = z.enum([
   "contest",
   "interview",
   "resume_filter",
-  "mcq_test",
+  "quiz",
 ]);
 export const zStageSelectionCriteria = z.enum(["automatic", "manual"]);
 export const zStageSelectType = z.enum(["relax", "strict"]);

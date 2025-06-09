@@ -15,6 +15,7 @@ import { FaCirclePlus } from 'react-icons/fa6';
 import { StageTypeRender } from './stage-type-render';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { BsFillPeopleFill } from 'react-icons/bs';
+import { cn } from '@/lib/utils';
 
 type Props = {
   job: JobSchemaT;
@@ -27,7 +28,7 @@ export const EditStagesForm = ({ job }: Props) => {
   });
 
   const { data: stages, isLoading: loadingStages } = useQuery({
-    queryKey: ['admins', 'jobs', jobId, 'edit'],
+    queryKey: ['admins', 'jobs', 'all', jobId, 'edit'],
     queryFn: async () => (await getStagesByJobId(jobId)).data,
     select: (data: GetStagesByJobIdResponseT) => data.data,
   });
@@ -96,9 +97,19 @@ export const EditStagesForm = ({ job }: Props) => {
                     </span>
                   </div>
 
-                  <p className="text-sm text-foreground/80 truncate w-full text-wrap">
-                    {stage.description}
-                  </p>
+                  <span className="w-full flex justify-between items-center text-sm text-foreground/80 ">
+                    <p className="truncate w-full h-full text-wrap">
+                      {stage.description}
+                    </p>
+                    <p
+                      className={cn(
+                        'text-xs h-full items-end justify-end italic font-medium',
+                        stage.isFinal ? 'text-green-500' : 'text-destructive',
+                      )}
+                    >
+                      {stage.isFinal ? 'Ready' : 'Pending'}
+                    </p>
+                  </span>
 
                   {stage.type !== 'resume_filter' &&
                     stage.startAt &&
@@ -123,25 +134,48 @@ export const EditStagesForm = ({ job }: Props) => {
           </ScrollArea>
         )}
 
-        <Card className="w-1/3 bg-primary-foreground">
-          <CardContent className="flex flex-col gap-2 text-sm text-muted-foreground">
-            <h4 className="text-base font-semibold text-foreground">
-              {job.title}
-            </h4>
-            <div>
-              <span className="font-medium text-foreground">Job ID: </span>
-              {job.id}
-            </div>
-            <div>
-              <span className="font-medium text-foreground">Location: </span>
-              {job.location}
-            </div>
-            <div>
-              <span className="font-medium text-foreground">End Date: </span>
-              {new Date(job.endDate).toLocaleDateString()}
-            </div>
-          </CardContent>
-        </Card>
+        <div className="w-1/3 h-full ">
+          <div className="h-[90%] w-full">
+            <Card className="w-full bg-primary-foreground">
+              <CardContent className="flex flex-col gap-2 text-sm text-muted-foreground">
+                <h4 className="text-base font-semibold text-foreground">
+                  {job.title}
+                </h4>
+                <div>
+                  <span className="font-medium text-foreground">Job ID: </span>
+                  {job.id}
+                </div>
+                <div>
+                  <span className="font-medium text-foreground">
+                    Location:{' '}
+                  </span>
+                  {job.location}
+                </div>
+                <div>
+                  <span className="font-medium text-foreground">
+                    Openings:{' '}
+                  </span>
+                  {job.openings}
+                </div>
+                <div>
+                  <span className="font-medium text-foreground">
+                    Experience:{' '}
+                  </span>
+                  {job.experience}+ years
+                </div>
+                <div>
+                  <span className="font-medium text-foreground">
+                    End Date:{' '}
+                  </span>
+                  {new Date(job.endDate).toLocaleDateString()}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          <div className="mt-5">
+            <Button className="w-full cursor-pointer">Launch</Button>
+          </div>
+        </div>
       </div>
     </>
   );

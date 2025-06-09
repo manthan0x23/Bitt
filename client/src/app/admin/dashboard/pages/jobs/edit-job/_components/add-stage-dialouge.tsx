@@ -93,7 +93,7 @@ export const AddStageDialog = ({
     },
     onSuccess: ({ data }: { data: CreateJobStageResponseT }) => {
       queryClient.invalidateQueries({
-        queryKey: ['admins', 'jobs', jobId, 'edit'],
+        queryKey: ['admins', 'jobs', 'all', jobId, 'edit'],
       });
 
       toast.success(data.message, { richColors: true });
@@ -124,7 +124,8 @@ export const AddStageDialog = ({
                 <div className="space-y-2">
                   <div className="w-full flex items-center justify-between">
                     <Label
-                      className={cn('w-1/2',
+                      className={cn(
+                        'w-1/2',
                         field.state.meta.errors.length > 0 &&
                           ' text-destructive',
                       )}

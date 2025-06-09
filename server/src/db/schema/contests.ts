@@ -8,10 +8,12 @@ import {
   varchar,
   unique,
   bigint,
+  time,
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
 import { contestTypeEnum, contestAccessEnum, contestStateEnum } from "./enums";
 import { jobs } from "./jobs";
+import { stages } from "./stages";
 
 export const contests = pgTable(
   "contests",
@@ -25,14 +27,14 @@ export const contests = pgTable(
     description: text("descriptions"),
 
     stageId: varchar("stage_id", { length: 256 })
-      .references(() => jobs.id, { onDelete: "cascade" })
+      .references(() => stages.id, { onDelete: "cascade" })
       .notNull()
       .unique(),
 
     startAt: timestamp("start_at").notNull(),
     endAt: timestamp("end_at").notNull(),
 
-    duration: bigint("duration", { mode: "number" }).default(10).notNull(),
+    duration: bigint("duration", { mode: "number" }).default(0),
 
     contestType: contestTypeEnum("contest_type").default("live").notNull(),
     accessibility: contestAccessEnum("accessibility")
@@ -43,16 +45,14 @@ export const contests = pgTable(
       .notNull()
       .default(true),
 
-    publishState: contestStateEnum("publish_state").notNull(),
+    state: contestStateEnum("publish_state").notNull(),
 
     createdAt: timestamp("created_at").notNull().defaultNow(),
   },
   (table) => ({
     startAtIndex: index("contests_start_at_idx").on(table.startAt),
     endAtIndex: index("contests_end_at_idx").on(table.endAt),
-    publishStateIndex: index("contests_publish_state_idx").on(
-      table.publishState
-    ),
+    publishStateIndex: index("contests_publish_state_idx").on(table.state),
     createdAtIndex: index("contests_created_at_idx").on(table.createdAt),
   })
 );

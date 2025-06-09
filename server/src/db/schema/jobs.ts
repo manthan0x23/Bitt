@@ -4,10 +4,10 @@ import {
   varchar,
   timestamp,
   jsonb,
-  pgEnum,
   index,
   boolean,
   integer,
+  unique,
 } from "drizzle-orm/pg-core";
 import { organizations } from "./organizations";
 import { shortId } from "../../utils/integrations/short-id";
@@ -63,6 +63,10 @@ export const jobs = pgTable(
   (table) => ({
     orgIdIndex: index("jobs_org_id_idx").on(table.organizationId),
     slugIndex: index("jobs_slug_idx").on(table.slug),
+    slugOrgUniqueIndex: unique("slud_org_unique_idx").on(
+      table.organizationId,
+      table.slug
+    ),
     statusIndex: index("jobs_status_idx").on(table.status),
     typeIndex: index("jobs_type_idx").on(table.type),
     screeningTypeIndex: index("jobs_screening_type_idx").on(
