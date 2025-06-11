@@ -21,7 +21,7 @@ export const StageTypeRender = ({
 
   const typeData = {
     contest: { label: 'Contest', color: 'bg-orange-500' },
-    mcq_test: { label: 'Quiz', color: 'bg-pink-500' },
+    quiz: { label: 'Quiz', color: 'bg-pink-500' },
     resume_filter: { label: 'Resume Filter', color: 'bg-green-500' },
     interview: { label: 'Interview', color: 'bg-blue-500' },
   }[type];

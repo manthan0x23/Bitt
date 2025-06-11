@@ -35,6 +35,7 @@ import {
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const InitialFormState: Partial<z.infer<typeof CreateJobFormSchema>> = {
   title: '',
@@ -126,323 +127,345 @@ export const CreateJobForm = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      <form
-        className="w-1/2 space-y-6"
-        onSubmit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          form.handleSubmit();
-        }}
-      >
-        <form.Field name="title">
-          {(field) => (
-            <div className="space-y-2">
-              <Label
-                className={cn(
-                  field.state.meta.errors.length > 0 && ' text-destructive',
-                )}
-                htmlFor="title"
-              >
-                Job Title
-              </Label>
-              <Textarea
-                id="title"
-                minLength={2}
-                placeholder="e.g., Senior Frontend Engineer"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                onBlur={field.handleBlur}
-                aria-invalid={field.state.meta.errors.length > 0}
-              />
-              {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-destructive">
-                  {field.state.meta.errors[0]?.message}
-                </p>
-              )}
-            </div>
-          )}
-        </form.Field>
-
-        <form.Field name="description">
-          {(field) => (
-            <div className="space-y-2">
-              <Label
-                className={cn(
-                  field.state.meta.errors.length > 0 && ' text-destructive',
-                )}
-                htmlFor="description"
-              >
-                Job Description
-              </Label>
-              <MarkdownEditor
-                preview={false}
-                aria-invalid={field.state.meta.errors.length > 0}
-                value={field.state.value || ''}
-                onChange={(v) => {
-                  const wordCount = v
-                    .trim()
-                    .split(/\s+/)
-                    .filter(Boolean).length;
-                  if (wordCount <= 400) field.handleChange(v);
-                }}
-                placeholder="Describe the job responsibilities..."
-              />
-              <p className="text-sm text-muted-foreground text-right">
-                {field.state.value?.split(/\s+/).filter(Boolean).length || 0}
-                /400 words
-              </p>
-              {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-destructive">
-                  {field.state.meta.errors[0]?.message}
-                </p>
-              )}
-            </div>
-          )}
-        </form.Field>
-        <form.Field name="experience">
-          {(field) => (
-            <div className="space-y-4 ">
-              <Label
-                className={cn(
-                  field.state.meta.errors.length > 0 && ' text-destructive',
-                  'flex justify-between items-center',
-                )}
-                htmlFor="experience"
-              >
-                <p>Experience Level (years)</p>
-                <p>{field.state.value ?? 0} years</p>
-              </Label>
-              <Slider
-                step={1}
-                min={0}
-                max={15}
-                id="experience"
-                value={[field.state.value || 0]}
-                onValueChange={(v) => field.handleChange(v[0])}
-                onBlur={field.handleBlur}
-                aria-invalid={field.state.meta.errors.length > 0}
-              />
-              {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-destructive">
-                  {field.state.meta.errors[0]?.message}
-                </p>
-              )}
-            </div>
-          )}
-        </form.Field>
-
-        <span className="flex items-center justify-between gap-4 w-full">
-          <form.Field name="location">
-            {(field) => (
-              <div className="space-y-2 w-1/2">
-                <Label
-                  className={cn(
-                    field.state.meta.errors.length > 0 && ' text-destructive',
+      <Tabs defaultValue="form" className="w-full">
+        <TabsList className="mt-2 mb-4">
+          <TabsTrigger value="form" className="cursor-pointer">
+            Form
+          </TabsTrigger>
+          <TabsTrigger value="preview" className="cursor-pointer">
+            Preview
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="form">
+          <form
+            className="w-full space-y-6"
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              form.handleSubmit();
+            }}
+          >
+            <form.Field name="title">
+              {(field) => (
+                <div className="space-y-2">
+                  <Label
+                    className={cn(
+                      field.state.meta.errors.length > 0 && ' text-destructive',
+                    )}
+                    htmlFor="title"
+                  >
+                    Job Title
+                  </Label>
+                  <Textarea
+                    id="title"
+                    minLength={2}
+                    placeholder="e.g., Senior Frontend Engineer"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    onBlur={field.handleBlur}
+                    aria-invalid={field.state.meta.errors.length > 0}
+                  />
+                  {field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-destructive">
+                      {field.state.meta.errors[0]?.message}
+                    </p>
                   )}
-                  htmlFor="location"
-                >
-                  Location
-                </Label>
-                <Input
-                  id="location"
-                  placeholder="e.g., Remote, Bengaluru, New York"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  onBlur={field.handleBlur}
-                  aria-invalid={field.state.meta.errors.length > 0}
-                />
-                {field.state.meta.errors.length > 0 && (
-                  <p className="text-sm text-destructive">
-                    {field.state.meta.errors[0]?.message}
+                </div>
+              )}
+            </form.Field>
+
+            <form.Field name="description">
+              {(field) => (
+                <div className="space-y-2">
+                  <Label
+                    className={cn(
+                      field.state.meta.errors.length > 0 && ' text-destructive',
+                    )}
+                    htmlFor="description"
+                  >
+                    Job Description
+                  </Label>
+                  <MarkdownEditor
+                    preview={false}
+                    aria-invalid={field.state.meta.errors.length > 0}
+                    value={field.state.value || ''}
+                    onChange={(v) => {
+                      const wordCount = v
+                        .trim()
+                        .split(/\s+/)
+                        .filter(Boolean).length;
+                      if (wordCount <= 400) field.handleChange(v);
+                    }}
+                    placeholder="Describe the job responsibilities..."
+                  />
+                  <p className="text-sm text-muted-foreground text-right">
+                    {field.state.value?.split(/\s+/).filter(Boolean).length ||
+                      0}
+                    /400 words
                   </p>
-                )}
-              </div>
-            )}
-          </form.Field>
-          <form.Field name="openings">
-            {(field) => (
-              <div className="space-y-2 w-1/2">
-                <Label
-                  className={cn(
-                    field.state.meta.errors.length > 0 && ' text-destructive',
+                  {field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-destructive">
+                      {field.state.meta.errors[0]?.message}
+                    </p>
                   )}
-                  htmlFor="openings"
-                >
-                  Openings
-                </Label>
-                <Input
-                  id="openings"
-                  type="number"
-                  placeholder="1"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(Number(e.target.value))}
-                  onBlur={field.handleBlur}
-                  aria-invalid={field.state.meta.errors.length > 0}
-                />
-                {field.state.meta.errors.length > 0 && (
-                  <p className="text-sm text-destructive">
-                    {field.state.meta.errors[0]?.message}
+                </div>
+              )}
+            </form.Field>
+            <form.Field name="experience">
+              {(field) => (
+                <div className="space-y-4 ">
+                  <Label
+                    className={cn(
+                      field.state.meta.errors.length > 0 && ' text-destructive',
+                      'flex justify-between items-center',
+                    )}
+                    htmlFor="experience"
+                  >
+                    <p>Experience Level (years)</p>
+                    <p>{field.state.value ?? 0} years</p>
+                  </Label>
+                  <Slider
+                    step={1}
+                    min={0}
+                    max={15}
+                    id="experience"
+                    value={[field.state.value || 0]}
+                    onValueChange={(v) => field.handleChange(v[0])}
+                    onBlur={field.handleBlur}
+                    aria-invalid={field.state.meta.errors.length > 0}
+                  />
+                  {field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-destructive">
+                      {field.state.meta.errors[0]?.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            </form.Field>
+
+            <span className="flex items-center justify-between gap-4 w-full">
+              <form.Field name="location">
+                {(field) => (
+                  <div className="space-y-2 w-1/2">
+                    <Label
+                      className={cn(
+                        field.state.meta.errors.length > 0 &&
+                          ' text-destructive',
+                      )}
+                      htmlFor="location"
+                    >
+                      Location
+                    </Label>
+                    <Input
+                      id="location"
+                      placeholder="e.g., Remote, Bengaluru, New York"
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      onBlur={field.handleBlur}
+                      aria-invalid={field.state.meta.errors.length > 0}
+                    />
+                    {field.state.meta.errors.length > 0 && (
+                      <p className="text-sm text-destructive">
+                        {field.state.meta.errors[0]?.message}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </form.Field>
+              <form.Field name="openings">
+                {(field) => (
+                  <div className="space-y-2 w-1/2">
+                    <Label
+                      className={cn(
+                        field.state.meta.errors.length > 0 &&
+                          ' text-destructive',
+                      )}
+                      htmlFor="openings"
+                    >
+                      Openings
+                    </Label>
+                    <Input
+                      id="openings"
+                      type="number"
+                      placeholder="1"
+                      value={field.state.value}
+                      onChange={(e) =>
+                        field.handleChange(Number(e.target.value))
+                      }
+                      onBlur={field.handleBlur}
+                      aria-invalid={field.state.meta.errors.length > 0}
+                    />
+                    {field.state.meta.errors.length > 0 && (
+                      <p className="text-sm text-destructive">
+                        {field.state.meta.errors[0]?.message}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </form.Field>
+            </span>
+
+            <form.Field name="endDate">
+              {(field) => (
+                <div className="space-y-2 ">
+                  <Label
+                    className={cn(
+                      field.state.meta.errors.length > 0 && ' text-destructive',
+                    )}
+                    htmlFor="endDate"
+                  >
+                    Application Ends At
+                  </Label>
+                  <DateTimePicker
+                    value={field.state.value ?? undefined}
+                    onChange={(date) => field.handleChange(date)}
+                    placeholder="Select application deadline"
+                    minDate={new Date()}
+                    className="w-full"
+                    aria-invalid={field.state.meta.errors.length > 0}
+                  />
+                  {field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-destructive">
+                      {field.state.meta.errors[0]?.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            </form.Field>
+
+            <form.Field name="tags">
+              {(field) => (
+                <div className="space-y-2">
+                  <Label htmlFor="tags">Tags</Label>
+                  <MultiSelect
+                    placeholder="Select tags"
+                    options={JobTags}
+                    variant={'default'}
+                    animation={2}
+                    maxCount={5}
+                    value={field.state.value}
+                    defaultValue={[]}
+                    onValueChange={field.handleChange}
+                  />
+                  {field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-destructive">
+                      {field.state.meta.errors[0]?.message}
+                    </p>
+                  )}
+                </div>
+              )}
+            </form.Field>
+
+            <span className="w-full flex gap-4">
+              <form.Field name="type">
+                {(field) => (
+                  <div className="space-y-2 w-1/2">
+                    <Label htmlFor="type">Job Type</Label>
+                    <Select
+                      value={field.state.value}
+                      onValueChange={(v) => field.handleChange(v as JobTypeT)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select a job type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="full-time">Full-time</SelectItem>
+                        <SelectItem value="part-time">Part-time</SelectItem>
+                        <SelectItem value="contract">Contract</SelectItem>
+                        <SelectItem value="internship">Internship</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </form.Field>
+
+              <form.Field name="screeningType">
+                {(field) => (
+                  <div className="space-y-2 w-1/2">
+                    <Label htmlFor="screeningType">Screening Type</Label>
+                    <Select
+                      value={field.state.value}
+                      onValueChange={(v) =>
+                        field.handleChange(v as JobScreeningTypeT)
+                      }
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Choose screening type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="application">Application</SelectItem>
+                        <SelectItem value="multi-stage">Multi-stage</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </form.Field>
+            </span>
+
+            <form.Field name="slug">
+              {(field) => (
+                <div className="space-y-2">
+                  <Label htmlFor="slug">Job Id (Auto-generated)</Label>
+                  <p className="text-xs text-inherit">
+                    Enter your company's referenced Job-Id or just leave it to
+                    us.
                   </p>
-                )}
-              </div>
-            )}
-          </form.Field>
-        </span>
-
-        <form.Field name="endDate">
-          {(field) => (
-            <div className="space-y-2 ">
-              <Label
-                className={cn(
-                  field.state.meta.errors.length > 0 && ' text-destructive',
-                )}
-                htmlFor="endDate"
-              >
-                Application Ends At
-              </Label>
-              <DateTimePicker
-                value={field.state.value ?? undefined}
-                onChange={(date) => field.handleChange(date)}
-                placeholder="Select application deadline"
-                minDate={new Date()}
-                className="w-full"
-                aria-invalid={field.state.meta.errors.length > 0}
-              />
-              {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-destructive">
-                  {field.state.meta.errors[0]?.message}
-                </p>
+                  <Input
+                    id="slug"
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                  />
+                </div>
               )}
-            </div>
-          )}
-        </form.Field>
+            </form.Field>
 
-        <form.Field name="tags">
-          {(field) => (
-            <div className="space-y-2">
-              <Label htmlFor="tags">Tags</Label>
-              <MultiSelect
-                placeholder="Select tags"
-                options={JobTags}
-                variant={'default'}
-                animation={2}
-                maxCount={5}
-                value={field.state.value}
-                defaultValue={[]}
-                onValueChange={field.handleChange}
-              />
-              {field.state.meta.errors.length > 0 && (
-                <p className="text-sm text-destructive">
-                  {field.state.meta.errors[0]?.message}
-                </p>
-              )}
-            </div>
-          )}
-        </form.Field>
+            <span className="w-full flex gap-4 items-center justify-start">
+              <form.Field name="resumeRequired">
+                {(field) => (
+                  <div className="flex justify-start items-center gap-2">
+                    <Switch
+                      id="resume-required"
+                      checked={field.state.value}
+                      onCheckedChange={(checked) => field.handleChange(checked)}
+                      className="cursor-pointer"
+                    />
+                    <Label htmlFor="resume-required">Requires Resume</Label>
+                  </div>
+                )}
+              </form.Field>
+              <form.Field name="coverLetterRequired">
+                {(field) => (
+                  <div className="flex justify-start items-center gap-2">
+                    <Switch
+                      id="cover-letter-required"
+                      checked={field.state.value}
+                      onCheckedChange={(checked) => field.handleChange(checked)}
+                      className="cursor-pointer"
+                    />
+                    <Label htmlFor="resume-required">
+                      Requires Cover letter
+                    </Label>
+                  </div>
+                )}
+              </form.Field>
+            </span>
 
-        <span className="w-full flex gap-4">
-          <form.Field name="type">
-            {(field) => (
-              <div className="space-y-2 w-1/2">
-                <Label htmlFor="type">Job Type</Label>
-                <Select
-                  value={field.state.value}
-                  onValueChange={(v) => field.handleChange(v as JobTypeT)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select a job type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="full-time">Full-time</SelectItem>
-                    <SelectItem value="part-time">Part-time</SelectItem>
-                    <SelectItem value="contract">Contract</SelectItem>
-                    <SelectItem value="internship">Internship</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-          </form.Field>
-
-          <form.Field name="screeningType">
-            {(field) => (
-              <div className="space-y-2 w-1/2">
-                <Label htmlFor="screeningType">Screening Type</Label>
-                <Select
-                  value={field.state.value}
-                  onValueChange={(v) =>
-                    field.handleChange(v as JobScreeningTypeT)
-                  }
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Choose screening type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="application">Application</SelectItem>
-                    <SelectItem value="multi-stage">Multi-stage</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            )}
-          </form.Field>
-        </span>
-
-        <form.Field name="slug">
-          {(field) => (
-            <div className="space-y-2">
-              <Label htmlFor="slug">Job Id (Auto-generated)</Label>
-              <p className="text-xs text-inherit">
-                Enter your company's referenced Job-Id or just leave it to us.
-              </p>
-              <Input
-                id="slug"
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
+            <div className='w-full flex justify-end'>
+              <form.Subscribe
+                selector={(state) => [state.canSubmit, state.isSubmitting]}
+                children={([canSubmit, isSubmitting]) => (
+                  <Button type="submit" disabled={!canSubmit || isSubmitting}>
+                    Create Job
+                  </Button>
+                )}
               />
             </div>
-          )}
-        </form.Field>
-
-        <span className="w-full flex gap-4 items-center justify-start">
-          <form.Field name="resumeRequired">
-            {(field) => (
-              <div className="flex justify-start items-center gap-2">
-                <Switch
-                  id="resume-required"
-                  checked={field.state.value}
-                  onCheckedChange={(checked) => field.handleChange(checked)}
-                  className="cursor-pointer"
-                />
-                <Label htmlFor="resume-required">Requires Resume</Label>
-              </div>
-            )}
-          </form.Field>
-          <form.Field name="coverLetterRequired">
-            {(field) => (
-              <div className="flex justify-start items-center gap-2">
-                <Switch
-                  id="cover-letter-required"
-                  checked={field.state.value}
-                  onCheckedChange={(checked) => field.handleChange(checked)}
-                  className="cursor-pointer"
-                />
-                <Label htmlFor="resume-required">Requires Cover letter</Label>
-              </div>
-            )}
-          </form.Field>
-        </span>
-
-        <form.Subscribe
-          selector={(state) => [state.canSubmit, state.isSubmitting]}
-          children={([canSubmit, isSubmitting]) => (
-            <Button type="submit" disabled={!canSubmit || isSubmitting}>
-              Create Job
-            </Button>
-          )}
-        />
-      </form>
-
-      <CreateJobFormPreview state={values} />
+          </form>
+        </TabsContent>
+        <TabsContent value="preview">
+          <CreateJobFormPreview state={values} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

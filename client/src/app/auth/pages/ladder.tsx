@@ -45,7 +45,7 @@ export const Ladder = () => {
       <LogoHeader className="mb-4 absolute m-10 top-0 left-0" />
 
       <div className="text-left max-w-lg mb-10 px-7">
-        <h2 className="text-4xl font-medium text-primary">Welcome to Bittt.</h2>
+        <h2 className="text-4xl font-medium">Welcome to Bittt.</h2>
         <p className="text-muted-foreground mt-2 text-sm">
           Whether you're managing a company or solving coding challenges, we
           tailor the experience for your needs. Choose your identity to get

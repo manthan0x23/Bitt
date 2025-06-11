@@ -7,7 +7,7 @@ const CreateJob = () => {
   const { open } = useSidebar();
 
   return (
-    <div className="h-full w-full flex items-center justify-center">
+    <div className="h-full max-w-5xl mx-auto flex items-center justify-center">
       <motion.div
         animate={{ width: open ? '100%' : '85%' }}
         transition={{ duration: 0.1, ease: 'backInOut' }}

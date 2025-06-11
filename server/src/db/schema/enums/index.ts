@@ -9,3 +9,4 @@ export * from "./stages";
 export * from "./quizes";
 export * from "./interview";
 export * from "./resume-filters";
+export * from "./quiz-problem-type";

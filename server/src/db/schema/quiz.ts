@@ -20,6 +20,7 @@ export const quizes = pgTable(
     title: varchar("title"),
 
     description: text("description"),
+    instructions: text("instructions"),
 
     stageId: varchar("stage_id")
       .notNull()
@@ -34,6 +35,16 @@ export const quizes = pgTable(
     state: quizStatusEnum("status").default("draft"),
     accessibility: quizStateEnum("state").default("public"),
 
+    requiresVideoMonitoring: boolean("requires_video_monitoring").default(
+      false
+    ),
+    requiresAudioMonitoring: boolean("required_audio_monitoring").default(
+      false
+    ),
+    requiresAIMonitoring: boolean("requires_ai_monitoring").default(false),
+    requiresScreenMonitoring: boolean("requires_screen_monitoring").default(
+      false
+    ),
     availableForPractise: boolean("available_for_practise").default(false),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),

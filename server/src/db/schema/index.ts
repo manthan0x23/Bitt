@@ -15,3 +15,4 @@ export * from "./stages";
 export * from "./interview";
 export * from "./quiz";
 export * from "./resume-filters";
+export * from "./quiz-problems";

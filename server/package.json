@@ -42,7 +42,9 @@
     "multer": "^2.0.0",
     "nanoid": "3",
     "postgres": "^3.4.7",
-    "zod": "^3.25.51"
+    "zod": "^3.25.51",
+    "@ai-sdk/deepinfra": "^0.2.15",
+    "ai": "^4.3.16"
   },
   "devDependencies": {
     "@types/busboy": "^1.5.4",
