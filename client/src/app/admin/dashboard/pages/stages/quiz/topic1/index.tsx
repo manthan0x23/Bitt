@@ -34,6 +34,11 @@ import { ArrowRight } from 'lucide-react';
 import { useSidebar } from '@/components/ui/sidebar';
 import { MarkdownEditor } from '@/components/common/markdown-editor';
 import { PiMagicWandFill } from 'react-icons/pi';
+import { TagsInput } from '@/components/ui/tag-input';
+import {
+  GenerateQuizCall,
+  type GenerateQuizCallResponseT,
+} from './server-calls/generate-with-ai-call';
 
 export const QuizTopic1 = () => {
   const router = useRouter();
@@ -62,7 +67,7 @@ export const QuizTopic1 = () => {
     if (quizQuery.error) {
       toast.error(quizQuery.data?.error, { richColors: true });
       router.navigate({
-        to: `/admin/jobs/${jobId}/stages/`,
+        to: `/admin/jobs/${jobId}/edit`,
         resetScroll: true,
         reloadDocument: true,
       });
@@ -77,6 +82,26 @@ export const QuizTopic1 = () => {
     },
   });
 
+  const generateQuizMutation = useMutation({
+    mutationFn: () => GenerateQuizCall(stageId),
+    onMutate: () => {
+      toast.loading('Generating Questions...', {
+        id: 'generate-quiz',
+        richColors: true,
+      });
+    },
+    onSuccess: ({ data }: { data: GenerateQuizCallResponseT }) => {
+      toast.success(data.message, { id: 'generate-quiz', richColors: true });
+      quizQuery.refetch();
+    },
+    onError: (err: any) => {
+      toast.error(err.message || 'Something went wrong', {
+        id: 'generate-quiz',
+        richColors: true,
+      });
+    },
+  });
+
   const form = useForm({
     defaultValues: {
       title: quizQuery.data?.data.title ?? '',
@@ -87,6 +112,7 @@ export const QuizTopic1 = () => {
       endAt: quizQuery.data?.data.endAt!.toString() ?? '',
 
       duration: Number(quizQuery.data?.data.duration ?? 30),
+      noOfQuestions: quizQuery.data?.data.noOfQuestions ?? 1,
 
       quizType: quizQuery.data?.data.quizType ?? 'take-home',
       state: quizQuery.data?.data.state ?? 'open',
@@ -100,9 +126,10 @@ export const QuizTopic1 = () => {
       requiresScreenMonitoring:
         quizQuery.data?.data.requiresScreenMonitoring ?? false,
 
+      tags: quizQuery.data?.data.tags ?? [],
+
       availableForPractise: quizQuery.data?.data.availableForPractise ?? false,
     },
-
     onSubmit: ({ value }) => {
       const parsed = UpdateQuizSchema.safeParse(value);
 
@@ -114,7 +141,10 @@ export const QuizTopic1 = () => {
   const formValues = useStore(form.store, (state) => state.values);
 
   return (
-    <div className="h-auto max-w-4xl mx-auto">
+    <div
+      className="h-auto max-w-4xl mx-auto"
+      aria-disabled={generateQuizMutation.isPending}
+    >
       <div className="space-y-2 pt-8">
         <h2>Configure Quiz Settings</h2>
         <p className="text-muted-foreground">
@@ -134,7 +164,20 @@ export const QuizTopic1 = () => {
             </TabsTrigger>
           </TabsList>
           <div className="flex items-center gap-3">
-            <Button variant="outline" className="cursor-pointer">
+            <Button
+              disabled={
+                quizQuery.data?.data.noOfQuestions ==
+                  quizQuery.data?.data.questionsCount ||
+                generateQuizMutation.isPending
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                generateQuizMutation.mutate();
+              }}
+              variant="outline"
+              className="cursor-pointer"
+            >
               <PiMagicWandFill className="mr-1 text-sm" />
               Generate Questions
             </Button>
@@ -157,7 +200,7 @@ export const QuizTopic1 = () => {
           </div>
         </div>
 
-        <TabsContent value="form">
+        <TabsContent value="form" className="pb-8">
           <form
             className="w-full space-y-6 mt-4 mb-8 "
             onSubmit={(e) => {
@@ -271,9 +314,39 @@ export const QuizTopic1 = () => {
 
             {/* Start and End Time */}
             <div className="flex gap-4">
+              <form.Field name="noOfQuestions">
+                {(field) => (
+                  <div className="space-y-2 w-1/3">
+                    <Label
+                      htmlFor="title"
+                      className={cn(
+                        field.state.meta.errors.length > 0 &&
+                          'text-destructive',
+                      )}
+                    >
+                      No. of Questions
+                    </Label>
+                    <Input
+                      aria-invalid={field.state.meta.errors.length > 0}
+                      placeholder="e.g. 15"
+                      value={field.state.value}
+                      type="number"
+                      onChange={(e) =>
+                        field.handleChange(Number(e.target.value))
+                      }
+                      onBlur={field.handleBlur}
+                    />
+                    {field.state.meta.errors.length > 0 && (
+                      <p className="text-sm text-destructive">
+                        {field.state.meta.errors[0]}
+                      </p>
+                    )}
+                  </div>
+                )}
+              </form.Field>
               <form.Field name="startAt">
                 {(field) => (
-                  <div className="space-y-2 w-1/2">
+                  <div className="space-y-2 w-1/3">
                     <Label htmlFor="startAt">Start Time</Label>
                     <DateTimePicker
                       value={field.state.value}
@@ -286,7 +359,7 @@ export const QuizTopic1 = () => {
               </form.Field>
               <form.Field name="endAt">
                 {(field) => (
-                  <div className="space-y-2 w-1/2">
+                  <div className="space-y-2 w-1/3">
                     <Label htmlFor="endAt">End Time</Label>
                     <DateTimePicker
                       value={field.state.value}
@@ -299,49 +372,63 @@ export const QuizTopic1 = () => {
               </form.Field>
             </div>
 
-            {/* Quiz Type */}
-            <form.Field name="quizType">
+            <form.Field name="tags">
               {(field) => (
-                <div className="space-y-2">
-                  <Label htmlFor="quizType">Quiz Type</Label>
-                  <Select
+                <div className="space-y-2 ">
+                  <Label htmlFor="quizType">Tags</Label>
+                  <TagsInput
                     value={field.state.value}
-                    onValueChange={(v) => field.handleChange(v as QuizTypeT)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select quiz type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="take-home">Take Home</SelectItem>
-                      <SelectItem value="live">Live</SelectItem>
-                      <SelectItem value="practise">Practise</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    onChange={(c) => field.handleChange(c)}
+                  />
                 </div>
               )}
             </form.Field>
 
-            {/* Accessibility */}
-            <form.Field name="accessibility">
-              {(field) => (
-                <div className="space-y-2">
-                  <Label htmlFor="accessibility">Access Level</Label>
-                  <Select
-                    value={field.state.value}
-                    onValueChange={(v) => field.handleChange(v as QuizStateT)}
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select access level" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="public">Public</SelectItem>
-                      <SelectItem value="private">Private</SelectItem>
-                      <SelectItem value="invite-only">Invite Only</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-            </form.Field>
+            <div className="w-full gap-4 flex items-center justify-center">
+              <form.Field name="quizType">
+                {(field) => (
+                  <div className="space-y-2 w-1/2">
+                    <Label htmlFor="quizType">Quiz Type</Label>
+                    <Select
+                      value={field.state.value}
+                      onValueChange={(v) => field.handleChange(v as QuizTypeT)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select quiz type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="take-home">Take Home</SelectItem>
+                        <SelectItem value="live">Live</SelectItem>
+                        <SelectItem value="practise">Practise</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </form.Field>
+
+              {/* Accessibility */}
+              <form.Field name="accessibility">
+                {(field) => (
+                  <div className="space-y-2 w-1/2">
+                    <Label htmlFor="accessibility">Access Level</Label>
+                    <Select
+                      value={field.state.value}
+                      onValueChange={(v) => field.handleChange(v as QuizStateT)}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select access level" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="public">Public</SelectItem>
+                        <SelectItem value="private">Private</SelectItem>
+                        <SelectItem value="invite-only">Invite Only</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </form.Field>
+            </div>
+            {/* Quiz Type */}
 
             <div className="grid grid-cols-2 gap-4">
               {(

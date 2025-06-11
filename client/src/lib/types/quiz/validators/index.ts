@@ -10,26 +10,30 @@ export const quizStatusEnum = z.enum(['draft', 'open', 'closed', 'archived']);
 export const quizStateEnum = z.enum(['public', 'private', 'invite-only']);
 
 export const quizSchema = z.object({
-  id: z.string().max(256).optional(),
-  title: z.string().max(255).optional(),
-  description: z.string().optional(),
-  instructions: z.string().optional(),
+  id: z.string().max(256),
+  title: z.string().max(255),
+  description: z.string(),
+  instructions: z.string(),
 
   stageId: z.string().max(255),
 
   startAt: z.coerce.date().optional(),
-  duration: z.number().nonnegative().optional(),
+  duration: z.number().nonnegative(),
   endAt: z.coerce.date().optional(),
 
-  quizType: quizTypeEnum.default('live'),
-  state: quizStatusEnum.default('draft'),
-  accessibility: quizStateEnum.default('public'),
+  noOfQuestions: z.number().nonnegative().min(2),
 
-  requiresVideoMonitoring: z.boolean().default(false),
-  requiresAudioMonitoring: z.boolean().default(false),
-  requiresAIMonitoring: z.boolean().default(false),
-  requiresScreenMonitoring: z.boolean().default(false),
-  availableForPractise: z.boolean().default(false),
+  quizType: quizTypeEnum,
+  state: quizStatusEnum,
+  accessibility: quizStateEnum,
+
+  requiresVideoMonitoring: z.boolean(),
+  requiresAudioMonitoring: z.boolean(),
+  requiresAIMonitoring: z.boolean(),
+  requiresScreenMonitoring: z.boolean(),
+  availableForPractise: z.boolean(),
+
+  tags: z.array(z.string()).default([]),
 
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),

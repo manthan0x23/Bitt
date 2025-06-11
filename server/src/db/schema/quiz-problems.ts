@@ -5,25 +5,42 @@ import {
   timestamp,
   json,
   integer,
+  index,
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
 import { quizProblemTypeEnum, quizProblemDifficultyEnum } from "./enums";
-export const quizProblems = pgTable("quiz_problems", {
-  id: varchar("id", { length: 256 }).$defaultFn(shortId),
+import { quizes } from "./quiz";
 
-  type: quizProblemTypeEnum("type").default("multiple_choice").notNull(),
+export const quizProblems = pgTable(
+  "quiz_problems",
+  {
+    id: varchar("id", { length: 256 })
+      .$defaultFn(shortId)
+      .primaryKey()
+      .unique()
+      .notNull(),
 
-  question: text("question").notNull(),
+    type: quizProblemTypeEnum("type").default("multiple_choice").notNull(),
 
-  choices: json("choices").$type<string[]>().default([]),
+    question: text("question").notNull(),
 
-  answer: json("answer").$type<string | string[]>().notNull(),
+    quizId: varchar("quizId", { length: 256 })
+      .references(() => quizes.id)
+      .notNull(),
 
-  explanation: text("explanation"),
-  points: integer("points").default(4),
+    choices: json("choices").$type<string[]>().default([]),
 
-  difficulty: quizProblemDifficultyEnum("difficulty").default("medium"),
+    answer: json("answer").$type<number | number[]>().notNull(),
 
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
+    explanation: text("explanation"),
+    points: integer("points").default(4),
+
+    difficulty: quizProblemDifficultyEnum("difficulty").default("medium"),
+
+    createdAt: timestamp("created_at").defaultNow(),
+    updatedAt: timestamp("updated_at").defaultNow(),
+  },
+  (table) => ({
+    quizIdProblemidx: index("quiz_id_problem_idx").on(table.quizId),
+  })
+);

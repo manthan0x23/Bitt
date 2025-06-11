@@ -10,6 +10,6 @@ export const GetQuizCall = (stageId: string) => {
 
 export type GetQuizCallResponseT = {
   message: string;
-  data: QuizSchemaT;
+  data: QuizSchemaT & { questionsCount: number };
   error?: string;
 };

@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { db } from "../../../../db/db";
-import { quizes, admins, stages } from "../../../../db/schema";
+import { quizes, admins, stages, quizProblems } from "../../../../db/schema";
 import { eq } from "drizzle-orm";
 import {
   AppError,
@@ -43,9 +43,14 @@ export const getQuiz = async (req: Request, res: Response): Promise<any> => {
       .from(quizes)
       .where(eq(quizes.id, stage.secondTableId));
 
+    const problems = await db
+      .select()
+      .from(quizProblems)
+      .where(eq(quizProblems.quizId, quiz.id));
+
     return res.status(200).json({
       message: "Quiz data retrieved successfully",
-      data: quiz,
+      data: { ...quiz, questionsCount: problems.length },
     });
   } catch (error) {
     console.error(error);

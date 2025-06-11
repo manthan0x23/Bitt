@@ -33,6 +33,14 @@ export const QuizPreview = ({ data }: Props) => {
             <p className="text-muted-foreground">Accessibility</p>
             <p className="capitalize">{data.accessibility}</p>
           </div>
+          <div className='space-y-2'>
+            <p className="text-muted-foreground">Tags</p>
+            <div className="capitalize flex items-center flex-wrap gap-2">
+              {data.tags.map((tag) => (
+                <Badge variant={"secondary"} className="capitalize">{tag}</Badge>
+              ))}
+            </div>
+          </div>
         </div>
 
         <div>
@@ -48,7 +56,7 @@ export const QuizPreview = ({ data }: Props) => {
             ]
               .filter(Boolean)
               .map((item, idx) => (
-                <Badge  variant={'secondary'} key={idx}>
+                <Badge variant={'outline'} key={idx}>
                   {item}
                 </Badge>
               ))}

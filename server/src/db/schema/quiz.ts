@@ -2,6 +2,8 @@ import {
   bigint,
   boolean,
   index,
+  integer,
+  json,
   pgTable,
   text,
   time,
@@ -15,7 +17,11 @@ import { quizStateEnum, quizStatusEnum, quizTypeEnum } from "./enums";
 export const quizes = pgTable(
   "quizes",
   {
-    id: varchar("id", { length: 256 }).notNull().unique().$defaultFn(shortId),
+    id: varchar("id", { length: 256 })
+      .notNull()
+      .unique()
+      .$defaultFn(shortId)
+      .primaryKey(),
 
     title: varchar("title"),
 
@@ -26,6 +32,9 @@ export const quizes = pgTable(
       .notNull()
       .references(() => stages.id, { onDelete: "no action" })
       .unique(),
+
+    noOfQuestions: integer("no_of_questions").default(10).notNull(),
+    tags: json("tags").$type<string | string[]>().notNull().default([]),
 
     startAt: timestamp("started_at").notNull().defaultNow(),
     duration: bigint("duration", { mode: "number" }).default(0),

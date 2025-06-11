@@ -21,6 +21,9 @@ export const UpdateQuizSchema = z.object({
   state: quizStatusEnum.default('open'),
   accessibility: quizStateEnum.default('public'),
 
+  noOfQuestions: z.number().nonnegative().min(2),
+  tags: z.array(z.string()).default([]),
+
   requiresVideoMonitoring: z.boolean().default(false),
   requiresAudioMonitoring: z.boolean().default(false),
   requiresAIMonitoring: z.boolean().default(false),
