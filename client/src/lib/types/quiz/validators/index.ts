@@ -38,3 +38,26 @@ export const quizSchema = z.object({
   createdAt: z.coerce.date().optional(),
   updatedAt: z.coerce.date().optional(),
 });
+
+export const quizProblemTypeEnum = z.enum([
+  'multiple_choice',
+  'multiple_select',
+  'text',
+]);
+export const quizProblemDifficultyEnum = z.enum(['easy', 'medium', 'hard']);
+
+export const quizProblemSchema = z.object({
+  id: z.string().min(1),
+  type: quizProblemTypeEnum,
+  question: z.string().nullable(),
+  questionIndex: z.number().int().nonnegative().min(1),
+  quizId: z.string().min(1),
+  choices: z.array(z.string()).nullable(),
+  answer: z.union([z.number(), z.array(z.number())]).nullable(),
+  textAnswer: z.string().nullable(),
+  explanation: z.string(),
+  points: z.number().int(),
+  difficulty: quizProblemDifficultyEnum,
+  createdAt: z.string().datetime().optional(),
+  updatedAt: z.string().datetime().optional(),
+});

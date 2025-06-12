@@ -88,6 +88,7 @@ export const EditStagesForm = ({ job }: Props) => {
                       search: {
                         topic: 1,
                       },
+                      reloadDocument: true,
                     });
                   }}
                   className="h-auto relative w-full cursor-pointer rounded-lg border border-border bg-background px-4 py-3 flex flex-col gap-1 transition-all hover:border-primary/20  hover:scale-[1.01] hover:bg-muted"

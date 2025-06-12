@@ -50,6 +50,34 @@
       "when": 1749659598005,
       "tag": "0006_dapper_goliath",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1749712372633,
+      "tag": "0007_absurd_madelyne_pryor",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1749712599087,
+      "tag": "0008_ambiguous_vector",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1749730227480,
+      "tag": "0009_ancient_mesmero",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1749732758171,
+      "tag": "0010_fat_leader",
+      "breakpoints": true
     }
   ]
 }

@@ -182,15 +182,17 @@ export const QuizTopic1 = () => {
               Generate Questions
             </Button>
             <Button
-              onClick={() =>
+              disabled={generateQuizMutation.isPending}
+              onClick={() => {
                 router.navigate({
                   to: `/admin/jobs/${jobId}/stages/${stageId}/quiz`,
                   search: {
                     topic: 2,
                     question: 1,
                   },
-                })
-              }
+                });
+                router.invalidate();
+              }}
               variant="outline"
               className="cursor-pointer"
             >
@@ -202,6 +204,7 @@ export const QuizTopic1 = () => {
 
         <TabsContent value="form" className="pb-8">
           <form
+            aria-disabled={generateQuizMutation.isPending}
             className="w-full space-y-6 mt-4 mb-8 "
             onSubmit={(e) => {
               e.preventDefault();
@@ -461,7 +464,11 @@ export const QuizTopic1 = () => {
                 children={([canSubmit, isSubmitting]) => (
                   <Button
                     type="submit"
-                    disabled={!canSubmit || isSubmitting}
+                    disabled={
+                      !canSubmit ||
+                      isSubmitting ||
+                      generateQuizMutation.isPending
+                    }
                     className="cursor-pointer"
                   >
                     Update Quiz
@@ -472,7 +479,7 @@ export const QuizTopic1 = () => {
           </form>
         </TabsContent>
 
-        <TabsContent value="preview">
+        <TabsContent value="preview" className="pb-8">
           <QuizPreview data={formValues} />
         </TabsContent>
       </Tabs>

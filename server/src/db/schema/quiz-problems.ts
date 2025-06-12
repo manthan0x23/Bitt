@@ -6,6 +6,7 @@ import {
   json,
   integer,
   index,
+  unique,
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
 import { quizProblemTypeEnum, quizProblemDifficultyEnum } from "./enums";
@@ -22,7 +23,9 @@ export const quizProblems = pgTable(
 
     type: quizProblemTypeEnum("type").default("multiple_choice").notNull(),
 
-    question: text("question").notNull(),
+    question: text("question"),
+
+    questionIndex: integer("question_index").notNull().default(1),
 
     quizId: varchar("quizId", { length: 256 })
       .references(() => quizes.id)
@@ -30,7 +33,8 @@ export const quizProblems = pgTable(
 
     choices: json("choices").$type<string[]>().default([]),
 
-    answer: json("answer").$type<number | number[]>().notNull(),
+    answer: json("answer").$type<number | number[]>(),
+    textAnswer: text("text_answer"),
 
     explanation: text("explanation"),
     points: integer("points").default(4),
@@ -42,5 +46,9 @@ export const quizProblems = pgTable(
   },
   (table) => ({
     quizIdProblemidx: index("quiz_id_problem_idx").on(table.quizId),
+    quizQuestionIndex: unique("quiz_id_question_index_idx").on(
+      table.quizId,
+      table.questionIndex
+    ),
   })
 );

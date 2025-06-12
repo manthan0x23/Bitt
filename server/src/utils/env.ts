@@ -20,6 +20,7 @@ const envSchema = z.object({
     .url("AWS_CLOUD_FRONT_DISTRIBUTION_URL is required"),
   AWS_S3_BUCKET_NAME: z.string().min(1, "AWS_S3_BUCKET_NAME is required"),
   DEEP_INFRA_API_KEY: z.string().min(1, "DEEP_INFRA_API_KEY is required"),
+  OPEN_ROUTER_API_KEY: z.string().min(1, "OPEN_ROUTER_API_KEY is required"),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

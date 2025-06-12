@@ -33,11 +33,13 @@ export const QuizPreview = ({ data }: Props) => {
             <p className="text-muted-foreground">Accessibility</p>
             <p className="capitalize">{data.accessibility}</p>
           </div>
-          <div className='space-y-2'>
+          <div className="space-y-2">
             <p className="text-muted-foreground">Tags</p>
             <div className="capitalize flex items-center flex-wrap gap-2">
               {data.tags.map((tag) => (
-                <Badge variant={"secondary"} className="capitalize">{tag}</Badge>
+                <Badge variant={'secondary'} className="capitalize">
+                  {tag}
+                </Badge>
               ))}
             </div>
           </div>

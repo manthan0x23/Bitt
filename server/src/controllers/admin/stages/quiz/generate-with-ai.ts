@@ -89,7 +89,7 @@ export const generateQuizWithAi = async (
     const requiredQuestions = quiz.noOfQuestions - existingCount;
 
     const previousQuestionsSet = new Set(
-      existingQuestions.map((q) => q.question.trim().toLowerCase())
+      existingQuestions.map((q) => q.question?.trim().toLowerCase())
     );
 
     const prompt = `
