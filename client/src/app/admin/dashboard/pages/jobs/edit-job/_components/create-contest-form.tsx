@@ -109,7 +109,9 @@ export const EditStagesForm = ({ job }: Props) => {
 
                   <span className="w-full flex justify-between items-center text-sm text-foreground/80 ">
                     <p className="truncate w-full h-full text-wrap">
-                      {stage.description}
+                      {stage.description.length > 200
+                        ? stage.description.slice(0, 200).concat(' .....')
+                        : stage.description}
                     </p>
                     <p
                       className={cn(

@@ -1,8 +1,4 @@
-import type {
-  ContestAccessT,
-  ContestSchemaT,
-  ContestTypeT,
-} from '@/lib/types/contests';
+import type { ContestAccessT, ContestTypeT } from '@/lib/types/contests';
 import { useForm, useStore } from '@tanstack/react-form';
 import { useParams, useRouter } from '@tanstack/react-router';
 import {
@@ -34,10 +30,11 @@ import {
 } from './server-calls/update-contest-call';
 import { toast } from 'sonner';
 import { ContestPreview } from './_components/contest-preview';
-import { TbArrowBackUpDouble, TbArrowLeft } from 'react-icons/tb';
+import { TbArrowLeft } from 'react-icons/tb';
+import type { GetContestCallResponseT } from '../server-calls/get-contest-call';
 
 type Props = {
-  contest: ContestSchemaT;
+  contest: GetContestCallResponseT['data'];
 };
 
 export const ContestTopic1 = ({ contest }: Props) => {
@@ -121,7 +118,7 @@ export const ContestTopic1 = ({ contest }: Props) => {
           form.handleSubmit();
           return;
         }}
-        className="w-full"
+        className="w-full mb-[7rem]"
       >
         <Tabs defaultValue="form" className="w-full">
           <div className="w-full flex items-center justify-between">
@@ -162,7 +159,7 @@ export const ContestTopic1 = ({ contest }: Props) => {
             />
           </div>
           <TabsContent value="form" className="w-full">
-            <section className=" space-y-6 mb-[5rem] mt-4">
+            <section className=" space-y-6 mt-4">
               <form.Field name="title">
                 {(field) => (
                   <div className="space-y-2">

@@ -7,13 +7,14 @@ import {
 } from './server-calls/get-quiz-problems';
 import { useSidebar } from '@/components/ui/sidebar';
 import { useEffect } from 'react';
-import {
-  GetQuizCall,
-  type GetQuizCallResponseT,
-} from '../topic1/server-calls/get-quiz-call';
 import { QuestionPage } from './_components/question-page';
+import type { QuizSchemaT } from '@/lib/types/quiz';
 
-export const QuizTopic2 = () => {
+type Props = {
+  quiz: QuizSchemaT;
+};
+
+export const QuizTopic2 = ({ quiz }: Props) => {
   const { setOpen } = useSidebar();
   const { stageId } = useParams({
     from: '/admin/_dashboard/jobs_/$jobId/stages_/$stageId/quiz/',
@@ -24,17 +25,12 @@ export const QuizTopic2 = () => {
     queryFn: () => GetQuizProblemsCall(stageId),
     select: ({ data }: { data: GetQuizProblemsCallResponseT }) => data.data,
   });
-  const quizQuery = useQuery({
-    queryKey: ['admin', 'stages', 'quiz', 'get', stageId],
-    queryFn: () => GetQuizCall(stageId),
-    select: ({ data }: { data: GetQuizCallResponseT }) => data.data,
-  });
 
   useEffect(() => {
     setOpen(false);
   }, []);
 
-  if (quizProblemsQuery.error || quizQuery.error) {
+  if (quizProblemsQuery.error || !quiz.id) {
     window.location.reload();
   }
 
@@ -44,8 +40,8 @@ export const QuizTopic2 = () => {
         <QuestionPage />
       </div>
       <div className="h-full w-[20%] p-2">
-        {quizProblemsQuery.data && quizQuery.data && (
-          <SidePannel problems={quizProblemsQuery.data} quiz={quizQuery.data} />
+        {quizProblemsQuery.data && quiz && (
+          <SidePannel problems={quizProblemsQuery.data} quiz={quiz} />
         )}
       </div>
     </div>

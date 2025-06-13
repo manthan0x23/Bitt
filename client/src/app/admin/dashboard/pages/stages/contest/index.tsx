@@ -60,11 +60,12 @@ export const ContestPannelAdmin = () => {
 
   return (
     <>
-      {contestQuery.data && search.topic === 1 ? (
-        <ContestTopic1 contest={contestQuery.data.data} />
-      ) : (
-        <ContestTopic2 />
-      )}
+      {contestQuery.data &&
+        (search.topic === 1 ? (
+          <ContestTopic1 contest={contestQuery.data.data} />
+        ) : (
+          <ContestTopic2 contest={contestQuery.data.data} />
+        ))}
     </>
   );
 };

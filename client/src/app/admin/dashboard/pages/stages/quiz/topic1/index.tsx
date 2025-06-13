@@ -1,12 +1,8 @@
 // QuizTopic1PageAdmin.tsx
-import { useMutation, useQuery } from '@tanstack/react-query';
-import {
-  GetQuizCall,
-  type GetQuizCallResponseT,
-} from './server-calls/get-quiz-call';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useParams, useRouter } from '@tanstack/react-router';
 import { toast } from 'sonner';
-import { useRef, useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useForm, useStore } from '@tanstack/react-form';
 import {
   UpdateQuizSchema,
@@ -41,45 +37,38 @@ import {
 } from './server-calls/generate-with-ai-call';
 import type { z } from 'zod/v4';
 import { TbArrowLeft } from 'react-icons/tb';
+import type { GetQuizCallResponseT } from './server-calls/get-quiz-call';
 
-export const QuizTopic1 = () => {
+type Props = {
+  quiz: GetQuizCallResponseT['data'];
+};
+
+export const QuizTopic1 = ({ quiz }: Props) => {
   const router = useRouter();
+
+  const queries = useQueryClient();
 
   const { setOpen } = useSidebar();
   const { stageId, jobId } = useParams({
     from: '/admin/_dashboard/jobs_/$jobId/stages_/$stageId/quiz/',
-  });
-  const hasShownToast = useRef(false);
-  const quizQuery = useQuery({
-    queryKey: ['admin', 'stages', 'quiz', 'get', stageId],
-    queryFn: () => GetQuizCall(stageId),
-    select: ({ data }: { data: GetQuizCallResponseT }) => data,
   });
 
   useEffect(() => {
     setOpen(false);
   }, []);
 
-  useEffect(() => {
-    if (quizQuery.isSuccess && !hasShownToast.current) {
-      toast.success(quizQuery.data.message, { richColors: true });
-      hasShownToast.current = true;
-    }
-
-    if (quizQuery.error) {
-      toast.error(quizQuery.data?.error, { richColors: true });
-      router.navigate({
-        to: `/admin/jobs/${jobId}/edit`,
-        resetScroll: true,
-        reloadDocument: true,
-      });
-    }
-  }, [quizQuery.isSuccess, quizQuery.data]);
+  const invalidateGetQuizQuery = useCallback(() => {
+    queries.invalidateQueries({
+      queryKey: ['admin', 'stages', 'quiz', 'get', stageId],
+    });
+  }, [stageId]);
 
   const updateQuizMutation = useMutation({
     mutationFn: (v: UpdateQuizSchemaT) => UpdateQuizCall(v),
     onSuccess: () => {
-      quizQuery.refetch();
+      queries.invalidateQueries({
+        queryKey: ['admin', 'stages', 'quiz', 'get', stageId],
+      });
       toast.success('Quiz updated successfully', { richColors: true });
     },
   });
@@ -94,46 +83,24 @@ export const QuizTopic1 = () => {
     },
     onSuccess: ({ data }: { data: GenerateQuizCallResponseT }) => {
       toast.success(data.message, { id: 'generate-quiz', richColors: true });
-      quizQuery.refetch();
+      invalidateGetQuizQuery();
     },
     onError: (err: any) => {
       toast.error(err.message || 'Something went wrong', {
         id: 'generate-quiz',
         richColors: true,
       });
+      invalidateGetQuizQuery();
     },
   });
 
   const form = useForm({
     defaultValues: {
-      title: quizQuery.data?.data.title ?? '',
-      description: quizQuery.data?.data.description ?? '',
-      instructions: quizQuery.data?.data.instructions ?? '',
-
-      duration: Number(quizQuery.data?.data.duration ?? 30),
-      noOfQuestions: quizQuery.data?.data.noOfQuestions ?? 1,
-
-      quizType: quizQuery.data?.data.quizType ?? 'take-home',
-      state: quizQuery.data?.data.state ?? 'open',
-      accessibility: quizQuery.data?.data.accessibility ?? 'public',
-
-      requiresVideoMonitoring:
-        quizQuery.data?.data.requiresVideoMonitoring ?? false,
-      requiresAudioMonitoring:
-        quizQuery.data?.data.requiresAudioMonitoring ?? false,
-      requiresAIMonitoring: quizQuery.data?.data.requiresAIMonitoring ?? false,
-      requiresScreenMonitoring:
-        quizQuery.data?.data.requiresScreenMonitoring ?? false,
-
-      tags: quizQuery.data?.data.tags ?? [],
-
-      availableForPractise: quizQuery.data?.data.availableForPractise ?? false,
-
+      ...quiz,
       stageId: stageId,
-      startAt: new Date(quizQuery.data?.data.startAt ?? '').toISOString(),
-      endAt: new Date(quizQuery.data?.data.endAt ?? '').toISOString(),
+      startAt: new Date(quiz.startAt ?? '').toISOString(),
+      endAt: new Date(quiz.endAt ?? '').toISOString(),
     } as z.infer<typeof UpdateQuizSchema>,
-
     validators: {
       onBlur: UpdateQuizSchema,
     },
@@ -186,8 +153,7 @@ export const QuizTopic1 = () => {
           <div className="flex items-center gap-3">
             <Button
               disabled={
-                quizQuery.data?.data.noOfQuestions ==
-                  quizQuery.data?.data.questionsCount ||
+                quiz.noOfQuestions == quiz.questionsCount ||
                 generateQuizMutation.isPending
               }
               onClick={(e) => {
@@ -289,7 +255,6 @@ export const QuizTopic1 = () => {
               )}
             </form.Field>
 
-            {/* Instructions */}
             <form.Field name="instructions">
               {(field) => (
                 <div className="space-y-2">
@@ -349,7 +314,6 @@ export const QuizTopic1 = () => {
               )}
             </form.Field>
 
-            {/* Start and End Time */}
             <div className="flex gap-4">
               <form.Field name="noOfQuestions">
                 {(field) => (
