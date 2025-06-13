@@ -1,1 +1,0 @@
-ALTER TABLE "quizes" ADD COLUMN "tags" json DEFAULT '[]'::json NOT NULL;

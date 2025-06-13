@@ -78,7 +78,17 @@ export const SidePannel = ({ problems, quiz }: Props) => {
   return (
     <ScrollArea className="h-full w-full">
       <div className="flex flex-col justify-between gap-6">
-        <Card>
+        <Card
+          className="hover:bg-accent cursor-pointer"
+          onClick={() => {
+            router.navigate({
+              to: `/admin/jobs/${jobId}/stages/${stageId}/quiz`,
+              search: { topic: 1 },
+              resetScroll: true,
+            });
+            router.invalidate();
+          }}
+        >
           <CardHeader>
             <CardTitle>{quiz.title}</CardTitle>
             <CardDescription>Quiz Settings Overview</CardDescription>
@@ -92,9 +102,9 @@ export const SidePannel = ({ problems, quiz }: Props) => {
               <strong className="text-muted-foreground">Question Limit:</strong>{' '}
               {quiz.noOfQuestions}
             </div>
-            <div>
+            <div className="capitalize">
               <strong className="text-muted-foreground">Type:</strong>{' '}
-              {quiz.quizType}
+              {quiz.quizType.replace('-', ' ')}
             </div>
           </CardContent>
         </Card>
@@ -120,7 +130,7 @@ export const SidePannel = ({ problems, quiz }: Props) => {
                         'cursor-pointer flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium shadow-sm transition-all duration-150',
                         'hover:ring-2 hover:ring-primary hover:bg-muted/70',
                         isActive
-                          ? 'bg-primary text-white'
+                          ? 'bg-primary text-secondary'
                           : 'bg-muted text-foreground',
                       )}
                       onClick={() => handleNavigate(problem.questionIndex)}

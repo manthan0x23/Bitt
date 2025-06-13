@@ -39,6 +39,7 @@ import {
   GenerateQuizCall,
   type GenerateQuizCallResponseT,
 } from './server-calls/generate-with-ai-call';
+import type { z } from 'zod/v4';
 
 export const QuizTopic1 = () => {
   const router = useRouter();
@@ -129,6 +130,9 @@ export const QuizTopic1 = () => {
       tags: quizQuery.data?.data.tags ?? [],
 
       availableForPractise: quizQuery.data?.data.availableForPractise ?? false,
+    } as z.infer<typeof UpdateQuizSchema>,
+    validators: {
+      onBlur: UpdateQuizSchema,
     },
     onSubmit: ({ value }) => {
       const parsed = UpdateQuizSchema.safeParse(value);
@@ -235,7 +239,7 @@ export const QuizTopic1 = () => {
                   />
                   {field.state.meta.errors.length > 0 && (
                     <p className="text-sm text-destructive">
-                      {field.state.meta.errors[0]}
+                      {field.state.meta.errors[0]?.message}
                     </p>
                   )}
                 </div>
@@ -246,7 +250,14 @@ export const QuizTopic1 = () => {
             <form.Field name="description">
               {(field) => (
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label
+                    className={cn(
+                      field.state.meta.errors.length > 0 && 'text-destructive',
+                    )}
+                    htmlFor="description"
+                  >
+                    Description
+                  </Label>
                   <MarkdownEditor
                     placeholder="Short description of the quiz..."
                     value={field.state.value}
@@ -255,7 +266,7 @@ export const QuizTopic1 = () => {
                   />
                   {field.state.meta.errors.length > 0 && (
                     <p className="text-sm text-destructive">
-                      {field.state.meta.errors[0]}
+                      {field.state.meta.errors[0]?.message}
                     </p>
                   )}
                 </div>
@@ -266,7 +277,14 @@ export const QuizTopic1 = () => {
             <form.Field name="instructions">
               {(field) => (
                 <div className="space-y-2">
-                  <Label htmlFor="instructions">Instructions</Label>
+                  <Label
+                    className={cn(
+                      field.state.meta.errors.length > 0 && 'text-destructive',
+                    )}
+                    htmlFor="instructions"
+                  >
+                    Instructions
+                  </Label>
                   <MarkdownEditor
                     placeholder="What should participants know before starting?"
                     value={field.state.value}
@@ -275,7 +293,7 @@ export const QuizTopic1 = () => {
                   />
                   {field.state.meta.errors.length > 0 && (
                     <p className="text-sm text-destructive">
-                      {field.state.meta.errors[0]}
+                      {field.state.meta.errors[0]?.message}
                     </p>
                   )}
                 </div>
@@ -308,7 +326,7 @@ export const QuizTopic1 = () => {
                   />
                   {field.state.meta.errors.length > 0 && (
                     <p className="text-sm text-destructive">
-                      {field.state.meta.errors[0]}
+                      {field.state.meta.errors[0]?.message}
                     </p>
                   )}
                 </div>
@@ -341,7 +359,7 @@ export const QuizTopic1 = () => {
                     />
                     {field.state.meta.errors.length > 0 && (
                       <p className="text-sm text-destructive">
-                        {field.state.meta.errors[0]}
+                        {field.state.meta.errors[0]?.message}
                       </p>
                     )}
                   </div>

@@ -17,18 +17,17 @@ export const UpdateQuizSchema = z.object({
   endAt: z.string(),
   duration: z.number().nonnegative(),
 
-  quizType: quizTypeEnum.default('live'),
-  state: quizStatusEnum.default('open'),
-  accessibility: quizStateEnum.default('public'),
+  quizType: quizTypeEnum,
+  state: quizStatusEnum,
+  accessibility: quizStateEnum,
 
   noOfQuestions: z.number().nonnegative().min(2),
-  tags: z.array(z.string()).default([]),
+  tags: z.array(z.string()),
 
-  requiresVideoMonitoring: z.boolean().default(false),
-  requiresAudioMonitoring: z.boolean().default(false),
-  requiresAIMonitoring: z.boolean().default(false),
-  requiresScreenMonitoring: z.boolean().default(false),
-
+  requiresVideoMonitoring: z.boolean(),
+  requiresAudioMonitoring: z.boolean(),
+  requiresAIMonitoring: z.boolean(),
+  requiresScreenMonitoring: z.boolean(),
   availableForPractise: z.boolean(),
 });
 

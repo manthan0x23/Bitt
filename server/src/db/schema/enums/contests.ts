@@ -2,9 +2,8 @@ import { pgEnum } from "drizzle-orm/pg-core";
 
 export const contestTypeEnum = pgEnum("contest_type", [
   "live",
-  "take-home",
+  "assignment",
   "practise",
-  "upsolve",
 ]);
 
 export const contestAccessEnum = pgEnum("contest_access", [

@@ -1,1 +1,0 @@
-ALTER TABLE "quiz_problems" ADD COLUMN "question_index" integer DEFAULT 1 NOT NULL;

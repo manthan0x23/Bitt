@@ -1,1 +1,0 @@
-ALTER TABLE "quiz_problems" ALTER COLUMN "question" DROP NOT NULL;

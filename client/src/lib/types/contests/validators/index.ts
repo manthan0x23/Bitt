@@ -1,32 +1,44 @@
 import { z } from 'zod/v4';
 
-export const zContestTypeEnum = z.enum(['live', 'practice']); // extend if more
-export const zContestAccessEnum = z.enum(['public', 'private']);
+export const zContestTypeEnum = z.enum(['live', 'assignment', 'practise']);
+
+export const zContestAccessEnum = z.enum(['public', 'private', 'invite-only']);
+
 export const zContestPublishStateEnum = z.enum([
   'draft',
-  'published',
+  'open',
+  'closed',
   'archived',
 ]);
+
 export const zContestSchema = z.object({
   id: z.string().min(1),
-  title: z.string().min(1),
+  title: z.string().min(1).max(256),
   description: z.string().optional(),
+  instructions: z.string().optional(),
 
-  stage: z.number().int().nonnegative().default(1),
+  stageId: z.string().min(1).nullable(),
+  isIndependent: z.boolean().default(false),
 
-  jobId: z.string().min(1),
-
-  startAt: z.iso.datetime({ message: 'Invalid start datetime' }),
-  endAt: z.iso.datetime({ message: 'Invalid end datetime' }),
-
-  duration: z.number().nonnegative().default(10),
+  startAt: z.coerce.date(),
+  endAt: z.coerce.date().nullable(),
+  duration: z.number().int().nonnegative().default(0),
 
   contestType: zContestTypeEnum.default('live'),
   accessibility: zContestAccessEnum.default('public'),
 
-  availableForPractise: z.boolean().default(true),
+  requiresVideoMonitoring: z.boolean().default(false),
+  requiresAudioMonitoring: z.boolean().default(false),
+  requiresAIMonitoring: z.boolean().default(false),
+  requiresScreenMonitoring: z.boolean().default(false),
 
-  publishState: zContestPublishStateEnum,
+  availableForPractise: z.boolean().default(false),
 
-  createdAt: z.string().datetime().optional(),
+  state: zContestPublishStateEnum,
+  noOfProblems: z.number().int().positive().default(1),
+
+  warnings: z.array(z.string()).default([]),
+
+  createdAt: z.coerce.date().optional(),
+  updatedAt: z.coerce.date().optional(),
 });

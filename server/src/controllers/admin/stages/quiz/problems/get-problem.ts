@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { db } from "../../../../db/db";
-import { quizes, admins, stages, quizProblems } from "../../../../db/schema";
+import { db } from "../../../../../db/db";
+import { quizes, admins, stages, quizProblems } from "../../../../../db/schema";
 import { and, asc, eq } from "drizzle-orm";
 import {
   AppError,
@@ -8,7 +8,7 @@ import {
   InternalServerError,
   NotFoundError,
   UnauthorizedError,
-} from "../../../../utils/errors";
+} from "../../../../../utils/errors";
 import z from "zod/v4";
 
 export const getQuizProblemById = async (

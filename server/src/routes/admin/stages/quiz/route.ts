@@ -2,11 +2,11 @@ import { Router } from "express";
 import { asyncHandler } from "../../../../middlewares/handlers/async-handler";
 import { getQuiz } from "../../../../controllers/admin/stages/quiz/get-quiz";
 import { updateQuiz } from "../../../../controllers/admin/stages/quiz/update-quiz";
-import { generateQuizWithAi } from "../../../../controllers/admin/stages/quiz/generate-with-ai";
-import { getQuizProblems } from "../../../../controllers/admin/stages/quiz/get-quiz-problems";
-import { getQuizProblemById } from "../../../../controllers/admin/stages/quiz/get-problem";
-import { updateQuizProblem } from "../../../../controllers/admin/stages/quiz/update-problem";
-import { createQuizProblem } from "../../../../controllers/admin/stages/quiz/create-quiz-problem";
+import { getQuizProblemById } from "../../../../controllers/admin/stages/quiz/problems/get-problem";
+import { createQuizProblem } from "../../../../controllers/admin/stages/quiz/problems/create-quiz-problem";
+import { updateQuizProblem } from "../../../../controllers/admin/stages/quiz/problems/update-problem";
+import { getQuizProblems } from "../../../../controllers/admin/stages/quiz/problems/get-quiz-problems";
+import { generateQuizWithAi } from "../../../../controllers/admin/stages/quiz/problems/generate-with-ai";
 
 const quizRouter = Router();
 

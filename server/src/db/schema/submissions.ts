@@ -7,9 +7,9 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
-import { problems } from "./problems";
 import { submissionStatusEnum, verdictEnum, languageEnum } from "./enums";
 import { contestRegisterations } from "./contest-registrations";
+import { contestProblems } from "./contest-problems";
 
 export const submissions = pgTable(
   "submissions",
@@ -23,7 +23,7 @@ export const submissions = pgTable(
       .references(() => contestRegisterations.id, { onDelete: "cascade" }),
     problemId: varchar("problem_id", { length: 256 })
       .notNull()
-      .references(() => problems.id, { onDelete: "cascade" }),
+      .references(() => contestProblems.id),
     contestId: varchar("contest_id", { length: 256 }),
 
     code: varchar("code", { length: 256 }).notNull().unique(),
@@ -63,6 +63,5 @@ export const submissions = pgTable(
     idx_plagiarized: index("idx_submissions_plagiarized").on(
       table.isPlagiarized
     ),
-    idx_code: index("idx"),
   })
 );

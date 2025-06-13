@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import { db } from "../../../../db/db";
+import { db } from "../../../../../db/db";
 import {
   quizes,
   admins,
@@ -7,7 +7,7 @@ import {
   quizProblems,
   jobs,
   prompts,
-} from "../../../../db/schema";
+} from "../../../../../db/schema";
 import { eq, InferInsertModel } from "drizzle-orm";
 import {
   AppError,
@@ -15,10 +15,10 @@ import {
   InternalServerError,
   NotFoundError,
   UnauthorizedError,
-} from "../../../../utils/errors";
+} from "../../../../../utils/errors";
 import { createDeepInfra } from "@ai-sdk/deepinfra";
 import { generateText } from "ai";
-import { Env } from "../../../../utils/env";
+import { Env } from "../../../../../utils/env";
 import z from "zod/v4";
 
 const zQuestion = z.object({

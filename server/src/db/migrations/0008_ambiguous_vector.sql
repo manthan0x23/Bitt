@@ -1,1 +1,0 @@
-ALTER TABLE "quiz_problems" ADD CONSTRAINT "quiz_id_question_index_idx" UNIQUE("quizId","question_index");

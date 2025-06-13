@@ -5,15 +5,15 @@ import {
   InternalServerError,
   NotFoundError,
   UnauthorizedError,
-} from "../../../../utils/errors";
-import { db } from "../../../../db/db";
+} from "../../../../../utils/errors";
+import { db } from "../../../../../db/db";
 import {
   admins,
   jobs,
   quizes,
   quizProblems,
   stages,
-} from "../../../../db/schema";
+} from "../../../../../db/schema";
 import { eq } from "drizzle-orm";
 import { zUpdateProblemInput } from "./types/update-quiz-problems-input";
 
