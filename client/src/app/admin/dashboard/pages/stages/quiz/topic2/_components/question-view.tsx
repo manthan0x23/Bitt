@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
-import { FaStar, FaExclamationTriangle } from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 import type { QuizProblemSchemaT } from '@/lib/types/quiz';
 
 interface QuestionViewProps {

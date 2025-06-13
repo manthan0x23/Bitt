@@ -37,7 +37,7 @@ import {
 } from './server-calls/generate-with-ai-call';
 import type { z } from 'zod/v4';
 import { TbArrowLeft } from 'react-icons/tb';
-import type { GetQuizCallResponseT } from './server-calls/get-quiz-call';
+import type { GetQuizCallResponseT } from '../server-calls/get-quiz-call';
 
 type Props = {
   quiz: GetQuizCallResponseT['data'];

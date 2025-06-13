@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   GetQuizCall,
   type GetQuizCallResponseT,
-} from './topic1/server-calls/get-quiz-call';
+} from './server-calls/get-quiz-call';
 import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 

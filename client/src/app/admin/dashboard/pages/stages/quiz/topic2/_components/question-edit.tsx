@@ -236,7 +236,7 @@ export const QuestionEdit = ({ data }: { data: QuizProblemSchemaT }) => {
         children={(choicesField) => {
           const formType = formValues.values.type;
           const isMCQ = formType === 'multiple_choice';
-          const isMSQ = formType === 'multiple_select';
+          // const isMSQ = formType === 'multiple_select';
           const isText = formType === 'text';
 
           if (isText) {
@@ -283,7 +283,7 @@ export const QuestionEdit = ({ data }: { data: QuizProblemSchemaT }) => {
                           value={index}
                           checked={ansField.state.value === index}
                           onChange={() => ansField.handleChange(index)}
-                          className='scale-115'
+                          className="scale-115"
                         />
                       )}
                     />
