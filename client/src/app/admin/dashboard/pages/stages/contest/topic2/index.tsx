@@ -1,3 +1,3 @@
-export const ContestTopic2Pannel = () => {
+export const ContestTopic2 = () => {
   return <div>topic2</div>;
 };

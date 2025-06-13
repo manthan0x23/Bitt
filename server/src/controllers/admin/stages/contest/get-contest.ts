@@ -39,7 +39,7 @@ export const getContest = async (req: Request, res: Response): Promise<any> => {
       .from(stages)
       .where(eq(stages.id, stageId));
 
-    if (!stage || stage.type != "quiz" || !stage.secondTableId) {
+    if (!stage || stage.type != "contest" || !stage.secondTableId) {
       throw new NotFoundError("Quiz stage not found !");
     }
 
@@ -55,7 +55,7 @@ export const getContest = async (req: Request, res: Response): Promise<any> => {
 
     return res.status(200).json({
       message: "Contest retrieved successfully.",
-      data: { ...contest, problemCount: problems.length },
+      data: { ...contest, problemsCount: problems.length },
     });
   } catch (error) {
     console.error(error);

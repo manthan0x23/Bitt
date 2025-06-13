@@ -14,10 +14,10 @@ export const zUpdateContestInput = z
     startAt: z.string().pipe(z.transform((v) => new Date(v ?? ""))),
     endAt: z.string().pipe(z.transform((v) => new Date(v ?? ""))),
 
-    duration: z.coerce
+    duration: z
       .number()
-      .min(0, "Duration must be a positive number")
-      .optional(),
+      .nonnegative()
+      .min(30, "Duration must be minimum 30 minutes"),
 
     contestType: z.enum(["live", "assignment", "practise"]),
     accessibility: z.enum(["public", "private", "invite-only"]),

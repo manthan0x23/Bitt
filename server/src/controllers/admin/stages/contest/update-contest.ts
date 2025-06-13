@@ -51,7 +51,7 @@ export const updateContest = async (
         job: jobs,
       })
       .from(contests)
-      .innerJoin(stages, eq(contests.id, stages.id))
+      .innerJoin(stages, eq(contests.stageId, stages.id))
       .innerJoin(jobs, eq(stages.jobId, jobs.id))
       .where(eq(contests.id, data.id))
       .limit(1);

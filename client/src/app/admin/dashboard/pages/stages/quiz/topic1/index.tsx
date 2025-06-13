@@ -40,6 +40,7 @@ import {
   type GenerateQuizCallResponseT,
 } from './server-calls/generate-with-ai-call';
 import type { z } from 'zod/v4';
+import { TbArrowLeft } from 'react-icons/tb';
 
 export const QuizTopic1 = () => {
   const router = useRouter();
@@ -75,7 +76,7 @@ export const QuizTopic1 = () => {
     }
   }, [quizQuery.isSuccess, quizQuery.data]);
 
-  const quizMutation = useMutation({
+  const updateQuizMutation = useMutation({
     mutationFn: (v: UpdateQuizSchemaT) => UpdateQuizCall(v),
     onSuccess: () => {
       quizQuery.refetch();
@@ -106,11 +107,8 @@ export const QuizTopic1 = () => {
   const form = useForm({
     defaultValues: {
       title: quizQuery.data?.data.title ?? '',
-      stageId: stageId,
       description: quizQuery.data?.data.description ?? '',
       instructions: quizQuery.data?.data.instructions ?? '',
-      startAt: quizQuery.data?.data.startAt!.toString() ?? '',
-      endAt: quizQuery.data?.data.endAt!.toString() ?? '',
 
       duration: Number(quizQuery.data?.data.duration ?? 30),
       noOfQuestions: quizQuery.data?.data.noOfQuestions ?? 1,
@@ -130,7 +128,12 @@ export const QuizTopic1 = () => {
       tags: quizQuery.data?.data.tags ?? [],
 
       availableForPractise: quizQuery.data?.data.availableForPractise ?? false,
+
+      stageId: stageId,
+      startAt: new Date(quizQuery.data?.data.startAt ?? '').toISOString(),
+      endAt: new Date(quizQuery.data?.data.endAt ?? '').toISOString(),
     } as z.infer<typeof UpdateQuizSchema>,
+
     validators: {
       onBlur: UpdateQuizSchema,
     },
@@ -138,7 +141,7 @@ export const QuizTopic1 = () => {
       const parsed = UpdateQuizSchema.safeParse(value);
 
       if (parsed.error) console.error(parsed.error);
-      else quizMutation.mutate(value);
+      else updateQuizMutation.mutate(value);
     },
   });
 
@@ -150,7 +153,20 @@ export const QuizTopic1 = () => {
       aria-disabled={generateQuizMutation.isPending}
     >
       <div className="space-y-2 pt-8">
-        <h2>Configure Quiz Settings</h2>
+        <div className="flex items-center gap-4 mb-4 relative">
+          <div
+            className="text-muted-foreground p-2 cursor-pointer rounded-full hover:bg-muted transition absolute -left-13"
+            onClick={() => {
+              router.navigate({
+                to: `/admin/jobs/${jobId}/edit`,
+                resetScroll: true,
+              });
+            }}
+          >
+            <TbArrowLeft size={24} />
+          </div>
+          <h2 className="text-xl font-semibold">Configure Quiz Settings</h2>
+        </div>
         <p className="text-muted-foreground">
           Set up essential details for your quiz, including title, duration,
           availability, and monitoring preferences. These settings determine how
@@ -368,26 +384,50 @@ export const QuizTopic1 = () => {
               <form.Field name="startAt">
                 {(field) => (
                   <div className="space-y-2 w-1/3">
-                    <Label htmlFor="startAt">Start Time</Label>
+                    <Label
+                      className={cn(
+                        field.state.meta.errors.length > 0 &&
+                          'text-destructive',
+                      )}
+                      htmlFor="startAt"
+                    >
+                      Start Time
+                    </Label>
                     <DateTimePicker
-                      value={field.state.value}
+                      value={new Date(field.state.value)}
                       onChange={(e) => field.handleChange(e?.toString() ?? '')}
-                      minDate={new Date()}
                       placeholder="Select start time"
                     />
+                    {field.state.meta.errors.length > 0 && (
+                      <p className="text-sm text-destructive">
+                        {field.state.meta.errors[0]?.message}
+                      </p>
+                    )}
                   </div>
                 )}
               </form.Field>
               <form.Field name="endAt">
                 {(field) => (
                   <div className="space-y-2 w-1/3">
-                    <Label htmlFor="endAt">End Time</Label>
+                    <Label
+                      className={cn(
+                        field.state.meta.errors.length > 0 &&
+                          'text-destructive',
+                      )}
+                      htmlFor="endAt"
+                    >
+                      End Time
+                    </Label>
                     <DateTimePicker
-                      value={field.state.value}
+                      value={new Date(field.state.value)}
                       onChange={(e) => field.handleChange(e?.toString() ?? '')}
-                      minDate={new Date()}
                       placeholder="Select end time"
                     />
+                    {field.state.meta.errors.length > 0 && (
+                      <p className="text-sm text-destructive">
+                        {field.state.meta.errors[0]?.message}
+                      </p>
+                    )}
                   </div>
                 )}
               </form.Field>
@@ -420,7 +460,6 @@ export const QuizTopic1 = () => {
                       <SelectContent>
                         <SelectItem value="take-home">Take Home</SelectItem>
                         <SelectItem value="live">Live</SelectItem>
-                        <SelectItem value="practise">Practise</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -465,6 +504,7 @@ export const QuizTopic1 = () => {
                   {(field) => (
                     <div className="flex items-center gap-2">
                       <Switch
+                        className="cursor-pointer"
                         id={key}
                         checked={field.state.value}
                         onCheckedChange={field.handleChange}

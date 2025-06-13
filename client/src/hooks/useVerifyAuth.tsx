@@ -15,9 +15,12 @@ export const useVerifyAuthentication = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ['api', 'auth', 'verify'],
     queryFn: verifyAuthenticationCall,
+    retry: 1,
+    refetchOnMount: 'always',
     refetchInterval: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
-    retry: 1,
+    refetchIntervalInBackground: true,
+    refetchOnReconnect: true,
   });
 
   authStore.setState(() => ({

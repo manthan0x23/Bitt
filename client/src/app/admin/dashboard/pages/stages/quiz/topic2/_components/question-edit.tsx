@@ -26,6 +26,7 @@ import {
 } from '../server-calls/update-quiz-problem';
 import { toast } from 'sonner';
 import { useParams, useSearch } from '@tanstack/react-router';
+import { RxCross2 } from 'react-icons/rx';
 
 export const QuestionEdit = ({ data }: { data: QuizProblemSchemaT }) => {
   const { stageId } = useParams({
@@ -273,15 +274,6 @@ export const QuestionEdit = ({ data }: { data: QuizProblemSchemaT }) => {
               <Label>Choices</Label>
               {choicesField.state.value.map((choice, index) => (
                 <div key={index} className="flex items-center gap-4">
-                  <Input
-                    className="flex-1"
-                    value={choice}
-                    onChange={(e) => {
-                      const updated = [...choicesField.state.value];
-                      updated[index] = e.target.value;
-                      choicesField.handleChange(updated);
-                    }}
-                  />
                   {isMCQ ? (
                     <form.Field
                       name="answer"
@@ -291,6 +283,7 @@ export const QuestionEdit = ({ data }: { data: QuizProblemSchemaT }) => {
                           value={index}
                           checked={ansField.state.value === index}
                           onChange={() => ansField.handleChange(index)}
+                          className='scale-115'
                         />
                       )}
                     />
@@ -315,8 +308,54 @@ export const QuestionEdit = ({ data }: { data: QuizProblemSchemaT }) => {
                       }}
                     />
                   )}
+
+                  <Input
+                    className="flex-1"
+                    value={choice}
+                    onChange={(e) => {
+                      const updated = [...choicesField.state.value];
+                      updated[index] = e.target.value;
+                      choicesField.handleChange(updated);
+                    }}
+                  />
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      const updated = [...choicesField.state.value];
+                      updated.splice(index, 1);
+
+                      // Also update the answer if it refers to a removed index
+                      const formType = formValues.values.type;
+                      const currentAnswer = formValues.values.answer;
+
+                      if (
+                        formType === 'multiple_choice' &&
+                        currentAnswer === index
+                      ) {
+                        form.setFieldValue('answer', -1);
+                      } else if (
+                        formType === 'multiple_select' &&
+                        Array.isArray(currentAnswer)
+                      ) {
+                        form.setFieldValue(
+                          'answer',
+                          currentAnswer
+                            .filter((i: number) => i !== index)
+                            .map((i: number) => (i > index ? i - 1 : i)),
+                        );
+                      }
+
+                      choicesField.handleChange(updated);
+                    }}
+                  >
+                    <RxCross2 />
+                  </Button>
                 </div>
               ))}
+
               <Button
                 variant="ghost"
                 size="sm"
