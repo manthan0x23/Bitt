@@ -11,9 +11,8 @@ import {
   json,
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
-import { admins } from "./admins";
 import { contests } from "./contests";
-import { quizes } from "./quiz";
+import { contestProblemDifficultyEnum } from "./enums";
 
 export const contestProblems = pgTable(
   "contest_problems",
@@ -34,37 +33,32 @@ export const contestProblems = pgTable(
     outputDescription: text("output_description"),
     constraints: text("constraints"),
 
-    hint: text("hint"),
+    hints: json("hints").$type<string[]>(),
 
-    sampleInput: text("sample_input"),
-    sampleOutput: text("sample_output"),
+    examples: json("examples").$type<{ input: string; output: string }[]>(),
 
     points: integer("points").notNull().default(100),
-    difficulty: decimal("difficulty").notNull().default("1.0"),
+    difficulty: contestProblemDifficultyEnum().default("medium"),
 
     timeLimitMs: integer("time_limit_ms").notNull().default(1000),
     memoryLimitMb: integer("memory_limit_mb").notNull().default(256),
 
-    noOfProblems: integer("number_of_problems").default(1),
-
-    authorId: varchar("author_id").references(() => admins.id, {
-      onDelete: "set null",
-    }),
+    authorIds: json("author_ids").$type<string[]>().notNull(),
 
     contestId: varchar("contest_id")
       .references(() => contests.id)
       .notNull(),
 
-    tags: json("tags").$type<number | number[]>(),
+    tags: json("tags").$type<string[]>(),
 
     partialMarks: boolean("partial_marks").default(true),
 
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
     deletedAt: timestamp("deleted_at"),
   },
   (table) => ({
     titleIndex: index("problems_title_idx").on(table.title),
-    authorIdIndex: index("problems_author_id_idx").on(table.authorId),
     difficultyIndex: index("problems_difficulty_idx").on(table.difficulty),
     contestIdIndex: index("problems_contest_id_idx").on(table.contestId),
     pointsIndex: index("problems_points_idx").on(table.points),

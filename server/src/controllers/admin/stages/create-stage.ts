@@ -44,7 +44,7 @@ export const createStage = async (
         .limit(1)
     )[0];
 
-    if (!admin?.organizationId) {
+    if (!admin.organizationId) {
       throw new BadRequestError(
         "Admin is not associated with any organization"
       );
@@ -97,6 +97,7 @@ export const createStage = async (
             .insert(contests)
             .values({
               stageId: newStage.id,
+              organizationId: admin.organizationId!,
               startAt: new Date(),
               endAt: new Date(),
               duration: 0,
@@ -104,6 +105,7 @@ export const createStage = async (
               availableForPractise: false,
               accessibility: "public",
               state: "draft",
+              isIndependent: false,
             })
             .returning()
         )[0].id;
@@ -120,6 +122,7 @@ export const createStage = async (
               state: "draft",
               accessibility: "public",
               availableForPractise: false,
+              organizationId: admin.organizationId!,
             })
             .returning()
         )[0].id;
@@ -133,6 +136,7 @@ export const createStage = async (
               endAt: new Date(),
               title: "Interview",
               interviewType: "manual",
+              organizationId: admin.organizationId!,
             })
             .returning()
         )[0].id;
@@ -141,9 +145,10 @@ export const createStage = async (
           await tx
             .insert(resumeFilters)
             .values({
-              stageId: newStage.id,
+              stageId: newStage.id as string,
               resumeFilterType: "hybrid",
               endAt: new Date(job.endDate),
+              organizationId: admin.organizationId!,
             })
             .returning()
         )[0].id;

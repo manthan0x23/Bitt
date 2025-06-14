@@ -75,16 +75,14 @@ export const CreateOrganizationForm = ({ email }: Props) => {
           if (data.status >= 400) {
             console.log(data);
           } else {
-            toast.success('Organization created!', { richColors: true });
+            toast.success('Organization created!');
             setTimeout(() => {
               router.navigate({ to: '/admin' });
             }, 1500);
           }
         },
         onError: (err) => {
-          toast.error(getAxiosResponseError(err) || 'Something went wrong', {
-            richColors: true,
-          });
+          toast.error(getAxiosResponseError(err) || 'Something went wrong');
         },
       },
     );

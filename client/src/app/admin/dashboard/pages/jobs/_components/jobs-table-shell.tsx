@@ -21,7 +21,7 @@ export const JobsTableShell = () => {
 
   useEffect(() => {
     if (jobsQuery.isSuccess && !hasShownToast.current) {
-      toast.success(jobsQuery.data?.message, { richColors: true });
+      toast.success(jobsQuery.data?.message);
       hasShownToast.current = true;
     }
   }, [jobsQuery.isSuccess, jobsQuery.data]);

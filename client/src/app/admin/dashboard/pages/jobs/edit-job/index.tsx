@@ -21,11 +21,9 @@ export const EditJob = () => {
 
   if (query.isFetched && query.error) {
     toast.error('You are not authorized to edit the Job', {
-      richColors: true,
       onAutoClose() {
         router.navigate({
           to: '/admin/jobs',
-          reloadDocument: false,
         });
       },
     });

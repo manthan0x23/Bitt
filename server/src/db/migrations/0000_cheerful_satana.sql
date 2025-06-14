@@ -1,7 +1,8 @@
 CREATE TYPE "public"."account_source" AS ENUM('google', 'credentials');--> statement-breakpoint
 CREATE TYPE "public"."contest_access" AS ENUM('public', 'private', 'invite-only');--> statement-breakpoint
+CREATE TYPE "public"."contest_problem_difficulty_enum" AS ENUM('easy', 'medium', 'hard');--> statement-breakpoint
 CREATE TYPE "public"."contest_publish_state_enum" AS ENUM('draft', 'open', 'closed', 'archived');--> statement-breakpoint
-CREATE TYPE "public"."contest_type" AS ENUM('live', 'take-home', 'practise', 'upsolve');--> statement-breakpoint
+CREATE TYPE "public"."contest_type" AS ENUM('live', 'assignment', 'practise');--> statement-breakpoint
 CREATE TYPE "public"."job_status" AS ENUM('draft', 'open', 'closed', 'archived');--> statement-breakpoint
 CREATE TYPE "public"."job_type" AS ENUM('internship', 'full-time', 'part-time');--> statement-breakpoint
 CREATE TYPE "public"."screening_type" AS ENUM('application', 'multi-stage');--> statement-breakpoint
@@ -66,19 +67,18 @@ CREATE TABLE "contest_problems" (
 	"input_description" text,
 	"output_description" text,
 	"constraints" text,
-	"hint" text,
-	"sample_input" text,
-	"sample_output" text,
+	"hints" json,
+	"examples" json,
 	"points" integer DEFAULT 100 NOT NULL,
-	"difficulty" numeric DEFAULT '1.0' NOT NULL,
+	"difficulty" "contest_problem_difficulty_enum" DEFAULT 'medium',
 	"time_limit_ms" integer DEFAULT 1000 NOT NULL,
 	"memory_limit_mb" integer DEFAULT 256 NOT NULL,
-	"number_of_problems" integer DEFAULT 1,
-	"author_id" varchar,
+	"author_ids" json NOT NULL,
 	"contest_id" varchar NOT NULL,
 	"tags" json,
 	"partial_marks" boolean DEFAULT true,
 	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL,
 	"deleted_at" timestamp,
 	CONSTRAINT "problem_contest_unqiue_index_idx" UNIQUE("problem_index","contest_id")
 );
@@ -94,16 +94,25 @@ CREATE TABLE "contests" (
 	"contests" varchar(256) PRIMARY KEY NOT NULL,
 	"title" varchar(256),
 	"descriptions" text,
-	"stage_id" varchar(256) NOT NULL,
+	"instructions" text,
+	"stage_id" varchar(256),
+	"organization_id" varchar(256) NOT NULL,
+	"is_independent" boolean DEFAULT false,
 	"start_at" timestamp NOT NULL,
-	"end_at" timestamp NOT NULL,
+	"end_at" timestamp,
 	"duration" bigint DEFAULT 0,
 	"contest_type" "contest_type" DEFAULT 'live' NOT NULL,
 	"accessibility" "contest_access" DEFAULT 'public' NOT NULL,
-	"available_for_practise" boolean DEFAULT true NOT NULL,
+	"requires_video_monitoring" boolean DEFAULT false,
+	"required_audio_monitoring" boolean DEFAULT false,
+	"requires_ai_monitoring" boolean DEFAULT false,
+	"requires_screen_monitoring" boolean DEFAULT false,
+	"available_for_practise" boolean DEFAULT false,
 	"publish_state" "contest_publish_state_enum" NOT NULL,
+	"no_of_problems" integer DEFAULT 1 NOT NULL,
+	"warnings" json DEFAULT '[]'::json,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "contests_stage_id_unique" UNIQUE("stage_id")
+	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
@@ -222,6 +231,7 @@ CREATE TABLE "interviews" (
 	"title" varchar(256) NOT NULL,
 	"description" text,
 	"stage_id" varchar NOT NULL,
+	"organization_id" varchar(256) NOT NULL,
 	"start_at" timestamp,
 	"end_at" timestamp,
 	"type" "interview_type_enum" DEFAULT 'manual',
@@ -242,6 +252,7 @@ CREATE TABLE "quizes" (
 	"started_at" timestamp DEFAULT now() NOT NULL,
 	"duration" bigint DEFAULT 0,
 	"end_at" timestamp DEFAULT now() NOT NULL,
+	"organization_id" varchar(256) NOT NULL,
 	"type" "quiz_type_enum" DEFAULT 'live',
 	"status" "quiz_status_enum" DEFAULT 'draft',
 	"state" "contest_access" DEFAULT 'public',
@@ -261,6 +272,7 @@ CREATE TABLE "resume_filters" (
 	"stage_id" varchar NOT NULL,
 	"end_at" timestamp DEFAULT now(),
 	"resumeFilterType" "resume_filters_type_enum" DEFAULT 'hybrid',
+	"organization_id" varchar(256) NOT NULL,
 	"created_at" timestamp DEFAULT now(),
 	"updated_at" timestamp DEFAULT now(),
 	CONSTRAINT "resume_filters_id_unique" UNIQUE("id"),
@@ -300,11 +312,11 @@ CREATE TABLE "prompts" (
 ALTER TABLE "contest_invite" ADD CONSTRAINT "contest_invite_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "contest_invite" ADD CONSTRAINT "contest_invite_contest_id_contests_contests_fk" FOREIGN KEY ("contest_id") REFERENCES "public"."contests"("contests") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "contest_problems_testcases" ADD CONSTRAINT "contest_problems_testcases_problem_id_contest_problems_id_fk" FOREIGN KEY ("problem_id") REFERENCES "public"."contest_problems"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "contest_problems" ADD CONSTRAINT "contest_problems_author_id_admins_id_fk" FOREIGN KEY ("author_id") REFERENCES "public"."admins"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "contest_problems" ADD CONSTRAINT "contest_problems_contest_id_contests_contests_fk" FOREIGN KEY ("contest_id") REFERENCES "public"."contests"("contests") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "contest_registrations" ADD CONSTRAINT "contest_registrations_contest_id_contests_contests_fk" FOREIGN KEY ("contest_id") REFERENCES "public"."contests"("contests") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "contest_registrations" ADD CONSTRAINT "contest_registrations_registered_user_id_users_id_fk" FOREIGN KEY ("registered_user_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "contests" ADD CONSTRAINT "contests_stage_id_stages_id_fk" FOREIGN KEY ("stage_id") REFERENCES "public"."stages"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "contests" ADD CONSTRAINT "contests_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "jobs" ADD CONSTRAINT "jobs_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "submissions" ADD CONSTRAINT "submissions_author_id_contest_registrations_id_fk" FOREIGN KEY ("author_id") REFERENCES "public"."contest_registrations"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "submissions" ADD CONSTRAINT "submissions_problem_id_contest_problems_id_fk" FOREIGN KEY ("problem_id") REFERENCES "public"."contest_problems"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
@@ -312,14 +324,16 @@ ALTER TABLE "organization_invite" ADD CONSTRAINT "organization_invite_organizati
 ALTER TABLE "organization_invite" ADD CONSTRAINT "organization_invite_created_by_admins_id_fk" FOREIGN KEY ("created_by") REFERENCES "public"."admins"("id") ON DELETE set null ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "stages" ADD CONSTRAINT "stages_job_id_jobs_id_fk" FOREIGN KEY ("job_id") REFERENCES "public"."jobs"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "interviews" ADD CONSTRAINT "interviews_stage_id_stages_id_fk" FOREIGN KEY ("stage_id") REFERENCES "public"."stages"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "interviews" ADD CONSTRAINT "interviews_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "quizes" ADD CONSTRAINT "quizes_stage_id_stages_id_fk" FOREIGN KEY ("stage_id") REFERENCES "public"."stages"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "quizes" ADD CONSTRAINT "quizes_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "resume_filters" ADD CONSTRAINT "resume_filters_stage_id_stages_id_fk" FOREIGN KEY ("stage_id") REFERENCES "public"."stages"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "resume_filters" ADD CONSTRAINT "resume_filters_organization_id_organizations_id_fk" FOREIGN KEY ("organization_id") REFERENCES "public"."organizations"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "quiz_problems" ADD CONSTRAINT "quiz_problems_quizId_quizes_id_fk" FOREIGN KEY ("quizId") REFERENCES "public"."quizes"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 CREATE UNIQUE INDEX "contest_invite_contest_user_idx" ON "contest_invite" USING btree ("contest_id","user_id");--> statement-breakpoint
 CREATE INDEX "contest_problems_testcases_problem_idx" ON "contest_problems_testcases" USING btree ("problem_id");--> statement-breakpoint
 CREATE INDEX "contest_problems_testcases_slug_idx" ON "contest_problems_testcases" USING btree ("slug");--> statement-breakpoint
 CREATE INDEX "problems_title_idx" ON "contest_problems" USING btree ("title");--> statement-breakpoint
-CREATE INDEX "problems_author_id_idx" ON "contest_problems" USING btree ("author_id");--> statement-breakpoint
 CREATE INDEX "problems_difficulty_idx" ON "contest_problems" USING btree ("difficulty");--> statement-breakpoint
 CREATE INDEX "problems_contest_id_idx" ON "contest_problems" USING btree ("contest_id");--> statement-breakpoint
 CREATE INDEX "problems_points_idx" ON "contest_problems" USING btree ("points");--> statement-breakpoint

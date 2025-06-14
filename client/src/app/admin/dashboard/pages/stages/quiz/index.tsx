@@ -25,20 +25,21 @@ export const QuizPannelAdmin = () => {
     queryKey: ['admin', 'stages', 'quiz', 'get', stageId],
     queryFn: () => GetQuizCall(stageId),
     select: ({ data }: { data: GetQuizCallResponseT }) => data,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
   });
 
   useEffect(() => {
     if (quizQuery.isSuccess && !hasShownToast.current) {
-      toast.success(quizQuery.data.message, { richColors: true });
+      toast.success(quizQuery.data.message);
       hasShownToast.current = true;
     }
 
     if (quizQuery.error) {
-      toast.error(quizQuery.data?.error, { richColors: true });
+      toast.error(quizQuery.data?.error);
       router.navigate({
         to: `/admin/jobs/${jobId}/edit`,
         resetScroll: true,
-        reloadDocument: true,
       });
     }
   }, [quizQuery.isSuccess, quizQuery.data]);

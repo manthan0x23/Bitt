@@ -77,7 +77,7 @@ export const AddStageDialog = ({
     onSubmit: async ({ value }) => {
       const parsed = CreateStageSchema.safeParse(value);
       if (parsed.error) {
-        toast.error(parsed.error.message, { richColors: true });
+        toast.error(parsed.error.message);
         return;
       }
 
@@ -89,14 +89,14 @@ export const AddStageDialog = ({
   const createStageMutation = useMutation({
     mutationFn: (v: CreateStageSchemaT) => createJobStageCall(v),
     onError: (e) => {
-      toast.error(e.message, { richColors: true });
+      toast.error(e.message);
     },
     onSuccess: ({ data }: { data: CreateJobStageResponseT }) => {
       queryClient.invalidateQueries({
         queryKey: ['admins', 'jobs', 'all', jobId, 'edit'],
       });
 
-      toast.success(data.message, { richColors: true });
+      toast.success(data.message);
 
       form.reset();
       setOpen(false);
@@ -327,8 +327,14 @@ export const AddStageDialog = ({
                     <div className="space-y-2 w-full">
                       <Label>Start At</Label>
                       <DateTimePicker
-                        value={field.state.value ?? ''}
-                        onChange={(date) => field.handleChange(date)}
+                        value={
+                          field.state.value
+                            ? new Date(field.state.value)
+                            : undefined
+                        }
+                        onChange={(date) =>
+                          field.handleChange(date ? date.toISOString() : '')
+                        }
                       />
                     </div>
                   )}
@@ -339,8 +345,14 @@ export const AddStageDialog = ({
                       <Label>End At</Label>
                       <DateTimePicker
                         className="w-full"
-                        value={field.state.value ?? ''}
-                        onChange={(date) => field.handleChange(date)}
+                        value={
+                          field.state.value
+                            ? new Date(field.state.value)
+                            : undefined
+                        }
+                        onChange={(date) =>
+                          field.handleChange(date ? date.toISOString() : '')
+                        }
                       />
                     </div>
                   )}

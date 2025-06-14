@@ -63,7 +63,7 @@ export const QuestionEdit = ({ data }: { data: QuizProblemSchemaT }) => {
       if (parsed.success) {
         updateProblemMutation.mutate(parsed.data);
       } else {
-        toast.error(parsed.error.message, { richColors: true });
+        toast.error(parsed.error.message);
       }
     },
   });
@@ -77,7 +77,6 @@ export const QuestionEdit = ({ data }: { data: QuizProblemSchemaT }) => {
     onMutate: () => {
       toast.loading('Updating Problem', {
         id: 'update_mutation',
-        richColors: true,
       });
     },
     onSuccess: ({ data }: { data: UpdateQuizProblemsCallResponseT }) => {
@@ -92,12 +91,11 @@ export const QuestionEdit = ({ data }: { data: QuizProblemSchemaT }) => {
           stageId,
         ],
       });
-      toast.success(data.message, { id: 'update_mutation', richColors: true });
+      toast.success(data.message, { id: 'update_mutation' });
     },
     onError: (e) => {
       toast.error(e.message, {
         id: 'update_mutation',
-        richColors: true,
       });
     },
   });

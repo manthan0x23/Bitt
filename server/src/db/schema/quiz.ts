@@ -11,7 +11,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
-import { stages } from ".";
+import { organizations, stages } from ".";
 import { quizStateEnum, quizStatusEnum, quizTypeEnum } from "./enums";
 
 export const quizes = pgTable(
@@ -40,6 +40,9 @@ export const quizes = pgTable(
     duration: bigint("duration", { mode: "number" }).default(0),
     endAt: timestamp("end_at").notNull().defaultNow(),
 
+    organizationId: varchar("organization_id", { length: 256 })
+      .references(() => organizations.id)
+      .notNull(),
     quizType: quizTypeEnum("type").default("live"),
     state: quizStatusEnum("status").default("draft"),
     accessibility: quizStateEnum("state").default("public"),

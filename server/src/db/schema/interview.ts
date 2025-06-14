@@ -2,6 +2,7 @@ import { pgTable, timestamp, varchar, text, index } from "drizzle-orm/pg-core";
 import { shortId } from "../../utils/integrations/short-id";
 import { stages } from "./stages";
 import { interviewTypeEnum } from "./enums";
+import { organizations } from "./organizations";
 
 export const interviews = pgTable(
   "interviews",
@@ -15,6 +16,10 @@ export const interviews = pgTable(
       .references(() => stages.id)
       .notNull()
       .unique(),
+
+    organizationId: varchar("organization_id", { length: 256 }).references(
+      () => organizations.id
+    ).notNull(),
 
     startAt: timestamp("start_at"),
     endAt: timestamp("end_at"),

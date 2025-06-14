@@ -69,7 +69,7 @@ export const QuizTopic1 = ({ quiz }: Props) => {
       queries.invalidateQueries({
         queryKey: ['admin', 'stages', 'quiz', 'get', stageId],
       });
-      toast.success('Quiz updated successfully', { richColors: true });
+      toast.success('Quiz updated successfully');
     },
   });
 
@@ -78,17 +78,15 @@ export const QuizTopic1 = ({ quiz }: Props) => {
     onMutate: () => {
       toast.loading('Generating Questions...', {
         id: 'generate-quiz',
-        richColors: true,
       });
     },
     onSuccess: ({ data }: { data: GenerateQuizCallResponseT }) => {
-      toast.success(data.message, { id: 'generate-quiz', richColors: true });
+      toast.success(data.message, { id: 'generate-quiz' });
       invalidateGetQuizQuery();
     },
     onError: (err: any) => {
       toast.error(err.message || 'Something went wrong', {
         id: 'generate-quiz',
-        richColors: true,
       });
       invalidateGetQuizQuery();
     },
@@ -177,7 +175,6 @@ export const QuizTopic1 = ({ quiz }: Props) => {
                     question: 1,
                   },
                 });
-                router.invalidate();
               }}
               variant="outline"
               className="cursor-pointer"

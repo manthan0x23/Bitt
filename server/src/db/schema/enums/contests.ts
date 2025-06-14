@@ -18,3 +18,8 @@ export const contestStateEnum = pgEnum("contest_publish_state_enum", [
   "closed",
   "archived",
 ]);
+
+export const contestProblemDifficultyEnum = pgEnum(
+  "contest_problem_difficulty_enum",
+  ["easy", "medium", "hard"]
+);

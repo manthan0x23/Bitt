@@ -14,6 +14,7 @@ quizRouter.get("/get/:stageId", asyncHandler(getQuiz));
 quizRouter.post("/update", asyncHandler(updateQuiz));
 quizRouter.put("/generate/:stageId", asyncHandler(generateQuizWithAi));
 
+// quiz problems
 quizRouter.get("/problems/:stageId", asyncHandler(getQuizProblems));
 quizRouter.get(
   "/problem/:questionIndex/stage/:stageId",

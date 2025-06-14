@@ -14,7 +14,7 @@ import {
   InternalServerError,
   UnauthorizedError,
 } from "../../../../utils/errors";
-import { zUpdateContestInput } from "./types/update-quiz-input";
+import { zUpdateContestInput } from "./types/update-contest-input";
 
 export const updateContest = async (
   req: Request,
@@ -23,7 +23,7 @@ export const updateContest = async (
   const parsed = zUpdateContestInput.safeParse(req.body);
 
   if (!parsed.success) {
-    throw new BadRequestError(parsed.error.issues.join(" , "));
+    throw new BadRequestError(parsed.error.message);
   }
 
   const { data } = parsed;

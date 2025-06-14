@@ -88,17 +88,18 @@ export const EditStagesForm = ({ job }: Props) => {
                       search: {
                         topic: 1,
                       },
-                      reloadDocument: true,
+                      resetScroll: true,
+                      reloadDocument: false,
                     });
                   }}
                   className="h-auto relative w-full cursor-pointer rounded-lg border border-border bg-background px-4 py-3 flex flex-col gap-1 transition-all hover:border-primary/20  hover:scale-[1.01] hover:bg-muted"
                 >
-                  <span
-                    className="absolute -left-3 top-1/2 -translate-y-1/2 text-xs bg-accent font-normal border border-border rounded-full w-5 h-5 flex items-center justify-center shadow-sm"
+                  <div
+                    className="absolute -left-3 top-1/2 -translate-y-1/2 text-xs  bg-secondary font-normal border border-border rounded-full w-5 h-5 flex items-center justify-center shadow-sm"
                     title={`Stage ${stage.stageIndex}`}
                   >
                     {stage.stageIndex}
-                  </span>
+                  </div>
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <StageTypeRender type={stage.type} size={2} />
                     <span className="font-medium text-foreground/80 flex items-center gap-2">

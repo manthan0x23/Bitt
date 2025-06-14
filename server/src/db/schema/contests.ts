@@ -14,6 +14,7 @@ import {
 import { shortId } from "../../utils/integrations/short-id";
 import { contestTypeEnum, contestAccessEnum, contestStateEnum } from "./enums";
 import { stages } from "./stages";
+import { organizations } from "./organizations";
 
 export const contests = pgTable(
   "contests",
@@ -30,6 +31,10 @@ export const contests = pgTable(
     stageId: varchar("stage_id", { length: 256 }).references(() => stages.id, {
       onDelete: "cascade",
     }),
+
+    organizationId: varchar("organization_id", { length: 256 }).references(
+      () => organizations.id
+    ).notNull(),
 
     isIndependent: boolean("is_independent").default(false),
 

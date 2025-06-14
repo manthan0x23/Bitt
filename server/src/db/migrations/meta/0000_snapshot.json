@@ -1,5 +1,5 @@
 {
-  "id": "1de35734-d0d8-4bd6-bab0-f845225fce4d",
+  "id": "dbee7c77-078b-4e3a-a3ba-d3bbf0f63250",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -360,21 +360,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "hint": {
-          "name": "hint",
-          "type": "text",
+        "hints": {
+          "name": "hints",
+          "type": "json",
           "primaryKey": false,
           "notNull": false
         },
-        "sample_input": {
-          "name": "sample_input",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "sample_output": {
-          "name": "sample_output",
-          "type": "text",
+        "examples": {
+          "name": "examples",
+          "type": "json",
           "primaryKey": false,
           "notNull": false
         },
@@ -387,10 +381,11 @@
         },
         "difficulty": {
           "name": "difficulty",
-          "type": "numeric",
+          "type": "contest_problem_difficulty_enum",
+          "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'1.0'"
+          "notNull": false,
+          "default": "'medium'"
         },
         "time_limit_ms": {
           "name": "time_limit_ms",
@@ -406,18 +401,11 @@
           "notNull": true,
           "default": 256
         },
-        "number_of_problems": {
-          "name": "number_of_problems",
-          "type": "integer",
+        "author_ids": {
+          "name": "author_ids",
+          "type": "json",
           "primaryKey": false,
-          "notNull": false,
-          "default": 1
-        },
-        "author_id": {
-          "name": "author_id",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "contest_id": {
           "name": "contest_id",
@@ -445,6 +433,13 @@
           "notNull": true,
           "default": "now()"
         },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
         "deleted_at": {
           "name": "deleted_at",
           "type": "timestamp",
@@ -458,21 +453,6 @@
           "columns": [
             {
               "expression": "title",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "problems_author_id_idx": {
-          "name": "problems_author_id_idx",
-          "columns": [
-            {
-              "expression": "author_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -545,19 +525,6 @@
         }
       },
       "foreignKeys": {
-        "contest_problems_author_id_admins_id_fk": {
-          "name": "contest_problems_author_id_admins_id_fk",
-          "tableFrom": "contest_problems",
-          "tableTo": "admins",
-          "columnsFrom": [
-            "author_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
         "contest_problems_contest_id_contests_contests_fk": {
           "name": "contest_problems_contest_id_contests_contests_fk",
           "tableFrom": "contest_problems",
@@ -696,11 +663,30 @@
           "primaryKey": false,
           "notNull": false
         },
+        "instructions": {
+          "name": "instructions",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "stage_id": {
           "name": "stage_id",
           "type": "varchar(256)",
           "primaryKey": false,
+          "notNull": false
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(256)",
+          "primaryKey": false,
           "notNull": true
+        },
+        "is_independent": {
+          "name": "is_independent",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
         },
         "start_at": {
           "name": "start_at",
@@ -712,7 +698,7 @@
           "name": "end_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "duration": {
           "name": "duration",
@@ -737,12 +723,40 @@
           "notNull": true,
           "default": "'public'"
         },
+        "requires_video_monitoring": {
+          "name": "requires_video_monitoring",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "required_audio_monitoring": {
+          "name": "required_audio_monitoring",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "requires_ai_monitoring": {
+          "name": "requires_ai_monitoring",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "requires_screen_monitoring": {
+          "name": "requires_screen_monitoring",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
         "available_for_practise": {
           "name": "available_for_practise",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": true,
-          "default": true
+          "notNull": false,
+          "default": false
         },
         "publish_state": {
           "name": "publish_state",
@@ -751,8 +765,29 @@
           "primaryKey": false,
           "notNull": true
         },
+        "no_of_problems": {
+          "name": "no_of_problems",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "warnings": {
+          "name": "warnings",
+          "type": "json",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'[]'::json"
+        },
         "created_at": {
           "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": true,
@@ -834,18 +869,23 @@
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
+        },
+        "contests_organization_id_organizations_id_fk": {
+          "name": "contests_organization_id_organizations_id_fk",
+          "tableFrom": "contests",
+          "tableTo": "organizations",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "contests_stage_id_unique": {
-          "name": "contests_stage_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "stage_id"
-          ]
-        }
-      },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -1959,6 +1999,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "start_at": {
           "name": "start_at",
           "type": "timestamp",
@@ -2018,6 +2064,19 @@
           "tableTo": "stages",
           "columnsFrom": [
             "stage_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "interviews_organization_id_organizations_id_fk": {
+          "name": "interviews_organization_id_organizations_id_fk",
+          "tableFrom": "interviews",
+          "tableTo": "organizations",
+          "columnsFrom": [
+            "organization_id"
           ],
           "columnsTo": [
             "id"
@@ -2115,6 +2174,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
         },
         "type": {
           "name": "type",
@@ -2250,6 +2315,19 @@
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "quizes_organization_id_organizations_id_fk": {
+          "name": "quizes_organization_id_organizations_id_fk",
+          "tableFrom": "quizes",
+          "tableTo": "organizations",
+          "columnsFrom": [
+            "organization_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -2304,6 +2382,12 @@
           "notNull": false,
           "default": "'hybrid'"
         },
+        "organization_id": {
+          "name": "organization_id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -2327,6 +2411,19 @@
           "tableTo": "stages",
           "columnsFrom": [
             "stage_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "resume_filters_organization_id_organizations_id_fk": {
+          "name": "resume_filters_organization_id_organizations_id_fk",
+          "tableFrom": "resume_filters",
+          "tableTo": "organizations",
+          "columnsFrom": [
+            "organization_id"
           ],
           "columnsTo": [
             "id"
@@ -2591,6 +2688,15 @@
         "invite-only"
       ]
     },
+    "public.contest_problem_difficulty_enum": {
+      "name": "contest_problem_difficulty_enum",
+      "schema": "public",
+      "values": [
+        "easy",
+        "medium",
+        "hard"
+      ]
+    },
     "public.contest_publish_state_enum": {
       "name": "contest_publish_state_enum",
       "schema": "public",
@@ -2606,9 +2712,8 @@
       "schema": "public",
       "values": [
         "live",
-        "take-home",
-        "practise",
-        "upsolve"
+        "assignment",
+        "practise"
       ]
     },
     "public.job_status": {

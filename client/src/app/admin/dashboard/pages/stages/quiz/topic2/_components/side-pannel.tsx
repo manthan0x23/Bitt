@@ -47,7 +47,7 @@ export const SidePannel = ({ problems, quiz }: Props) => {
       search: { topic: 2, question: index },
       resetScroll: true,
     });
-    router.invalidate();
+   
   };
 
   const createProblemMutation = useMutation({
@@ -55,11 +55,10 @@ export const SidePannel = ({ problems, quiz }: Props) => {
     onMutate: () => {
       toast.loading('Updating Problem', {
         id: 'update_mutation',
-        richColors: true,
       });
     },
     onSuccess: ({ data }: { data: CreateQuizProblemCallResponseT }) => {
-      toast.success(data.message, { id: 'update_mutation', richColors: true });
+      toast.success(data.message, { id: 'update_mutation' });
       queries.invalidateQueries({
         queryKey: ['admin', 'stages', 'quiz', 'problems', stageId],
       });
@@ -68,7 +67,6 @@ export const SidePannel = ({ problems, quiz }: Props) => {
     onError: (e) => {
       toast.error(e.message, {
         id: 'update_mutation',
-        richColors: true,
       });
     },
   });
@@ -86,7 +84,7 @@ export const SidePannel = ({ problems, quiz }: Props) => {
               search: { topic: 1 },
               resetScroll: true,
             });
-            router.invalidate();
+         
           }}
         >
           <CardHeader>

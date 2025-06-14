@@ -100,6 +100,7 @@ export const createJob = async (req: Request, res: Response): Promise<any> => {
           .values({
             stageId: resumeFilterStage.id,
             endAt: anYearLater__,
+            organizationId: admin.organizationId!,
           })
           .returning();
 
@@ -111,6 +112,7 @@ export const createJob = async (req: Request, res: Response): Promise<any> => {
             stageId: interviewStage.id,
             startAt: new Date(),
             endAt: new Date(),
+            organizationId: admin.organizationId!,
           })
           .returning();
 

@@ -317,10 +317,15 @@ export const CreateJobForm = () => {
                     Application Ends At
                   </Label>
                   <DateTimePicker
-                    value={field.state.value ?? undefined}
-                    onChange={(date) => field.handleChange(date)}
+                    value={
+                      field.state.value
+                        ? new Date(field.state.value)
+                        : undefined
+                    }
+                    onChange={(date) =>
+                      field.handleChange(date ? date.toISOString() : '')
+                    }
                     placeholder="Select application deadline"
-                    minDate={new Date()}
                     className="w-full"
                     aria-invalid={field.state.meta.errors.length > 0}
                   />
@@ -450,7 +455,7 @@ export const CreateJobForm = () => {
               </form.Field>
             </span>
 
-            <div className='w-full flex justify-end'>
+            <div className="w-full flex justify-end">
               <form.Subscribe
                 selector={(state) => [state.canSubmit, state.isSubmitting]}
                 children={([canSubmit, isSubmitting]) => (

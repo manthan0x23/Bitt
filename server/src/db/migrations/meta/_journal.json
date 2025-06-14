@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1749757867545,
-      "tag": "0000_mean_mikhail_rasputin",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1749797032451,
-      "tag": "0001_peaceful_moon_knight",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1749810036960,
-      "tag": "0002_peaceful_solo",
+      "when": 1749900164708,
+      "tag": "0000_cheerful_satana",
       "breakpoints": true
     }
   ]

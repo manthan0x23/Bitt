@@ -48,18 +48,16 @@ export const ContestTopic1 = ({ contest }: Props) => {
     onMutate: () => {
       toast.loading('Updating Contest...', {
         id: 'update-contest',
-        richColors: true,
       });
     },
     onSuccess: ({ data }: { data: UpdateContestCallResponseT }) => {
-      toast.success(data.message, { id: 'update-contest', richColors: true });
+      toast.success(data.message, { id: 'update-contest' });
     },
     onError: (err: any) => {
       const message =
         err.response?.data?.error || err.message || 'Something went wrong';
       toast.error(message, {
         id: 'update-contest',
-        richColors: true,
       });
     },
   });
@@ -80,7 +78,7 @@ export const ContestTopic1 = ({ contest }: Props) => {
     onSubmit: ({ value }) => {
       const parsed = zUpdateContestSchema.safeParse(value);
       if (parsed.success) updateContestMutation.mutate(parsed.data);
-      else toast.error(parsed.error.message, { richColors: true });
+      else toast.error(parsed.error.message);
     },
   });
 
@@ -146,7 +144,7 @@ export const ContestTopic1 = ({ contest }: Props) => {
                       to: `/admin/jobs/${jobId}/stages/${stageId}/contest/`,
                       search: {
                         topic: 2,
-                        question: 1,
+                        problem: 1,
                       },
                     });
                   }}

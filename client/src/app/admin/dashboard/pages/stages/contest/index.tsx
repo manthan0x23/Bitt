@@ -39,7 +39,7 @@ export const ContestPannelAdmin = () => {
 
   useEffect(() => {
     if (contestQuery.isSuccess && !hasShownToast.current) {
-      toast.success(contestQuery.data.message, { richColors: true });
+      toast.success(contestQuery.data.message);
       hasShownToast.current = true;
     }
   }, [contestQuery.isSuccess, contestQuery.data]);
@@ -54,7 +54,7 @@ export const ContestPannelAdmin = () => {
       contestQuery.error?.message ||
       'Something went wrong';
 
-    toast.error(errorMessage, { richColors: true });
+    toast.error(errorMessage);
     return null;
   }
 

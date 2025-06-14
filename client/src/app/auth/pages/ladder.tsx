@@ -65,8 +65,8 @@ export const Ladder = () => {
               className={twMerge(
                 ' cursor-pointer h-[6rem] text-6xl flex items-center justify-between border rounded-md px-6 py-4 transition-all duration-200 hover:scale-[1.007] ',
                 selected === role.id
-                  ? 'border-primary/80 bg-secondary shadow-sm'
-                  : 'border-primary/40 bg-secondary hover:border-primary/70',
+                  ? 'border-primary/80 shadow-sm'
+                  : 'border-primary/40 hover:border-primary/70',
               )}
               onClick={() => setSelected(role.id)}
             >
