@@ -10,17 +10,19 @@ import { generateQuizWithAi } from "../../../../controllers/admin/stages/quiz/pr
 
 const quizRouter = Router();
 
-quizRouter.get("/get/:stageId", asyncHandler(getQuiz));
-quizRouter.post("/update", asyncHandler(updateQuiz));
-quizRouter.put("/generate/:stageId", asyncHandler(generateQuizWithAi));
+quizRouter
+  .get("/get/:stageId", asyncHandler(getQuiz))
+  .post("/update", asyncHandler(updateQuiz))
+  .put("/generate/:stageId", asyncHandler(generateQuizWithAi));
 
 // quiz problems
-quizRouter.get("/problems/:stageId", asyncHandler(getQuizProblems));
-quizRouter.get(
-  "/problem/:questionIndex/stage/:stageId",
-  asyncHandler(getQuizProblemById)
-);
-quizRouter.put("/problem", asyncHandler(updateQuizProblem));
-quizRouter.post("/problem/:quizId", asyncHandler(createQuizProblem));
+quizRouter
+  .get("/problems/:stageId", asyncHandler(getQuizProblems))
+  .get(
+    "/problem/:questionIndex/stage/:stageId",
+    asyncHandler(getQuizProblemById)
+  )
+  .put("/problem", asyncHandler(updateQuizProblem))
+  .post("/problem/:quizId", asyncHandler(createQuizProblem));
 
 export { quizRouter };

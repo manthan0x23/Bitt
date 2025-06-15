@@ -27,15 +27,11 @@ export const contestProblems = pgTable(
 
     problemIndex: integer("problem_index").notNull(),
 
-    solution: text("solution"),
-
     inputDescription: text("input_description"),
     outputDescription: text("output_description"),
     constraints: text("constraints"),
 
     hints: json("hints").$type<string[]>(),
-
-    examples: json("examples").$type<{ input: string; output: string }[]>(),
 
     points: integer("points").notNull().default(100),
     difficulty: contestProblemDifficultyEnum().default("medium"),

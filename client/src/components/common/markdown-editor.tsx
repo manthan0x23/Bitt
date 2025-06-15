@@ -9,6 +9,9 @@ interface MarkdownEditorProps {
   onChange: (value: string) => void;
   placeholder?: string;
   preview?: boolean;
+  withBorder?: boolean;
+  withPadding?: boolean;
+  height?: number;
 }
 
 export const MarkdownEditor = ({
@@ -17,6 +20,9 @@ export const MarkdownEditor = ({
   onChange,
   placeholder = 'Write your job description here...',
   preview = true,
+  withBorder = false,
+  withPadding = false,
+  height = 300,
 }: MarkdownEditorProps) => {
   const { theme } = useStore(themeStore);
 
@@ -24,17 +30,21 @@ export const MarkdownEditor = ({
     <div className="space-y-2 w-full">
       {label && <Label>{label}</Label>}
       <div
-        className="rounded-md border p-2"
+        className={[
+          withBorder ? 'border rounded-md' : '',
+          withPadding ? 'p-2' : '',
+        ].join(' ')}
         data-color-mode={theme === 'dark' ? 'dark' : 'light'}
       >
         <MDEditor
           value={value}
           onChange={(val = '') => onChange(val)}
-          height={300}
           preview={preview ? 'live' : 'edit'}
-          textareaProps={{
-            placeholder,
-          }}
+          height={height}
+          textareaProps={{ placeholder }}
+          hideToolbar={true}
+          visibleDragbar={true}
+          highlightEnable
         />
       </div>
     </div>

@@ -10,7 +10,8 @@ import { admins, contestProblems, contests } from "../../../../../db/schema";
 import { db } from "../../../../../db/db";
 import { asc, eq } from "drizzle-orm";
 import { zUpdateProblemInput } from "./types/update-problem-schema";
-import { refineContestProblem } from "./utils/refine-problem";
+import { extractSchemaErrors } from "../../../../../utils/validation/generic-validator";
+import { problemSchema } from "./utils/refine-problem";
 
 export const updateContestProblems = async (
   req: Request,
@@ -66,12 +67,14 @@ export const updateContestProblems = async (
         ...parsed.data,
         updatedAt: new Date(),
         authorIds: newAuthorIds,
-        examples: [],
       })
       .where(eq(contestProblems.id, problem.id))
       .returning();
 
-    const updatedProblem = refineContestProblem(problem);
+    const updatedProblem = {
+      ...problem,
+      warnings: extractSchemaErrors(problem, problemSchema),
+    };
 
     return res.status(200).json({
       message: `Problem ${problem.problemIndex} updated successfully`,

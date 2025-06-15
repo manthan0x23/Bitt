@@ -20,6 +20,7 @@ import {
 } from '../server-calls/create-contest-problem-call';
 import { toast } from 'sonner';
 import type { ApiError } from '@/lib/error';
+import type { ContestSearchParamsT } from '@/lib/types/globals';
 
 type Props = {
   totalProblemCount: number;
@@ -42,7 +43,7 @@ export const ProblemsCard = ({
 
   const search = useSearch({
     from: '/admin/_dashboard/jobs_/$jobId/stages_/$stageId/contest/',
-  }) satisfies { topic: number; problem: number };
+  }) satisfies ContestSearchParamsT;
 
   const createProblemMutation = useMutation<
     CreateContestProblemsCallResponseT,
@@ -73,7 +74,7 @@ export const ProblemsCard = ({
   const handleNavigate = (index: number) => {
     router.navigate({
       to: `/admin/jobs/${jobId}/stages/${stageId}/contest/`,
-      search: { topic: 2, problem: index },
+      search: { topic: 2, problem: index, section: 'builder' },
       resetScroll: true,
     });
   };
@@ -109,17 +110,23 @@ export const ProblemsCard = ({
                   }
                   key={problem.id}
                   className={cn(
-                    'cursor-pointer flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium shadow-sm transition-all duration-150',
-                    'hover:ring-2 hover:ring-primary hover:bg-secondary hover:text-primary font-semibold',
-
-                    problem.warnings.length > 0 &&
-                      'text-destructive  hover:ring-destructive hover:text-destructive',
+                    'group relative cursor-pointer flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium shadow-sm transition-all duration-150',
+                    'hover:ring hover:ring-accent font-semibold',
                     isActive
                       ? 'bg-primary border text-primary-foreground'
                       : 'bg-muted border',
                   )}
                   onClick={() => handleNavigate(problem.problemIndex)}
                 >
+                  {problem.warnings.length > 0 && (
+                    <div
+                      className={cn(
+                        'absolute h-2 w-2 rounded-full bg-destructive transition-transform duration-150',
+                        '-top-[0.9px] -right-[0.9px]',
+                        'group-hover:translate-x-[1px] group-hover:-translate-y-[1px]',
+                      )}
+                    />
+                  )}
                   {problem.problemIndex}
                 </div>
               );

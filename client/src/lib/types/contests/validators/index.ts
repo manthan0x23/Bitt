@@ -46,28 +46,17 @@ export const zContestSchema = z.object({
 export const zContestProblemDifficultyEnum = z.enum(['easy', 'medium', 'hard']);
 
 export const zContestProblemSchema = z.object({
-  id: z.string().max(256).optional(),
+  id: z.string().max(256).nullable(),
   title: z.string().max(256),
   description: z.string(),
 
   problemIndex: z.number().int().nonnegative(),
 
-  solution: z.string().optional(),
+  inputDescription: z.string().nullable(),
+  outputDescription: z.string().nullable(),
+  constraints: z.string().nullable(),
 
-  inputDescription: z.string().optional(),
-  outputDescription: z.string().optional(),
-  constraints: z.string().optional(),
-
-  hints: z.array(z.string()).optional(),
-
-  examples: z
-    .array(
-      z.object({
-        input: z.string(),
-        output: z.string(),
-      }),
-    )
-    .optional(),
+  hints: z.array(z.string()).nullable(),
 
   points: z.number().int().default(100),
 
@@ -80,11 +69,11 @@ export const zContestProblemSchema = z.object({
 
   contestId: z.string(),
 
-  tags: z.array(z.string()).optional(),
+  tags: z.array(z.string()).nullable(),
 
   partialMarks: z.boolean().default(true),
 
-  createdAt: z.date().optional(),
-  updatedAt: z.date().optional(),
-  deletedAt: z.date().nullable().optional(),
+  createdAt: z.date().nullable(),
+  updatedAt: z.date().nullable(),
+  deletedAt: z.date().nullable().nullable(),
 });

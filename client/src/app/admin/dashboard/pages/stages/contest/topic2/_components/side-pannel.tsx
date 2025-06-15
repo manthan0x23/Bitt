@@ -1,10 +1,6 @@
-import type {
-  ContestProblemSchemaT,
-  ContestSchemaT,
-} from '@/lib/types/contests';
+import type { ContestSchemaT } from '@/lib/types/contests';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useRouter, useSearch } from '@tanstack/react-router';
-import type { GetContestCallResponseT } from '../../server-calls/get-contest-call';
 import type { AxiosError } from 'axios';
 import {
   GetContestProblemsCall,
@@ -23,9 +19,8 @@ import {
   MdOutlineKeyboardDoubleArrowLeft,
   MdOutlineKeyboardDoubleArrowRight,
 } from 'react-icons/md';
-import { Skeleton } from '@/components/ui/skeleton';
-import { cn } from '@/lib/utils';
 import { ProblemsCard } from './problems-card';
+import type { ContestSearchParamsT } from '@/lib/types/globals';
 
 type Props = {
   contest: ContestSchemaT;
@@ -38,7 +33,7 @@ export const SidePannel = ({ contest }: Props) => {
   });
   const search = useSearch({
     from: '/admin/_dashboard/jobs_/$jobId/stages_/$stageId/contest/',
-  }) satisfies { topic: number; problem: number };
+  }) satisfies ContestSearchParamsT;
 
   const problemsQuery = useQuery<GetContestProblemsCallResponseT, AxiosError>({
     queryKey: ['admin', 'stages', 'contest', 'problems', stageId],
@@ -50,7 +45,7 @@ export const SidePannel = ({ contest }: Props) => {
   const handleNavigate = (index: number) => {
     router.navigate({
       to: `/admin/jobs/${jobId}/stages/${stageId}/contest/`,
-      search: { topic: 2, problem: index },
+      search: { topic: 2, problem: index, section: 'builder' },
       resetScroll: true,
     });
   };
@@ -71,9 +66,11 @@ export const SidePannel = ({ contest }: Props) => {
           >
             <CardHeader>
               <CardTitle>{contest.title}</CardTitle>
-              <CardDescription>Contest Overview</CardDescription>
+              <CardDescription className="text-primary">
+                Contest Overview
+              </CardDescription>
             </CardHeader>
-            <CardContent className="text-sm space-y-1 text-primary">
+            <CardContent className="text-sm space-y-1 ">
               <div>
                 <strong className="text-muted-foreground">Duration:</strong>{' '}
                 {contest.duration} minutes
@@ -127,7 +124,21 @@ export const SidePannel = ({ contest }: Props) => {
             <MdOutlineKeyboardDoubleArrowRight className="h-4 w-4" />
           </Button>
         </div>
-        <Button className="w-full mt-1 cursor-pointer">Launch</Button>
+        <Button
+          title={
+            problemsQuery.data?.data?.some(
+              (problem) => problem.warnings.length > 0,
+            )
+              ? 'Resolve issues with all the problems first '
+              : 'Launch contest'
+          }
+          disabled={problemsQuery.data?.data?.some(
+            (problem) => problem.warnings.length > 0,
+          )}
+          className="w-full mt-1 cursor-pointer"
+        >
+          Launch
+        </Button>
       </section>
     </div>
   );

@@ -7,10 +7,10 @@ import { contestRouter } from "./contest/routes";
 
 const stageRouter = Router();
 
-stageRouter.use("/quiz", quizRouter);
-stageRouter.use("/contest",contestRouter)
+stageRouter.use("/quiz", quizRouter).use("/contest", contestRouter);
 
-stageRouter.post("/create", asyncHandler(createStage));
-stageRouter.get("/all/:jobId", asyncHandler(getStagesByJobId));
+stageRouter
+  .get("/all/:jobId", asyncHandler(getStagesByJobId))
+  .post("/create", asyncHandler(createStage));
 
 export { stageRouter };

@@ -3,16 +3,17 @@ import {
   AppError,
   BadRequestError,
   InternalServerError,
+  NotFoundError,
   UnauthorizedError,
 } from "../../../../../utils/errors";
 import { admins, contestProblems, contests } from "../../../../../db/schema";
 import { db } from "../../../../../db/db";
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import z from "zod/v4";
+import { problemSchema } from "./utils/refine-problem";
 import { extractSchemaErrors } from "../../../../../utils/validation/generic-validator";
-import { problemExampleSchema, problemSchema } from "./utils/refine-problem";
 
-export const getContestProblems = async (
+export const getContestProblemsById = async (
   req: Request,
   res: Response
 ): Promise<any> => {
@@ -21,6 +22,16 @@ export const getContestProblems = async (
       stageId: z
         .string()
         .min(1, "StageId is required to retrieve contest realted data"),
+      problemIndex: z
+        .string()
+        .min(1, "Problem index is required")
+        .transform((v) => {
+          const n = Number(v);
+          if (Number.isNaN(n))
+            throw new Error("Problem index must be a valid number");
+          return n;
+        })
+        .pipe(z.number().int().nonnegative("Problem index must be ≥ 0")),
     })
     .safeParse(req.params);
 
@@ -49,27 +60,30 @@ export const getContestProblems = async (
       .where(eq(contests.stageId, parsed.data.stageId))
       .limit(1);
 
-    const problems = await db
+    const [problem] = await db
       .select()
       .from(contestProblems)
-      .where(eq(contestProblems.contestId, contest.id))
-      .orderBy(asc(contestProblems.problemIndex));
+      .where(
+        and(
+          eq(contestProblems.contestId, contest.id),
+          eq(contestProblems.problemIndex, parsed.data.problemIndex)
+        )
+      )
+      .limit(1);
 
-    let problemsWithWarnings =
-      problems.length > 0
-        ? problems.map((problem) => ({
-            ...problem,
-            warnings: extractSchemaErrors(problem, problemSchema),
-          }))
-        : null;
+    if (!problem || !problem.id) {
+      throw new NotFoundError("Problem not found !");
+    }
+
+    const warnings = extractSchemaErrors(problem, problemSchema);
 
     return res.status(200).json({
       message: "Contest problems retrieved successfully",
-      data: problemsWithWarnings,
+      data: { ...problem, warnings },
     });
   } catch (error) {
     console.error(error);
     if (error instanceof AppError) throw error;
-    throw new InternalServerError("Unexpected error during stage creation.");
+    throw new InternalServerError("Unexpected error during problem retrieval.");
   }
 };

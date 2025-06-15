@@ -1,13 +1,14 @@
 import { z } from "zod/v4";
-import { contestProblems } from "../../../../../../db/schema";
-
-type ContestProblem = typeof contestProblems.$inferSelect;
-
-export type ContestProblemWithWarning = ContestProblem & {
-  warnings: string[];
-};
 
 export const ContestProblemDifficulty = z.enum(["easy", "medium", "hard"]);
+
+export const problemExampleSchema = z.array(
+  z.object({
+    input: z.string(),
+    output: z.string(),
+  })
+);
+
 export const problemSchema = z.object({
   id: z.string().min(1, "ID is required."),
   problemIndex: z.number("Problem index is required."),
@@ -21,13 +22,7 @@ export const problemSchema = z.object({
 
   hints: z.array(z.string()),
 
-  examples: z
-    .array(z.string())
-    .min(1, "At least one input-output example is required."),
-
   tags: z.array(z.string()).min(1, "At least one tag is required"),
-
-  solution: z.string().min(1, "Solution is required."),
 
   difficulty: ContestProblemDifficulty.default("medium"),
 
@@ -47,22 +42,3 @@ export const problemSchema = z.object({
   createdAt: z.any().optional(),
   deletedAt: z.any().optional(),
 });
-
-export const refineContestProblem = (
-  problem: ContestProblem
-): ContestProblemWithWarning => {
-  const warnings: string[] = [];
-
-  const result = problemSchema.safeParse(problem);
-
-  if (!result.success) {
-    for (const issue of result.error.issues) {
-      warnings.push(issue.message);
-    }
-  }
-
-  return {
-    ...problem,
-    warnings,
-  };
-};

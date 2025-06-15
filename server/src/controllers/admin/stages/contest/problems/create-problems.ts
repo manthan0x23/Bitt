@@ -14,8 +14,6 @@ import {
 } from "../../../../../db/schema";
 import { db } from "../../../../../db/db";
 import { desc, eq } from "drizzle-orm";
-import { zUpdateProblemInput } from "./types/update-problem-schema";
-import { refineContestProblem } from "./utils/refine-problem";
 import z from "zod/v4";
 
 export const createContestProblems = async (
