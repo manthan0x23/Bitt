@@ -69,7 +69,7 @@ export const ProblemPage = () => {
               }}
               className={cn(
                 'text-sm px-12 h-full font-normal flex items-center justify-center gap-2',
-                'hover:bg-secondary cursor-pointer transition-all',
+                'hover:bg-accent cursor-pointer transition-all',
                 search.section == section.key &&
                   'border-b-4 border-primary font-semibold',
               )}
@@ -81,7 +81,7 @@ export const ProblemPage = () => {
         </div>
       </section>
       <section className="w-full mx-auto flex-1 min-h-0">
-        <div className="h-full max-h-[83vh] overflow-y-auto relative rounded-md px-4 py-2">
+        <div className="h-full max-h-[83vh] overflow-y-auto relative rounded-md px-4 py-4">
           {search.section === 'builder' && problemQuery.data && (
             <ProblemBuilder problem={problemQuery.data.data} />
           )}

@@ -35,6 +35,7 @@ import { Switch } from '@/components/ui/switch';
 import { useParams, useSearch } from '@tanstack/react-router';
 import type { ContestSearchParamsT } from '@/lib/types/globals';
 import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 type Props = {
   problem: Partial<ContestProblemSchemaT>;
@@ -139,6 +140,7 @@ export const ProblemBuilder = ({ problem }: Props) => {
       toast.success(message, {
         id: 'update-contest-problem',
       });
+      form.reset();
       queries.invalidateQueries({
         queryKey: ['admin', 'stages', 'contest', 'problems', stageId],
       });
@@ -167,7 +169,7 @@ export const ProblemBuilder = ({ problem }: Props) => {
   }, [search.problem]);
 
   return (
-    <div className="w-full h-full pt-5">
+    <div className="w-full h-full">
       <form
         aria-disabled={form.state.isSubmitting}
         onSubmit={(e) => {
@@ -178,30 +180,57 @@ export const ProblemBuilder = ({ problem }: Props) => {
         }}
         className="w-full mb-[2rem] space-y-8"
       >
-        <form.Subscribe
-          selector={(state) => [state.canSubmit, state.isSubmitting]}
-        >
-          {([canSubmit, isSubmitting]) => (
-            <button
-              type="submit"
-              disabled={!canSubmit || isSubmitting}
-              className="w-full text-left"
+        {
+          <div className="sticky top-0 z-10 bg-background">
+            <form.Subscribe
+              selector={(state) => [
+                state.canSubmit,
+                state.isSubmitting,
+                state.isDirty,
+              ]}
             >
-              <Alert
-                variant="default"
-                className={`
-          flex flex-col justify-start transition-all border border-primary 
-          ${canSubmit ? 'cursor-pointer hover:scale-[1.01]' : 'cursor-not-allowed opacity-70'}
-        `}
-              >
-                <AlertTitle>Unsaved Changes</AlertTitle>
-                <AlertDescription>
-                  Some form values have changed. Click to save the changes.
-                </AlertDescription>
-              </Alert>
-            </button>
-          )}
-        </form.Subscribe>
+              {([canSubmit, isSubmitting, isDirty]) => (
+                <AnimatePresence>
+                  {isDirty && (
+                    <motion.div
+                      initial={{ y: -100, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -100, opacity: 0 }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 25,
+                      }}
+                      className="sticky top-0 z-10 bg-background shadow-sm border-b border-border"
+                    >
+                      <Alert
+                        variant="default"
+                        className="flex items-center justify-between gap-2 px-4 py-3 transition-all"
+                      >
+                        <div className="flex flex-col">
+                          <AlertTitle>Unsaved Changes</AlertTitle>
+                          <AlertDescription>
+                            Some form values have changed. Click to save the
+                            changes.
+                          </AlertDescription>
+                        </div>
+                        <Button
+                          size="sm"
+                          type="submit"
+                          disabled={!canSubmit || isSubmitting}
+                          variant="secondary"
+                          className="border border-primary"
+                        >
+                          Save
+                        </Button>
+                      </Alert>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              )}
+            </form.Subscribe>
+          </div>
+        }
 
         <form.Field name="title">
           {(field) => (
@@ -319,7 +348,7 @@ export const ProblemBuilder = ({ problem }: Props) => {
                   variant={'default'}
                   maxCount={5}
                   value={field.state.value}
-                  defaultValue={currTags}
+                  defaultValue={field.state.value}
                   onValueChange={field.handleChange}
                   aria-invalid={field.state.meta.errors.length > 0}
                   onBlur={field.handleBlur}

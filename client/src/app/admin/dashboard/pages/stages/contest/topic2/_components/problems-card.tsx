@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils'; // Make sure this is your classnames utility
 import { useRouter, useSearch, useParams } from '@tanstack/react-router';
@@ -74,7 +73,7 @@ export const ProblemsCard = ({
   const handleNavigate = (index: number) => {
     router.navigate({
       to: `/admin/jobs/${jobId}/stages/${stageId}/contest/`,
-      search: { topic: 2, problem: index, section: 'builder' },
+      search: { topic: 2, problem: index, section: 'description' },
       resetScroll: true,
     });
   };

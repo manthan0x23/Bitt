@@ -13,7 +13,6 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import type { JobScreeningTypeT, JobTypeT } from '@/lib/types/jobs';
-import { MarkdownEditor } from '@/components/common/markdown-editor';
 import { useStore } from '@tanstack/react-store';
 import { CreateJobFormPreview } from './create-job-form-preview';
 import { MultiSelect } from '@/components/ui/multi-select';
@@ -185,18 +184,20 @@ export const CreateJobForm = () => {
                   >
                     Job Description
                   </Label>
-                  <MarkdownEditor
-                    preview={false}
+                  <Textarea
+                    className="h-[180px]"
+                    onBlur={field.handleBlur}
                     aria-invalid={field.state.meta.errors.length > 0}
-                    value={field.state.value || ''}
-                    onChange={(v) => {
+                    placeholder={'Give job Description'}
+                    value={field.state.value}
+                    onChange={(e) => {
+                      const v = e.target.value;
                       const wordCount = v
                         .trim()
                         .split(/\s+/)
                         .filter(Boolean).length;
                       if (wordCount <= 400) field.handleChange(v);
                     }}
-                    placeholder="Describe the job responsibilities..."
                   />
                   <p className="text-sm text-muted-foreground text-right">
                     {field.state.value?.split(/\s+/).filter(Boolean).length ||

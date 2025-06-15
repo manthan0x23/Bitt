@@ -32,6 +32,7 @@ import { toast } from 'sonner';
 import { ContestPreview } from './_components/contest-preview';
 import { TbArrowLeft } from 'react-icons/tb';
 import type { GetContestCallResponseT } from '../server-calls/get-contest-call';
+import { Textarea } from '@/components/ui/textarea';
 
 type Props = {
   contest: GetContestCallResponseT['data'];
@@ -198,12 +199,18 @@ export const ContestTopic1 = ({ contest }: Props) => {
                     >
                       Description
                     </Label>
-                    <MarkdownEditor
-                      placeholder="Short description of the contest..."
+                    <p className="text-xs text-muted-foreground">
+                      Write contest's description here (Markdown supported).
+                    </p>
+                    <Textarea
+                      className="h-[300px]"
+                      onBlur={field.handleBlur}
+                      aria-invalid={field.state.meta.errors.length > 0}
+                      placeholder={'Enter description, Markdown supported...'}
                       value={field.state.value}
-                      onChange={(v) => field.handleChange(v)}
-                      preview={false}
+                      onChange={(e) => field.handleChange(e.target.value)}
                     />
+
                     {field.state.meta.errors.length > 0 && (
                       <p className="text-sm text-destructive">
                         {field.state.meta.errors[0]?.message}
@@ -225,11 +232,17 @@ export const ContestTopic1 = ({ contest }: Props) => {
                     >
                       Instructions
                     </Label>
-                    <MarkdownEditor
-                      placeholder="What should participants know before starting?"
+                    <p className="text-xs text-muted-foreground">
+                      Write instruction for participants here
+                      (Markdown supported).
+                    </p>
+                    <Textarea
+                      className="h-[300px]"
+                      onBlur={field.handleBlur}
+                      aria-invalid={field.state.meta.errors.length > 0}
+                      placeholder={'Enter description, Markdown supported...'}
                       value={field.state.value}
-                      onChange={(v) => field.handleChange(v)}
-                      preview={false}
+                      onChange={(e) => field.handleChange(e.target.value)}
                     />
                     {field.state.meta.errors.length > 0 && (
                       <p className="text-sm text-destructive">

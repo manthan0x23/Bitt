@@ -45,7 +45,7 @@ export const SidePannel = ({ contest }: Props) => {
   const handleNavigate = (index: number) => {
     router.navigate({
       to: `/admin/jobs/${jobId}/stages/${stageId}/contest/`,
-      search: { topic: 2, problem: index, section: 'builder' },
+      search: { topic: 2, problem: index, section: 'description' },
       resetScroll: true,
     });
   };
@@ -55,7 +55,8 @@ export const SidePannel = ({ contest }: Props) => {
       <ScrollArea className="h-[80%] w-full">
         <div className="flex flex-col justify-between gap-6">
           <Card
-            className="hover:bg-accent cursor-pointer"
+            title="Navigate to contest page"
+            className="hover:bg-secondary/40 cursor-pointer"
             onClick={() => {
               router.navigate({
                 to: `/admin/jobs/${jobId}/stages/${stageId}/contest`,
