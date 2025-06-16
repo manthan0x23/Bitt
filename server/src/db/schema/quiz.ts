@@ -6,7 +6,6 @@ import {
   json,
   pgTable,
   text,
-  time,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";

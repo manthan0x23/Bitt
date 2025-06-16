@@ -18,3 +18,4 @@ export * from "./resume-filters";
 export * from "./quiz-problems";
 export * from "./prompts";
 export * from "./testcases";
+export * from "./job-registrations";
