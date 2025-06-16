@@ -109,7 +109,7 @@ class StorageService {
     }
   }
 
-  async getUrlFromKey(key: string) {
+  public static getUrlFromKey(key: string) {
     return StorageService.cdnDistributionUrl + key;
   }
 }

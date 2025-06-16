@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { ProblemDescription } from './problem-description';
 import { ProblemBuilder } from './problem-builder';
+import { ProblemTestcases } from './problem-testcases';
 
 export const ProblemPage = () => {
   const router = useRouter();
@@ -87,6 +88,9 @@ export const ProblemPage = () => {
           )}
           {search.section === 'description' && problemQuery.data && (
             <ProblemDescription problem={problemQuery.data.data} />
+          )}
+          {search.section === 'testcases' && problemQuery.data && (
+            <ProblemTestcases />
           )}
         </div>
       </section>

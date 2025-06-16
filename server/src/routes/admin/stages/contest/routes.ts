@@ -16,7 +16,10 @@ contestRouter
 // contest problems
 contestRouter
   .get("/problems/:stageId", asyncHandler(getContestProblems))
-  .get("/problems/:stageId/get/:problemIndex", asyncHandler(getContestProblemsById))
+  .get(
+    "/problems/:stageId/get/:problemIndex",
+    asyncHandler(getContestProblemsById)
+  )
   .post("/problems/create/:stageId", asyncHandler(createContestProblems))
   .put("/problems/update", asyncHandler(updateContestProblems));
 

@@ -15,6 +15,20 @@
       "when": 1750003015793,
       "tag": "0001_odd_mach_iv",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750005007950,
+      "tag": "0002_condemned_carnage",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1750010577230,
+      "tag": "0003_flawless_the_stranger",
+      "breakpoints": true
     }
   ]
 }

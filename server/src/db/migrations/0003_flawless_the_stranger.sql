@@ -1,0 +1,1 @@
+ALTER TABLE "testcases" ADD COLUMN "points" integer DEFAULT 0 NOT NULL;
