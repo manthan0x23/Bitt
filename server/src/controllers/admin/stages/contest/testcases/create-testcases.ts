@@ -14,8 +14,6 @@ import {
 import { db } from "../../../../../db/db";
 import { eq } from "drizzle-orm";
 import { zCreateTestcaseInput } from "./types/testcases-input";
-import { S3Client } from "@aws-sdk/client-s3";
-import { Env } from "../../../../../utils/env";
 import { StorageService } from "../../../../../services/aws/storage";
 import fromBuffer from "magic-bytes.js";
 import { shortId } from "../../../../../utils/integrations/short-id";
@@ -70,15 +68,7 @@ export const createTestCase = async (
       );
     }
 
-    const s3Client = new S3Client({
-      region: Env.AWS_REGION,
-      credentials: {
-        accessKeyId: Env.AWS_ACCESS_KEY,
-        secretAccessKey: Env.AWS_SECRET_KEY,
-      },
-    });
-
-    const storageService = new StorageService(s3Client, Env.AWS_S3_BUCKET_NAME);
+    const storageService = new StorageService();
 
     const {
       inputFile,
@@ -94,7 +84,9 @@ export const createTestCase = async (
       text: string,
       prefix: string
     ): Promise<string> => {
-      const key = `bit/contest/${contest.id}/${contestProblemId}/${prefix}/${shortId(10)}.txt`;
+      const key = `bit/contest/${
+        contest.id
+      }/${contestProblemId}/${prefix}/${shortId(10)}.txt`;
       await storageService.uploadObject(key, text, "text/plain");
       return key;
     };
@@ -111,7 +103,9 @@ export const createTestCase = async (
         throw new BadRequestError("Only plain text files are allowed");
       }
 
-      const key = `bit/contest/${contest.id}/${contestProblemId}/${prefix}/${shortId(10)}.txt`;
+      const key = `bit/contest/${
+        contest.id
+      }/${contestProblemId}/${prefix}/${shortId(10)}.txt`;
       await storageService.uploadObject(key, file.buffer, "text/plain");
       return key;
     };

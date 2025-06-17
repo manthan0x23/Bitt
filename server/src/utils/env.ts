@@ -13,6 +13,7 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(1, "JWT_SECRET is required"),
   DATABASE_URL: z.string().url("DATABASE_URL must be a valid URL"),
   NODE_ENV: z.string().optional().default("prod"),
+
   AWS_ACCESS_KEY: z.string().min(1, "AWS_ACCESS_KEY is required"),
   AWS_SECRET_KEY: z.string().min(1, "AWS_SECRET_KEY is required"),
   AWS_REGION: z.string().min(1, "AWS_REGION is required"),
@@ -20,6 +21,10 @@ const envSchema = z.object({
     .string()
     .url("AWS_CLOUD_FRONT_DISTRIBUTION_URL is required"),
   AWS_S3_BUCKET_NAME: z.string().min(1, "AWS_S3_BUCKET_NAME is required"),
+  AWS_SQS_FIFO_QUEUE_URL: z
+    .string()
+    .min(1, "AWS_SQS_FIFO_QUEUE_URL is required !"),
+
   DEEP_INFRA_API_KEY: z.string().min(1, "DEEP_INFRA_API_KEY is required"),
   OPEN_ROUTER_API_KEY: z.string().min(1, "OPEN_ROUTER_API_KEY is required"),
 });

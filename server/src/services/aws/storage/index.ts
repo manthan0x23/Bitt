@@ -13,9 +13,15 @@ class StorageService {
   private static cdnDistributionUrl: string =
     Env.AWS_CLOUD_FRONT_DISTRIBUTION_URL;
 
-  constructor(s3Client: S3Client, bucketName: string) {
-    this.s3Client = s3Client;
-    this.bucketName = bucketName;
+  constructor() {
+    this.s3Client = new S3Client({
+      region: Env.AWS_REGION,
+      credentials: {
+        accessKeyId: Env.AWS_ACCESS_KEY,
+        secretAccessKey: Env.AWS_SECRET_KEY,
+      },
+    });
+    this.bucketName = Env.AWS_S3_BUCKET_NAME;
   }
 
   async uploadObject(
