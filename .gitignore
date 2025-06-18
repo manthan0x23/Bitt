@@ -6,3 +6,6 @@ routeTree.gen.ts
 
 .env.server
 docker-compose.prod.yml
+
+.vscode
+.vs_code
