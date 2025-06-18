@@ -61,7 +61,7 @@ export const createOrganization = async (
 
       const updatedAdmins = await tx
         .update(admins)
-        .set({ organizationId: newOrg.id })
+        .set({ organizationId: newOrg.id, role: "super_admin" })
         .where(and(eq(admins.id, user.id), eq(admins.workEmail, user.email)))
         .returning();
 

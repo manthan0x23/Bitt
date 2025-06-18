@@ -84,6 +84,7 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
             emailVerified: true,
             password: null,
             accountSource: "google",
+            role: "restrict",
           })
           .returning()
       )[0];
@@ -106,6 +107,7 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
       id: admin.id,
       sub: payload.sub,
       picture: admin.pictureurl,
+      role: admin.role,
       type: "admin",
     });
 

@@ -8,6 +8,7 @@ import {
 import { shortId } from "../../utils/integrations/short-id";
 import { organizations } from "./organizations";
 import {
+  adminRoleEnum,
   organizationInviteStatusEnum,
   organizationInviteTypeEnum,
 } from "./enums";
@@ -29,6 +30,8 @@ export const organizationInvite = pgTable(
     organizationId: varchar("organization_id", { length: 256 })
       .references(() => organizations.id, { onDelete: "cascade" })
       .notNull(),
+
+    role: adminRoleEnum().notNull(),
 
     allowedOrigins: varchar("allowed_origins", { length: 512 })
       .array()

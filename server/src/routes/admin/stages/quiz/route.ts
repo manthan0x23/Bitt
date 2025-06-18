@@ -7,13 +7,31 @@ import { createQuizProblem } from "../../../../controllers/admin/stages/quiz/pro
 import { updateQuizProblem } from "../../../../controllers/admin/stages/quiz/problems/update-problem";
 import { getQuizProblems } from "../../../../controllers/admin/stages/quiz/problems/get-quiz-problems";
 import { generateQuizWithAi } from "../../../../controllers/admin/stages/quiz/problems/generate-with-ai";
+import { adminRoles } from "../../../../utils/types/admin-roles";
+import { allowedRoles } from "../../../../middlewares/role-based-access";
 
 const quizRouter = Router();
 
 quizRouter
   .get("/get/:stageId", asyncHandler(getQuiz))
-  .post("/update", asyncHandler(updateQuiz))
-  .put("/generate/:stageId", asyncHandler(generateQuizWithAi));
+  .post(
+    "/update",
+    allowedRoles([
+      adminRoles.superAdmin,
+      adminRoles.moderator,
+      adminRoles.problemSetter,
+    ]),
+    asyncHandler(updateQuiz)
+  )
+  .put(
+    "/generate/:stageId",
+    allowedRoles([
+      adminRoles.superAdmin,
+      adminRoles.moderator,
+      adminRoles.problemSetter,
+    ]),
+    asyncHandler(generateQuizWithAi)
+  );
 
 // quiz problems
 quizRouter
@@ -22,7 +40,23 @@ quizRouter
     "/problem/:questionIndex/stage/:stageId",
     asyncHandler(getQuizProblemById)
   )
-  .put("/problem", asyncHandler(updateQuizProblem))
-  .post("/problem/:quizId", asyncHandler(createQuizProblem));
+  .put(
+    "/problem",
+    allowedRoles([
+      adminRoles.superAdmin,
+      adminRoles.moderator,
+      adminRoles.problemSetter,
+    ]),
+    asyncHandler(updateQuizProblem)
+  )
+  .post(
+    "/problem/:quizId",
+    allowedRoles([
+      adminRoles.superAdmin,
+      adminRoles.moderator,
+      adminRoles.problemSetter,
+    ]),
+    asyncHandler(createQuizProblem)
+  );
 
 export { quizRouter };

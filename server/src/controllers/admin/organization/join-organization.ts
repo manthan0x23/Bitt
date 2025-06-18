@@ -106,6 +106,7 @@ export const joinOrganization = async (
         .update(admins)
         .set({
           organizationId: searchInvite.organizationId,
+          role: searchInvite.role,
         })
         .where(
           and(eq(admins.id, req.user.id), eq(admins.workEmail, req.user.email))

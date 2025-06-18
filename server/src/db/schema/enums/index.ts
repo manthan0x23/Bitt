@@ -12,3 +12,4 @@ export * from "./resume-filters";
 export * from "./quiz-problem-type";
 export * from "./testcases";
 export * from "./job-registrations";
+export * from "./admins";

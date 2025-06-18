@@ -1,6 +1,8 @@
 export class AppError extends Error {
   constructor(public statusCode: number, message: string) {
     super(message);
+    this.name = new.target.name;
+    Error.captureStackTrace?.(this, this.constructor);
   }
 }
 
@@ -17,13 +19,48 @@ export class UnauthorizedError extends AppError {
 }
 export class InternalServerError extends AppError {
   constructor(message?: string) {
-    if (message) super(500, message);
-    else super(500, "Internal Server Error");
+    if (message) super(500, message ?? "Internal server error");
   }
 }
 
 export class NotFoundError extends AppError {
   constructor(message: string = "Not Found") {
     super(404, message);
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message = "Forbidden") {
+    super(403, message);
+  }
+}
+
+export class ConflictError extends AppError {
+  constructor(message = "Conflict") {
+    super(409, message);
+  }
+}
+
+export class UnprocessableEntityError extends AppError {
+  constructor(message = "Unprocessable Entity") {
+    super(422, message);
+  }
+}
+
+export class TooManyRequestsError extends AppError {
+  constructor(message = "Too Many Requests") {
+    super(429, message);
+  }
+}
+
+export class ServiceUnavailableError extends AppError {
+  constructor(message = "Service Unavailable") {
+    super(503, message);
+  }
+}
+
+export class GatewayTimeoutError extends AppError {
+  constructor(message = "Gateway Timeout") {
+    super(504, message);
   }
 }

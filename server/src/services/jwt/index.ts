@@ -1,5 +1,6 @@
 import jwt, { SignOptions } from "jsonwebtoken";
 import { Env } from "../../utils/env";
+import { AdminRole } from "../../utils/types/admin-roles";
 
 export interface JwtPayload {
   id: string;
@@ -8,6 +9,7 @@ export interface JwtPayload {
   sub?: string;
   picture?: string | null;
   type: "user" | "admin";
+  role: AdminRole;
 }
 
 export class JwtService {

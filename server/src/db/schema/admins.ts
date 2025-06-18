@@ -7,6 +7,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { accountSourceEnum } from "./enums/account-source";
 import { shortId } from "../../utils/integrations/short-id";
+import { adminRoleEnum } from "./enums";
 
 export const admins = pgTable("admins", {
   id: varchar("id")
@@ -24,6 +25,8 @@ export const admins = pgTable("admins", {
   accountSource: accountSourceEnum("account_source")
     .default("credentials")
     .notNull(),
+
+  role: adminRoleEnum().notNull(),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   isDeleted: timestamp("is_deleted"),
