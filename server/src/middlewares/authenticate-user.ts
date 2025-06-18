@@ -1,8 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { JwtPayload, JwtService } from "../services/jwt";
-import { db } from "../db/db";
-import { users } from "../db/schema";
-import { and, eq } from "drizzle-orm";
+import { JwtService } from "../services/jwt";
 import { UnauthorizedError } from "../utils/errors";
 
 export const authenticateUserMiddleware = async (

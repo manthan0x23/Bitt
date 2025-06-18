@@ -19,3 +19,5 @@ export * from "./quiz-problems";
 export * from "./prompts";
 export * from "./testcases";
 export * from "./job-registrations";
+export * from "./tasks";
+export * from "./roles";

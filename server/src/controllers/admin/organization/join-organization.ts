@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { zJoinOrganizationInput } from "./types/join-organization.input";
 import { db } from "../../../db/db";
-import { admins, organizationInvite } from "../../../db/schema";
+import { admins, organizationInvite, roles } from "../../../db/schema";
 import { and, eq } from "drizzle-orm";
 import {
   AppError,
@@ -102,11 +102,20 @@ export const joinOrganization = async (
         .where(eq(organizationInvite.id, searchInvite.id))
         .returning();
 
+      let role: typeof roles.$inferSelect | null = null;
+
+      if (searchInvite.roleId)
+        [role] = await tx
+          .select()
+          .from(roles)
+          .where(eq(roles.id, searchInvite.roleId));
+
       const adminUpdateResult = await tx
         .update(admins)
         .set({
           organizationId: searchInvite.organizationId,
-          role: searchInvite.role,
+          role: role?.tag,
+          roleId: role?.id,
         })
         .where(
           and(eq(admins.id, req.user.id), eq(admins.workEmail, req.user.email))

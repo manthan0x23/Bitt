@@ -8,6 +8,8 @@ import { users } from "../../db/schema";
 import { db } from "../../db/db";
 import { eq } from "drizzle-orm";
 import { JwtService } from "../../services/jwt";
+import { adminRoles } from "../../utils/types/admin-roles";
+import { shortId } from "../../utils/integrations/short-id";
 
 export const redirectToGoogleAuthScreen = async (
   req: Request,
@@ -78,6 +80,7 @@ export const loginWithGoogleOAuth = async (req: Request, res: Response) => {
           .insert(users)
           .values({
             name: payload.name,
+            username: payload.email.split("@")[0].concat("_").concat(shortId()),
             pictureurl: payload.picture,
             email: payload.email,
             emailVerified: true,
@@ -106,6 +109,8 @@ export const loginWithGoogleOAuth = async (req: Request, res: Response) => {
       sub: payload.sub,
       picture: user.pictureurl,
       type: "user",
+      role: adminRoles.restrict,
+      roleId: null,
     });
 
     res.cookie("token", myToken, {

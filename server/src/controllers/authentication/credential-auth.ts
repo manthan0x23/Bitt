@@ -5,6 +5,8 @@ import { db } from "../../db/db";
 import { users } from "../../db/schema";
 import { HashService } from "../../services/hash";
 import { JwtService } from "../../services/jwt";
+import { adminRoles } from "../../utils/types/admin-roles";
+import { shortId } from "../../utils/integrations/short-id";
 
 const credentialLoginBodyObject = z.object({
   email: z.string().email(),
@@ -43,7 +45,12 @@ export const credentialLoginUser = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    const token = JwtService;
+    const token = JwtService.sign({
+      ...existingUser,
+      type: "user",
+      role: adminRoles.restrict,
+      roleId: null,
+    });
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -83,6 +90,7 @@ export const credentialRegisterUser = async (req: Request, res: Response) => {
     const hashedPassword = await HashService.hashPassword(password);
 
     await db.insert(users).values({
+      username: email.split("@")[0].concat("_").concat(shortId()),
       email,
       password: hashedPassword,
     });

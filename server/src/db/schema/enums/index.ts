@@ -13,3 +13,6 @@ export * from "./quiz-problem-type";
 export * from "./testcases";
 export * from "./job-registrations";
 export * from "./admins";
+export * from "./tasks";
+export * from "./capabilities";
+export * from "./color";

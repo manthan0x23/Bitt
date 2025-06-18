@@ -13,6 +13,7 @@ import {
   organizationInviteTypeEnum,
 } from "./enums";
 import { admins } from "./admins";
+import { roles } from "./roles";
 
 export const organizationInvite = pgTable(
   "organization_invite",
@@ -31,7 +32,9 @@ export const organizationInvite = pgTable(
       .references(() => organizations.id, { onDelete: "cascade" })
       .notNull(),
 
-    role: adminRoleEnum().notNull(),
+    roleId: varchar("role_id").references(() => roles.id, {
+      onDelete: "set null",
+    }),
 
     allowedOrigins: varchar("allowed_origins", { length: 512 })
       .array()

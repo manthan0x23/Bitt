@@ -9,7 +9,8 @@ export interface JwtPayload {
   sub?: string;
   picture?: string | null;
   type: "user" | "admin";
-  role: AdminRole;
+  roleId: string | null;
+  role: string;
 }
 
 export class JwtService {

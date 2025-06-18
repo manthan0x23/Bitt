@@ -7,55 +7,48 @@ import { createQuizProblem } from "../../../../controllers/admin/stages/quiz/pro
 import { updateQuizProblem } from "../../../../controllers/admin/stages/quiz/problems/update-problem";
 import { getQuizProblems } from "../../../../controllers/admin/stages/quiz/problems/get-quiz-problems";
 import { generateQuizWithAi } from "../../../../controllers/admin/stages/quiz/problems/generate-with-ai";
-import { adminRoles } from "../../../../utils/types/admin-roles";
-import { allowedRoles } from "../../../../middlewares/role-based-access";
+import { capabilitiesMap } from "../../../../utils/types/admin-capabilities";
+import { requiresCapability } from "../../../../middlewares/authorize-admin";
 
 const quizRouter = Router();
 
 quizRouter
-  .get("/get/:stageId", asyncHandler(getQuiz))
+  .get(
+    "/get/:stageId",
+    requiresCapability(capabilitiesMap.quiz.read),
+    asyncHandler(getQuiz)
+  )
   .post(
     "/update",
-    allowedRoles([
-      adminRoles.superAdmin,
-      adminRoles.moderator,
-      adminRoles.problemSetter,
-    ]),
+    requiresCapability(capabilitiesMap.quiz.update),
     asyncHandler(updateQuiz)
   )
   .put(
     "/generate/:stageId",
-    allowedRoles([
-      adminRoles.superAdmin,
-      adminRoles.moderator,
-      adminRoles.problemSetter,
-    ]),
+    requiresCapability(capabilitiesMap.quiz.generate),
     asyncHandler(generateQuizWithAi)
   );
 
 // quiz problems
 quizRouter
-  .get("/problems/:stageId", asyncHandler(getQuizProblems))
+  .get(
+    "/problems/:stageId",
+    requiresCapability(capabilitiesMap.quizProblem.read),
+    asyncHandler(getQuizProblems)
+  )
   .get(
     "/problem/:questionIndex/stage/:stageId",
+    requiresCapability(capabilitiesMap.quizProblem.read),
     asyncHandler(getQuizProblemById)
   )
   .put(
     "/problem",
-    allowedRoles([
-      adminRoles.superAdmin,
-      adminRoles.moderator,
-      adminRoles.problemSetter,
-    ]),
+    requiresCapability(capabilitiesMap.quizProblem.update),
     asyncHandler(updateQuizProblem)
   )
   .post(
     "/problem/:quizId",
-    allowedRoles([
-      adminRoles.superAdmin,
-      adminRoles.moderator,
-      adminRoles.problemSetter,
-    ]),
+    requiresCapability(capabilitiesMap.quizProblem.create),
     asyncHandler(createQuizProblem)
   );
 

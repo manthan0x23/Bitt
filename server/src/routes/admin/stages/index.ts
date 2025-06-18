@@ -2,10 +2,10 @@ import { Router } from "express";
 import { getStagesByJobId } from "../../../controllers/admin/stages/get-stages-by-job-id";
 import { createStage } from "../../../controllers/admin/stages/create-stage";
 import { asyncHandler } from "../../../middlewares/handlers/async-handler";
-import { quizRouter } from "./quiz/route";
-import { contestRouter } from "./contest/routes";
-import { allowedRoles } from "../../../middlewares/role-based-access";
-import { adminRoles } from "../../../utils/types/admin-roles";
+import { requiresCapability } from "../../../middlewares/authorize-admin";
+import { capabilitiesMap } from "../../../utils/types/admin-capabilities";
+import { quizRouter } from "./quiz";
+import { contestRouter } from "./contest";
 
 const stageRouter = Router();
 
@@ -15,7 +15,7 @@ stageRouter
   .get("/all/:jobId", asyncHandler(getStagesByJobId))
   .post(
     "/create",
-    allowedRoles([adminRoles.superAdmin, adminRoles.moderator]),
+    requiresCapability(capabilitiesMap.stage.create),
     asyncHandler(createStage)
   );
 

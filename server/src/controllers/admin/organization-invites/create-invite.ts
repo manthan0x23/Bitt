@@ -45,7 +45,7 @@ export const createOrganizationInvite = async (
           allowedOrigins: parsed.data.allowedOrigins,
           inviteType: parsed.data.inviteType,
           usageLimit: parsed.data.usageLimit,
-          role: parsed.data.role,
+          roleId: parsed.data.roleId,
           endDate: new Date(parsed.data.endDate),
           createdBy: admin.id,
         })

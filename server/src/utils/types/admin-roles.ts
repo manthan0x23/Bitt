@@ -1,4 +1,4 @@
-import { z } from "zod";
+import z from "zod/v4";
 
 export const adminRoles = {
   superAdmin: "super_admin",
@@ -10,6 +10,7 @@ export const adminRoles = {
 } as const;
 
 export type AdminRole = (typeof adminRoles)[keyof typeof adminRoles];
-export const zAdminRolesEnum = z.enum(
+
+export const zAdminRoleEnum = z.enum(
   Object.values(adminRoles) as [AdminRole, ...AdminRole[]]
 );

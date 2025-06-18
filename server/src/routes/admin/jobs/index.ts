@@ -5,25 +5,25 @@ import { updateJob } from "../../../controllers/admin/jobs/update-job";
 import { deleteJob } from "../../../controllers/admin/jobs/delete-job";
 import { getJobById } from "../../../controllers/admin/jobs/get-job-by-id";
 import { getOrganizationJobs } from "../../../controllers/admin/jobs/get-all-jobs";
-import { allowedRoles } from "../../../middlewares/role-based-access";
-import { adminRoles } from "../../../utils/types/admin-roles";
+import { requiresCapability } from "../../../middlewares/authorize-admin";
+import { capabilitiesMap } from "../../../utils/types/admin-capabilities";
 
 const jobRouter = Router();
 
 jobRouter
   .post(
     "/create",
-    allowedRoles([adminRoles.superAdmin, adminRoles.moderator]),
+    requiresCapability(capabilitiesMap.job.create),
     asyncHandler(createJob)
   )
   .put(
     "/update",
-    allowedRoles([adminRoles.superAdmin, adminRoles.moderator]),
+    requiresCapability(capabilitiesMap.job.update),
     asyncHandler(updateJob)
   )
   .delete(
     "/:id",
-    allowedRoles([adminRoles.superAdmin, adminRoles.moderator]),
+    requiresCapability(capabilitiesMap.job.delete),
     asyncHandler(deleteJob)
   )
   .get("/get/:id", asyncHandler(getJobById))

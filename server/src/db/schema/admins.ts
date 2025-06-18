@@ -7,7 +7,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { accountSourceEnum } from "./enums/account-source";
 import { shortId } from "../../utils/integrations/short-id";
-import { adminRoleEnum } from "./enums";
+import { roles } from "./roles";
 
 export const admins = pgTable("admins", {
   id: varchar("id")
@@ -16,6 +16,7 @@ export const admins = pgTable("admins", {
     .notNull()
     .$defaultFn(() => shortId(8)),
   name: varchar("name", { length: 256 }),
+  username: varchar("username").unique().notNull(),
 
   workEmail: varchar("work_email").notNull().unique(),
   password: text("password"),
@@ -26,7 +27,11 @@ export const admins = pgTable("admins", {
     .default("credentials")
     .notNull(),
 
-  role: adminRoleEnum().notNull(),
+  role: varchar("role").notNull().default("restrict"),
+
+  roleId: varchar("role_id", { length: 256 }).references(() => roles.id, {
+    onDelete: "set null",
+  }),
 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   isDeleted: timestamp("is_deleted"),

@@ -8,6 +8,8 @@ import { admins } from "../../../db/schema";
 import { db } from "../../../db/db";
 import { eq } from "drizzle-orm";
 import { JwtService } from "../../../services/jwt";
+import { adminRoles } from "../../../utils/types/admin-roles";
+import { shortId } from "../../../utils/integrations/short-id";
 
 export const redirectAdminGoogleAuthScreen = async (
   req: Request,
@@ -79,12 +81,14 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
           .insert(admins)
           .values({
             name: payload.name,
+            username: payload.email.split("@")[0].concat("_").concat(shortId()),
             pictureurl: payload.picture,
             workEmail: payload.email,
             emailVerified: true,
             password: null,
             accountSource: "google",
-            role: "restrict",
+            role: adminRoles.restrict,
+            roleId: null,
           })
           .returning()
       )[0];
@@ -108,6 +112,7 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
       sub: payload.sub,
       picture: admin.pictureurl,
       role: admin.role,
+      roleId: admin.roleId,
       type: "admin",
     });
 

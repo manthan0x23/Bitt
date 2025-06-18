@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { db } from "../../../db/db";
-import { admins, organizations } from "../../../db/schema";
+import { admins, organizations, roles } from "../../../db/schema";
 import { and, eq } from "drizzle-orm";
 import { scrapeLogoUrl } from "../../../utils/integrations/logo-scrapper";
 import { zCreateOrganizationInput } from "./types/create-organization.input";
@@ -10,6 +10,8 @@ import {
   InternalServerError,
   UnauthorizedError,
 } from "../../../utils/errors";
+import { insertDefaultRoles } from "../../../utils/types/default-roles-org";
+import { adminRoles } from "../../../utils/types/admin-roles";
 
 export const createOrganization = async (
   req: Request,
@@ -59,9 +61,28 @@ export const createOrganization = async (
           .returning()
       )[0];
 
+      const defaultRoles = await insertDefaultRoles(newOrg.id);
+      const insertedRoles = await tx
+        .insert(roles)
+        .values(defaultRoles)
+        .returning();
+
+      const superRole = insertedRoles.find(
+        (r) => r.tag === adminRoles.superAdmin
+      );
+      if (!superRole) {
+        throw new InternalServerError(
+          "Super admin role not found after insertion"
+        );
+      }
+
       const updatedAdmins = await tx
         .update(admins)
-        .set({ organizationId: newOrg.id, role: "super_admin" })
+        .set({
+          organizationId: newOrg.id,
+          role: adminRoles.superAdmin,
+          roleId: superRole.id,
+        })
         .where(and(eq(admins.id, user.id), eq(admins.workEmail, user.email)))
         .returning();
 
@@ -81,7 +102,9 @@ export const createOrganization = async (
   } catch (error) {
     if (error instanceof AppError) {
       throw error;
-    } else console.error(error);
-    throw new InternalServerError();
+    } else {
+      console.error(error);
+      throw new InternalServerError();
+    }
   }
 };

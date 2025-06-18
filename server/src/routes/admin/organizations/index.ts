@@ -4,7 +4,7 @@ import { joinOrganization } from "../../../controllers/admin/organization/join-o
 import { asyncHandler } from "../../../middlewares/handlers/async-handler";
 import { uploadHandler } from "../../../middlewares/handlers/uploads-handler";
 import { updateOrganization } from "../../../controllers/admin/organization/update-organization";
-import { inviteRouter } from "./invites/routes";
+import { inviteRouter } from "./invites";
 import { getOrganizationById } from "../../../controllers/admin/organization/get-organization-by-id";
 
 const organizationRouter = Router();
@@ -15,7 +15,7 @@ organizationRouter
   .post("/join", asyncHandler(joinOrganization))
   .put(
     "/update",
-    uploadHandler.single("org_logo"),
+    uploadHandler().single("org_logo"),
     asyncHandler(updateOrganization)
   )
   .get("/:orgId", asyncHandler(getOrganizationById));

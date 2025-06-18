@@ -144,7 +144,7 @@ Relevant tags: ${
 Respond with a JavaScript array of question objects, strictly adhering to the schema.
 `;
 
-    const deepinfra = createDeepInfra({ apiKey: Env.DEEP_INFRA_API_KEY });
+    const deepinfra = createDeepInfra({ apiKey: Env.EDEN_AI_API_KEY });
 
     const {
       text: result,
