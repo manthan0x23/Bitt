@@ -1,6 +1,11 @@
 import argon2 from "argon2";
 
 export class HashService {
+  static async hashString(str: string): Promise<string> {
+    return await argon2.hash(str);
+  }
+
+  // for passwords
   static async hashPassword(password: string): Promise<string> {
     return await argon2.hash(password);
   }

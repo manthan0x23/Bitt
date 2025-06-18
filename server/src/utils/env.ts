@@ -25,8 +25,7 @@ const envSchema = z.object({
     .string()
     .min(1, "AWS_SQS_FIFO_QUEUE_URL is required !"),
 
-  DEEP_INFRA_API_KEY: z.string().min(1, "DEEP_INFRA_API_KEY is required"),
-  OPEN_ROUTER_API_KEY: z.string().min(1, "OPEN_ROUTER_API_KEY is required"),
+  EDEN_AI_API_KEY: z.string().min(1, "EDEN_AI_API_KEY is required"),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);
