@@ -8,29 +8,35 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+
 import type { IconType } from 'react-icons/lib';
 import { Link, useLocation } from '@tanstack/react-router';
 
-export function SideBarGroupSecondary({
-  items,
-  ...props
-}: {
+interface SideBarGroupGeneralProps
+  extends React.ComponentPropsWithoutRef<typeof SidebarGroup> {
+  title?: string;
   items: {
     title: string;
     url: string;
     icon: IconType;
   }[];
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+}
+
+export function SideBarGroupGeneral({
+  title,
+  items,
+  ...props
+}: SideBarGroupGeneralProps) {
   const { pathname } = useLocation();
 
   return (
     <SidebarGroup {...props}>
-      <SidebarGroupLabel>Organization</SidebarGroupLabel>
+      {title && <SidebarGroupLabel>{title}</SidebarGroupLabel>}
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild isActive={pathname == item.url}>
+              <SidebarMenuButton asChild isActive={pathname === item.url}>
                 <Link to={item.url}>
                   <item.icon />
                   <span>{item.title}</span>

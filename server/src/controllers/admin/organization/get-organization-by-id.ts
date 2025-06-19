@@ -4,7 +4,6 @@ import { admins, organizations } from "../../../db/schema";
 import { eq } from "drizzle-orm";
 import {
   AppError,
-  BadRequestError,
   InternalServerError,
   NotFoundError,
   UnauthorizedError,
@@ -21,7 +20,10 @@ export const getOrganizationById = async (req: Request, res: Response) => {
     )[0];
 
     if (!admin.organizationId) {
-      throw new BadRequestError("Admin doesnt belong to any organization.");
+      return res.status(207).json({
+        message: "Admin doesnt belong to any organization.",
+        data: null,
+      });
     }
 
     const organization = (
@@ -38,7 +40,7 @@ export const getOrganizationById = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: "Organization fetched successfully",
-      organization,
+      data: organization,
     });
   } catch (error) {
     if (error instanceof AppError) {

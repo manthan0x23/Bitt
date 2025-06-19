@@ -7,31 +7,26 @@ export class AppError extends Error {
 }
 
 export class BadRequestError extends AppError {
-  constructor(message: string = "Bad Request") {
+  constructor(message = "Bad Request") {
     super(400, message);
   }
 }
 
 export class UnauthorizedError extends AppError {
-  constructor(message: string = "Unauthorized") {
+  constructor(message = "Unauthorized") {
     super(401, message);
-  }
-}
-export class InternalServerError extends AppError {
-  constructor(message?: string) {
-    if (message) super(500, message ?? "Internal server error");
-  }
-}
-
-export class NotFoundError extends AppError {
-  constructor(message: string = "Not Found") {
-    super(404, message);
   }
 }
 
 export class ForbiddenError extends AppError {
   constructor(message = "Forbidden") {
     super(403, message);
+  }
+}
+
+export class NotFoundError extends AppError {
+  constructor(message = "Not Found") {
+    super(404, message);
   }
 }
 
@@ -50,6 +45,12 @@ export class UnprocessableEntityError extends AppError {
 export class TooManyRequestsError extends AppError {
   constructor(message = "Too Many Requests") {
     super(429, message);
+  }
+}
+
+export class InternalServerError extends AppError {
+  constructor(message = "Internal Server Error") {
+    super(500, message);
   }
 }
 

@@ -10,6 +10,8 @@ import { Link, useLocation } from '@tanstack/react-router';
 import { Mail } from 'lucide-react';
 import { FaCirclePlus } from 'react-icons/fa6';
 import type { IconType } from 'react-icons/lib';
+import { SideBarDropdownGroup } from './group-dropdown';
+import { MdLayers, MdOutlineLayers } from 'react-icons/md';
 
 export function SideBarGroupMain({
   items,
@@ -47,7 +49,12 @@ export function SideBarGroupMain({
               <SidebarMenuButton
                 tooltip={item.title}
                 asChild
-                isActive={pathname == item.url}
+                isActive={
+                  item.title == 'Dashboard'
+                    ? (location.pathname == '/admin' ||
+                      location.pathname == '/admin/')
+                    : pathname.startsWith(item.url)
+                }
               >
                 <Link to={item.url}>
                   {item.icon && <item.icon />}
@@ -56,6 +63,23 @@ export function SideBarGroupMain({
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
+        </SidebarMenu>
+        <SidebarMenu>
+          <SideBarDropdownGroup
+            title="Stages"
+            icon={MdLayers}
+            icon_line={MdOutlineLayers}
+            url="/admin/stages/"
+            children={[
+              { title: 'Interviews', url: '/admin/stages/interviews' },
+              { title: 'Contests', url: '/admin/stages/contests' },
+              { title: 'Quizzes', url: '/admin/stages/quizzes' },
+              {
+                title: 'Resume Filters',
+                url: '/admin/stages/resume-filters',
+              },
+            ]}
+          />
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

@@ -10,14 +10,16 @@ import {
 import { db } from "../../../db/db";
 import { admins, organizations } from "../../../db/schema";
 import { and, eq } from "drizzle-orm";
+import { StorageService } from "../../../services/aws/storage";
 
 export const updateOrganization = async (req: Request, res: Response) => {
-  const parsed = zUpdateOrganizationInput.safeParse(req.body);
+  const parsed = zUpdateOrganizationInput.safeParse({
+    ...req.body,
+    logo: req.file,
+  });
 
   if (parsed.error) {
-    throw new BadRequestError(
-      JSON.stringify(parsed.error.flatten().fieldErrors)
-    );
+    throw new BadRequestError(JSON.stringify(parsed.error.message));
   }
   if (!req.user || req.user.type !== "admin") {
     throw new UnauthorizedError("Unauthorized action to create organization");
@@ -48,6 +50,21 @@ export const updateOrganization = async (req: Request, res: Response) => {
         .limit(1)
     )[0];
 
+    let logoUrl = prevOrganizationState.logoUrl;
+
+    if (parsed.data.logo) {
+      const storageService = new StorageService();
+
+      const logoKey = await storageService.uploadObject(
+        `bit/logo/organization/${prevOrganizationState.id}.${
+          String(parsed.data.logo.originalname).split(".")[1]
+        }`,
+        parsed.data.logo.buffer
+      );
+
+      logoUrl = StorageService.getUrlFromKey(logoKey);
+    }
+
     const newOrganizationState = (
       await db
         .update(organizations)
@@ -55,15 +72,10 @@ export const updateOrganization = async (req: Request, res: Response) => {
           name: parsed.data.name ?? prevOrganizationState.name,
           description:
             parsed.data.description ?? prevOrganizationState.description,
-          billingEmailAddress:
-            parsed.data.billingEmailAddress ??
-            prevOrganizationState.billingEmailAddress,
-          billingEmailVerified: parsed.data.billingEmailAddress
-            ? false
-            : prevOrganizationState.billingEmailVerified,
-
           updatedAt: new Date(),
-          // logoUrl:
+          slug: parsed.data.slug ?? prevOrganizationState.slug,
+          origin: parsed.data.origin ?? prevOrganizationState.origin,
+          logoUrl,
         })
         .where(eq(organizations.id, prevOrganizationState.id))
         .returning()
@@ -74,6 +86,8 @@ export const updateOrganization = async (req: Request, res: Response) => {
       data: newOrganizationState,
     });
   } catch (error) {
+    console.error(error);
+
     if (error instanceof AppError) {
       throw error;
     }

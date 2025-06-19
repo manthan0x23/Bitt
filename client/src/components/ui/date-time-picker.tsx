@@ -715,6 +715,11 @@ type DateTimePickerProps = {
    * Show the default month and time when popup the calendar. Default is the current Date().
    **/
   defaultPopupValue?: Date;
+  /**
+   * Whether to show the time picker. When false, time defaults to 00:00:00.
+   * Default is true.
+   **/
+  pickTime?: boolean;
 } & Pick<
   DayPickerProps,
   'locale' | 'weekStartsOn' | 'showWeekNumber' | 'showOutsideDays'
@@ -742,6 +747,7 @@ const DateTimePicker = React.forwardRef<
       granularity = 'second',
       placeholder = 'Pick a date',
       className,
+      pickTime = true,
       ...props
     },
     ref,
@@ -770,11 +776,16 @@ const DateTimePicker = React.forwardRef<
         return;
       }
       if (!defaultPopupValue) {
-        newDay.setHours(
-          month?.getHours() ?? 0,
-          month?.getMinutes() ?? 0,
-          month?.getSeconds() ?? 0,
-        );
+        if (pickTime) {
+          newDay.setHours(
+            month?.getHours() ?? 0,
+            month?.getMinutes() ?? 0,
+            month?.getSeconds() ?? 0,
+          );
+        } else {
+          // When pickTime is false, always set time to 00:00:00
+          newDay.setHours(0, 0, 0, 0);
+        }
         onMonthChange?.(newDay);
         setMonth(newDay);
         return;
@@ -784,11 +795,16 @@ const DateTimePicker = React.forwardRef<
       const newDateFull = add(defaultPopupValue, {
         days: Math.ceil(diffInDays),
       });
-      newDateFull.setHours(
-        month?.getHours() ?? 0,
-        month?.getMinutes() ?? 0,
-        month?.getSeconds() ?? 0,
-      );
+      if (pickTime) {
+        newDateFull.setHours(
+          month?.getHours() ?? 0,
+          month?.getMinutes() ?? 0,
+          month?.getSeconds() ?? 0,
+        );
+      } else {
+        // When pickTime is false, always set time to 00:00:00
+        newDateFull.setHours(0, 0, 0, 0);
+      }
       onMonthChange?.(newDateFull);
       setMonth(newDateFull);
     };
@@ -796,6 +812,10 @@ const DateTimePicker = React.forwardRef<
     const onSelect = (newDay?: Date) => {
       if (!newDay) {
         return;
+      }
+      // When pickTime is false, always set time to 00:00:00
+      if (!pickTime) {
+        newDay.setHours(0, 0, 0, 0);
       }
       onChange?.(newDay);
       setMonth(newDay);
@@ -879,7 +899,7 @@ const DateTimePicker = React.forwardRef<
             locale={locale}
             {...props}
           />
-          {granularity !== 'day' && (
+          {pickTime && granularity !== 'day' && (
             <div className="border-border border-t p-3">
               <TimePicker
                 onChange={(value) => {

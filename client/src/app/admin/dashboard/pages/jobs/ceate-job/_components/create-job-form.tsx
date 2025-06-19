@@ -97,7 +97,7 @@ export const CreateJobForm = () => {
         <DialogContent>
           <DialogHeader>
             <h4>Job Saved as Draft</h4>
-            <DialogDescription className="text-primary/70">
+            <DialogDescription>
               This job requires a contest to be created before it can be
               published. You can create the contest now or do it later from the
               admin panel.

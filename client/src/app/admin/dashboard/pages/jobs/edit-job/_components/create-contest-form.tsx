@@ -1,5 +1,4 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import type { JobSchemaT } from '@/lib/types/jobs';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -77,7 +76,7 @@ export const EditStagesForm = ({ job }: Props) => {
             </Button>
           </div>
         ) : (
-          <ScrollArea className="w-2/3 h-[60vh] rounded-xl bg-muted/5 border border-border ">
+          <div className="w-2/3 h-[60vh] rounded-xl bg-muted/5 border border-border overflow-y-scroll">
             <div className="flex flex-col items-center justify-start space-y-3 m-6">
               {stages?.map((stage) => (
                 <div
@@ -144,7 +143,7 @@ export const EditStagesForm = ({ job }: Props) => {
                 Add Stage
               </Button>
             </div>
-          </ScrollArea>
+          </div>
         )}
 
         <div className="w-1/3 h-full ">

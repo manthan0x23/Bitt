@@ -11,13 +11,13 @@ const organizationRouter = Router();
 
 organizationRouter
   .use("/invite", inviteRouter)
+  .get("/my", asyncHandler(getOrganizationById))
   .post("/create", asyncHandler(createOrganization))
   .post("/join", asyncHandler(joinOrganization))
   .put(
     "/update",
-    uploadHandler().single("org_logo"),
+    uploadHandler().single("logo"),
     asyncHandler(updateOrganization)
-  )
-  .get("/:orgId", asyncHandler(getOrganizationById));
+  );
 
 export { organizationRouter };
