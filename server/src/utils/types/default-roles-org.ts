@@ -1,6 +1,8 @@
+import z from "zod/v4";
 import { shortId } from "../../utils/integrations/short-id";
 import { adminRoles } from "./admin-roles";
 import { roleCapabilitiesMap } from "./role-capabilities";
+import { roles } from "../../db/schema";
 
 const defaultInsertableRoles = [
   adminRoles.superAdmin,
@@ -10,7 +12,25 @@ const defaultInsertableRoles = [
   adminRoles.interviewer,
 ] as const;
 
-const roleColorMap: Record<(typeof defaultInsertableRoles)[number], string> = {
+export const colorSchemeEnum = z.enum([
+  "gray", // default / neutral
+  "blue", // info / primary
+  "green", // success
+  "red", // danger / error
+  "pink", // playful / accent
+  "orange", // warning
+  "yellow", // caution
+  "purple", // creativity / secondary
+  "teal", // alternative success
+  "indigo", // highlight
+]);
+
+export type ColorSchemes = z.infer<typeof colorSchemeEnum>;
+
+const roleColorMap: Record<
+  (typeof defaultInsertableRoles)[number],
+  ColorSchemes
+> = {
   super_admin: "green",
   moderator: "blue",
   watcher: "orange",
@@ -19,13 +39,16 @@ const roleColorMap: Record<(typeof defaultInsertableRoles)[number], string> = {
 } as const;
 
 export const insertDefaultRoles = async (organizationId: string) => {
-  const inserts = defaultInsertableRoles.map((tag) => ({
-    id: shortId(),
-    tag,
-    capabilities: roleCapabilitiesMap[tag],
-    organizationId,
-    color: roleColorMap[tag],
-  }));
+  const inserts: (typeof roles.$inferInsert)[] = defaultInsertableRoles.map(
+    (tag) => ({
+      id: shortId(),
+      tag,
+      capabilities: roleCapabilitiesMap[tag],
+      organizationId,
+      colorScheme: roleColorMap[tag],
+      isTemplate: true,
+    })
+  );
 
   return inserts;
 };

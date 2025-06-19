@@ -6,7 +6,7 @@ export const zUpdateOrganizationInput = z.object({
   slug: z.string().min(1).nullable(),
 
   description: z.string().nullable(),
-  logoUrl: z.url().nullable(),
+  logoUrl: z.string().nullable().optional(),
 
   logo: z
     .any()

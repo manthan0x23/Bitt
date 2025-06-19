@@ -24,7 +24,7 @@ export const roles = pgTable(
       .references(() => organizations.id, { onDelete: "cascade" })
       .notNull(),
 
-    colorScheme: colorSchemeEnum().default("gray").notNull(),
+    colorScheme: colorSchemeEnum("color_scheme").default("gray").notNull(),
 
     isTemplate: boolean("is_template").default(false).notNull(),
   },

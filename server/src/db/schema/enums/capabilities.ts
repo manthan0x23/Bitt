@@ -43,4 +43,6 @@ export const capabilityEnum = pgEnum("capability", [
   "update.quiz",
   "generate.quiz",
   "read.quiz",
+
+  "manage.roles",
 ]);

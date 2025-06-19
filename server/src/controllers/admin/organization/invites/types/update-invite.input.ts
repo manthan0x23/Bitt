@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { zMinuteDateTime } from "../../../../../utils/integrations/date-time";
-import { zOrganizationInviteTypeEnum } from "./create-invite.invite";
+import { zOrganizationInviteTypeEnum } from "./create-invite.input";
 
 export const zOrganizationInviteStatusEnum = z.enum([
   "active",

@@ -7,7 +7,7 @@ import {
 export const zOrganizationInviteTypeEnum = z.enum(["strict", "open-for-all"]);
 
 export const zCreateOrganizationInviteInput = z.object({
-  allowedOrigins: z.array(z.string()).default([]),
+  allowedOrigins: z.array(z.string().email().min(1)).default([]),
   inviteType: zOrganizationInviteTypeEnum.default("strict"),
   roleId: z.string().min(1, "Role ID is required."),
   role: z.string().min(1, "Role is required"),

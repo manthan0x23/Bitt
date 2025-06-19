@@ -57,6 +57,9 @@ export const capabilitiesMap = {
     passStage: "pass.candidate.stage",
     viewSubmissions: "view.candidate.submissions",
   },
+  roles: {
+    manageRoles: "manage.roles",
+  },
 } as const;
 
 export const capabilities = Object.values(capabilitiesMap).flatMap((group) =>

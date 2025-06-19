@@ -15,6 +15,13 @@
       "when": 1750342380816,
       "tag": "0001_furry_sprite",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750354125593,
+      "tag": "0002_right_dreadnoughts",
+      "breakpoints": true
     }
   ]
 }

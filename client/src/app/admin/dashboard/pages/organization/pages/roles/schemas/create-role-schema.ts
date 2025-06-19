@@ -1,12 +1,12 @@
 import { colorSchemeEnum } from '@/integrations/theme/colors/scheme';
+import { zCapabilityEnum } from '@/lib/types/capabilities';
 import { z } from 'zod/v4';
-import { zCapabilityEnum } from '../../capabilities';
 
-export const zRoleSchema = z.object({
-  id: z.string().min(1),
+export const zCreateRoleSchema = z.object({
   tag: z.string().min(1).max(64),
   capabilities: z.array(zCapabilityEnum),
-  organizationId: z.string().min(1),
   colorScheme: colorSchemeEnum,
   isTemplate: z.boolean(),
 });
+
+export type CreateRoleSchemaT = z.infer<typeof zCreateRoleSchema>;

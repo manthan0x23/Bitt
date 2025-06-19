@@ -9,7 +9,7 @@ import {
   InternalServerError,
   UnauthorizedError,
 } from "../../../../utils/errors";
-import { zCreateOrganizationInviteInput } from "./types/create-invite.invite";
+import { zCreateOrganizationInviteInput } from "./types/create-invite.input";
 
 export const createOrganizationInvite = async (
   req: Request,

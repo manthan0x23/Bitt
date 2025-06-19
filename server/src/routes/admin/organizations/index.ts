@@ -7,11 +7,13 @@ import { updateOrganization } from "../../../controllers/admin/organization/upda
 import { inviteRouter } from "./invites";
 import { getOrganizationById } from "../../../controllers/admin/organization/get-organization-by-id";
 import { getOrganizationMembers } from "../../../controllers/admin/organization/get-org-members";
+import { roleRouter } from "./roles";
 
 const organizationRouter = Router();
 
 organizationRouter
   .use("/invite", inviteRouter)
+  .use("/roles", roleRouter)
   .get("/my", asyncHandler(getOrganizationById))
   .get("/members", asyncHandler(getOrganizationMembers))
   .post("/create", asyncHandler(createOrganization))
