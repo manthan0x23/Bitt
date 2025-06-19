@@ -2,7 +2,7 @@ import { z } from "zod";
 import {
   minutePrecisionDateTimeRegex,
   zMinuteDateTime,
-} from "../../../../utils/integrations/date-time";
+} from "../../../../../utils/integrations/date-time";
 
 export const zOrganizationInviteTypeEnum = z.enum(["strict", "open-for-all"]);
 

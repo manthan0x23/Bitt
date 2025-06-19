@@ -1,13 +1,13 @@
 import type { Request, Response } from "express";
-import { db } from "../../../db/db";
-import { admins, organizationInvite } from "../../../db/schema";
+import { db } from "../../../../db/db";
+import { admins, organizationInvite } from "../../../../db/schema";
 import { and, eq, not } from "drizzle-orm";
 import {
   AppError,
   BadRequestError,
   InternalServerError,
   UnauthorizedError,
-} from "../../../utils/errors";
+} from "../../../../utils/errors";
 
 export const getOrganizationInviteById = async (
   req: Request,

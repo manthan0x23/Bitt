@@ -26,5 +26,11 @@ export const zUpdateOrganizationInput = z.object({
     ),
 
   origin: z.string().min(1).nullable(),
-  startDate: z.string().nullable(),
+  startDate: z
+    .string()
+    .nullable()
+    .transform((v) => {
+      if (v) return new Date(v);
+      else null;
+    }),
 });

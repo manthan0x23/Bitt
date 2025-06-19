@@ -1,0 +1,1 @@
+ALTER TABLE "admins" RENAME COLUMN "picture_url" TO "logo_url";

@@ -75,6 +75,11 @@ export const updateOrganization = async (req: Request, res: Response) => {
           updatedAt: new Date(),
           slug: parsed.data.slug ?? prevOrganizationState.slug,
           origin: parsed.data.origin ?? prevOrganizationState.origin,
+          startDate: parsed.data.startDate
+            ? (parsed.data.startDate instanceof Date
+                ? parsed.data.startDate.toISOString()
+                : parsed.data.startDate)
+            : prevOrganizationState.startDate,
           logoUrl,
         })
         .where(eq(organizations.id, prevOrganizationState.id))

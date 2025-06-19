@@ -82,7 +82,7 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
           .values({
             name: payload.name,
             username: payload.email.split("@")[0].concat("_").concat(shortId()),
-            pictureurl: payload.picture,
+            logoUrl: payload.picture,
             workEmail: payload.email,
             emailVerified: true,
             password: null,
@@ -99,7 +99,7 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
           .set({
             emailVerified: true,
             name: admins.name,
-            pictureurl: payload.picture,
+            logoUrl: payload.picture,
           })
           .where(eq(admins.workEmail, payload.email))
       )[0];
@@ -110,7 +110,7 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
       name: admin.name,
       id: admin.id,
       sub: payload.sub,
-      picture: admin.pictureurl,
+      picture: admin.logoUrl,
       role: admin.role,
       roleId: admin.roleId,
       type: "admin",

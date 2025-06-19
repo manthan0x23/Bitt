@@ -1,12 +1,12 @@
 import type { Request, Response } from "express";
-import { db } from "../../../db/db";
-import { organizationInvite } from "../../../db/schema";
+import { db } from "../../../../db/db";
+import { organizationInvite } from "../../../../db/schema";
 import { eq } from "drizzle-orm";
 import {
   BadRequestError,
   UnauthorizedError,
   InternalServerError,
-} from "../../../utils/errors";
+} from "../../../../utils/errors";
 
 export const deleteOrganizationInvite = async (
   req: Request,

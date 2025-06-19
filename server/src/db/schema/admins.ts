@@ -22,7 +22,7 @@ export const admins = pgTable("admins", {
   password: text("password"),
   emailVerified: boolean("email_verified").default(false),
 
-  pictureurl: text("picture_url"),
+  logoUrl: text("logo_url"),
   accountSource: accountSourceEnum("account_source")
     .default("credentials")
     .notNull(),

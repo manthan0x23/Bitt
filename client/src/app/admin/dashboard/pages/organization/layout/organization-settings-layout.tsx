@@ -19,7 +19,7 @@ export const OrganizationSettingsLayout = ({ children }: PropsWithChildren) => {
           through the available sections.
         </p>
       </section>
-      <div className="w-full h-[75vh] flex items-start justify-between gap-4">
+      <div className="w-full h-[75vh] flex items-start justify-between gap-8">
         <section className="w-[25%] h-full overflow-hidden">
           <OrganizationSettingsSidePannel />
         </section>

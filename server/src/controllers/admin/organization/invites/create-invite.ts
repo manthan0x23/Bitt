@@ -1,14 +1,14 @@
 import type { Request, Response } from "express";
-import { db } from "../../../db/db";
-import { admins, organizationInvite, organizations } from "../../../db/schema";
+import { db } from "../../../../db/db";
+import { admins, organizationInvite, organizations } from "../../../../db/schema";
 import { and, eq } from "drizzle-orm";
-import { scrapeLogoUrl } from "../../../utils/integrations/logo-scrapper";
+import { scrapeLogoUrl } from "../../../../utils/integrations/logo-scrapper";
 import {
   AppError,
   BadRequestError,
   InternalServerError,
   UnauthorizedError,
-} from "../../../utils/errors";
+} from "../../../../utils/errors";
 import { zCreateOrganizationInviteInput } from "./types/create-invite.invite";
 
 export const createOrganizationInvite = async (
