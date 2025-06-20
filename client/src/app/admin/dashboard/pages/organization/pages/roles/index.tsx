@@ -27,8 +27,9 @@ export const OrganizationRoles = () => {
         <div className="h-[10%] w-full flex justify-between items-center">
           <div className="space-y-1">
             <h4>Roles</h4>
-            <p className="text-muted-foreground text-sm">
-              //TODO write a description
+            <p className="text-muted-foreground text-sm text-wrap w-[80%]">
+              Manage all the roles within your organization, define their
+              capabilities, and customize access using tags and templates.
             </p>
           </div>
           <Button

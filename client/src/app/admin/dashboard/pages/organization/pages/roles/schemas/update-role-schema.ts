@@ -4,10 +4,12 @@ import { z } from 'zod/v4';
 
 export const zUpdateRoleSchema = z.object({
   id: z.string().min(1), // Required for identifying the role
-  tag: z.string().min(1).max(64).optional(),
-  capabilities: z.array(zCapabilityEnum).optional(),
-  colorScheme: colorSchemeEnum.optional(),
-  isTemplate: z.boolean().optional().default(false),
+  tag: z.string().min(1, 'Role needs a tag').max(64),
+  capabilities: z
+    .array(zCapabilityEnum)
+    .min(1, 'At least 1 capability needs to be assigned to a role'),
+  colorScheme: colorSchemeEnum,
+  isTemplate: z.boolean(),
 });
 
 export type UpdateRoleSchemaT = z.infer<typeof zUpdateRoleSchema>;

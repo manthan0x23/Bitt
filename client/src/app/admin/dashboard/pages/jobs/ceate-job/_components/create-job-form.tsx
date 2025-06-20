@@ -15,7 +15,7 @@ import { Button } from '@/components/ui/button';
 import type { JobScreeningTypeT, JobTypeT } from '@/lib/types/jobs';
 import { useStore } from '@tanstack/react-store';
 import { CreateJobFormPreview } from './create-job-form-preview';
-import { MultiSelect } from '@/components/ui/multi-select';
+import MultiSelect from '@/components/ui/multi-select';
 import { JobTags } from '@/integrations/data/job-tags';
 import { CreateJobFormSchema } from '../schemas';
 import { useMutation } from '@tanstack/react-query';
@@ -346,12 +346,16 @@ export const CreateJobForm = () => {
                   <MultiSelect
                     placeholder="Select tags"
                     options={JobTags}
-                    variant={'default'}
-                    animation={2}
-                    maxCount={5}
-                    value={field.state.value}
-                    defaultValue={[]}
-                    onValueChange={field.handleChange}
+                    maxSelected={5}
+                    value={JobTags.filter((option) =>
+                      field.state.value?.includes(option.value),
+                    )}
+                    onChange={(selectedOptions) =>
+                      field.handleChange(
+                        selectedOptions.map((opt) => opt.value),
+                      )
+                    }
+                    aria-invalid={field.state.meta.errors.length > 0}
                   />
                   {field.state.meta.errors.length > 0 && (
                     <p className="text-sm text-destructive">

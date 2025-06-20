@@ -12,6 +12,8 @@ import {
 } from "../../../utils/errors";
 import { insertDefaultRoles } from "../../../utils/types/default-roles-org";
 import { adminRoles } from "../../../utils/types/admin-roles";
+import { JwtService } from "../../../services/jwt";
+import { Env } from "../../../utils/env";
 
 export const createOrganization = async (
   req: Request,
@@ -93,6 +95,24 @@ export const createOrganization = async (
       }
 
       return { newOrg, updatedAdmins };
+    });
+
+    const admin = result.updatedAdmins[0];
+
+    const myToken = JwtService.sign({
+      email: admin.workEmail,
+      name: admin.name,
+      id: admin.id,
+      picture: admin.logoUrl,
+      role: admin.role,
+      roleId: admin.roleId,
+      type: "admin",
+    });
+
+    res.cookie("token", myToken, {
+      httpOnly: true,
+      secure: Env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(201).json({

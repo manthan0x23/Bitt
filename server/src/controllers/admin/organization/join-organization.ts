@@ -9,6 +9,8 @@ import {
   InternalServerError,
   UnauthorizedError,
 } from "../../../utils/errors";
+import { JwtService } from "../../../services/jwt";
+import { Env } from "../../../utils/env";
 
 export const joinOrganization = async (
   req: Request,
@@ -84,7 +86,7 @@ export const joinOrganization = async (
       throw new BadRequestError("Invalid invite code/link.");
     }
 
-    await db.transaction(async (tx) => {
+    const [updatedAdmins] = await db.transaction(async (tx) => {
       const now = new Date();
       const newUsageCount = searchInvite.usageCount + 1;
       const newStatus =
@@ -125,6 +127,26 @@ export const joinOrganization = async (
       if (adminUpdateResult.length === 0 || inviteUpdateResult.length === 0) {
         throw new InternalServerError("Failed to assign organization to admin");
       }
+
+      return adminUpdateResult;
+    });
+
+    const admin = updatedAdmins;
+
+    const myToken = JwtService.sign({
+      email: admin.workEmail,
+      name: admin.name,
+      id: admin.id,
+      picture: admin.logoUrl,
+      role: admin.role,
+      roleId: admin.roleId,
+      type: "admin",
+    });
+
+    res.cookie("token", myToken, {
+      httpOnly: true,
+      secure: Env.NODE_ENV === "production",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res

@@ -1,9 +1,5 @@
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useForm } from '@tanstack/react-form';
-import {
-  zCreateRoleSchema,
-  type CreateRoleSchemaT,
-} from '../schemas/create-role-schema';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
@@ -24,52 +20,55 @@ import { capabilities, type Capability } from '@/lib/types/capabilities';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  CreateOrgRoleCall,
-  type CreateOrgRoleCallResponseT,
-} from '../server-calls/create-org-role';
 import type { ApiError } from '@/lib/error';
 import { toast } from 'sonner';
+import type { RoleSchemaT } from '@/lib/types/roles';
+import {
+  zUpdateRoleSchema,
+  type UpdateRoleSchemaT,
+} from '../schemas/update-role-schema';
+import {
+  UpdateOrgRoleCall,
+  type UpdateOrgRoleCallResponseT,
+} from '../server-calls/update-org-role';
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  role: RoleSchemaT;
 };
 
-export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
+export const UpdateRoleForm = ({ open, onOpenChange, role }: Props) => {
   const queries = useQueryClient();
   const form = useForm({
     defaultValues: {
-      tag: '',
-      colorScheme: 'gray',
-      capabilities: [],
-      isTemplate: true,
-    } as CreateRoleSchemaT,
+      ...role,
+    } as UpdateRoleSchemaT,
     validators: {
-      onBlur: zCreateRoleSchema,
-      onBlurAsync: zCreateRoleSchema,
-      onSubmit: zCreateRoleSchema,
-      onSubmitAsync: zCreateRoleSchema,
+      onBlur: zUpdateRoleSchema,
+      onBlurAsync: zUpdateRoleSchema,
+      onSubmit: zUpdateRoleSchema,
+      onSubmitAsync: zUpdateRoleSchema,
     },
     onSubmit({ value }) {
-      createRoleMutation.mutate(value);
+      updateRoleMutation.mutate(value);
     },
   });
 
-  const createRoleMutation = useMutation<
-    CreateOrgRoleCallResponseT,
+  const updateRoleMutation = useMutation<
+    UpdateOrgRoleCallResponseT,
     ApiError,
-    CreateRoleSchemaT
+    UpdateRoleSchemaT
   >({
-    mutationFn: async (body) => (await CreateOrgRoleCall(body)).data,
+    mutationFn: async (body) => (await UpdateOrgRoleCall(body)).data,
     onMutate: () => {
-      toast.loading('Creating role....', {
-        id: 'create-role',
+      toast.loading('Updating role....', {
+        id: 'update-role',
       });
     },
     onSuccess: ({ message }) => {
       toast.success(message, {
-        id: 'create-role',
+        id: 'update-role',
       });
       queries.invalidateQueries({
         queryKey: ['admin', 'organization', 'roles', 'all'],
@@ -79,7 +78,7 @@ export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
     },
     onError: ({ response }) => {
       toast.error(response?.data.error, {
-        id: 'create-role',
+        id: 'update-role',
       });
     },
   });
@@ -88,9 +87,9 @@ export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <div>
-          <h4>Create Role</h4>
+          <h4>Update Role</h4>
           <p className="text-muted-foreground text-sm">
-            Fill in the details to create a new role.
+            Modify the details below to update this role’s configuration.
           </p>
         </div>
         <form
@@ -117,6 +116,7 @@ export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
                     Short name for the role, e.g., "Scout", "Admin".
                   </p>
                   <Input
+                    autoFocus
                     id="tag"
                     minLength={2}
                     placeholder="e.g., Senior Frontend Engineer"
@@ -177,12 +177,12 @@ export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
                   Define what actions this role is allowed to perform.
                 </p>
                 <MultiSelect
+                  badgeClassName="bg-transparent border border-secondary text-secondary-foreground dark:text-secondary-foreground"
                   placeholder="Select tags"
                   options={capabilities.map((cap) => ({
                     value: cap,
                     label: cap,
                   }))}
-
                   value={field.state.value.map((cap) => ({
                     value: cap,
                     label: cap,
@@ -190,8 +190,7 @@ export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
                   onChange={(e) =>
                     field.handleChange(e.map((e) => e.value) as Capability[])
                   }
-                   aria-invalid={field.state.meta.errors.length > 0}
-            
+                  aria-invalid={field.state.meta.errors.length > 0}
                 />
                 {field.state.meta.errors.length > 0 && (
                   <p className="text-sm text-destructive">
@@ -245,7 +244,7 @@ export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
                     type="submit"
                     className="cursor-pointer"
                   >
-                    Create
+                    Update
                   </Button>
                 )}
               />

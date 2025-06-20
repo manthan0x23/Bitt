@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import { db } from "../../../../db/db";
 import { admins, organizations, roles } from "../../../../db/schema";
-import { asc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import {
   AppError,
   InternalServerError,
@@ -42,7 +42,7 @@ export const getOrganizationRoles = async (req: Request, res: Response) => {
       .select()
       .from(roles)
       .where(eq(roles.organizationId, organization.id))
-      .orderBy(asc(roles.isTemplate));
+      .orderBy(desc(roles.isTemplate));
 
     return res.status(200).json({
       message: "Roles fetched successfully",

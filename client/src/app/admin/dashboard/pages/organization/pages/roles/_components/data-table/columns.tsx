@@ -1,10 +1,13 @@
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { colorSchemeBgClassMap } from '@/integrations/theme/colors/scheme';
 import type { RoleSchemaT } from '@/lib/types/roles';
 import { cn } from '@/lib/utils';
 import type { ColumnDef } from '@tanstack/react-table';
+import { useState } from 'react';
 import { IoCheckmarkOutline } from 'react-icons/io5';
 import { RxCross2 } from 'react-icons/rx';
+import { UpdateRoleForm } from '../update-role-form';
 
 export const roleColumns: ColumnDef<RoleSchemaT>[] = [
   {
@@ -14,7 +17,7 @@ export const roleColumns: ColumnDef<RoleSchemaT>[] = [
       <Badge
         className={cn(
           colorSchemeBgClassMap[row.original.colorScheme],
-          'text-accent dark:text-accent-foreground capitalize',
+          'text-white dark:text-white font-medium capitalize rounded-2xl px-2',
         )}
       >
         {row.original.tag.split('_').join(' ')}
@@ -29,5 +32,31 @@ export const roleColumns: ColumnDef<RoleSchemaT>[] = [
         {row.original.isTemplate ? <IoCheckmarkOutline /> : <RxCross2 />}
       </span>
     ),
+  },
+  {
+    accessorKey: 'Edit',
+    header: ' ',
+    cell: ({ row }) => {
+      const [open, setOpen] = useState(false);
+
+      return (
+        <>
+          <UpdateRoleForm
+            open={open}
+            onOpenChange={setOpen}
+            role={row.original}
+          />
+          <Button
+            type="button"
+            onClick={() => setOpen((v) => !v)}
+            variant={open ? 'default' : 'outline'}
+            className="cursor-pointer"
+            size={'sm'}
+          >
+            {!open ? <>Edit</> : <>Cancel</>}
+          </Button>
+        </>
+      );
+    },
   },
 ];

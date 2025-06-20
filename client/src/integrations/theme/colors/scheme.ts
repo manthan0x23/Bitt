@@ -15,15 +15,15 @@ export const colorSchemeEnum = z.enum([
 
 export type ColorSchemeEnum = z.infer<typeof colorSchemeEnum>;
 
-export const colorSchemeBgClassMap: Record<string, string> = {
-  gray: 'bg-gray-500 dark:bg-accent-foreground',
-  blue: 'bg-blue-500 dark:bg-accent-foreground',
-  green: 'bg-green-500 dark:bg-accent-foreground',
-  red: 'bg-red-500 dark:bg-accent-foreground',
-  pink: 'bg-pink-500 dark:bg-accent-foreground',
-  orange: 'bg-orange-500 dark:bg-accent-foreground',
-  yellow: 'bg-yellow-500 dark:bg-accent-foreground',
-  purple: 'bg-purple-500 dark:bg-accent-foreground',
-  teal: 'bg-teal-500 dark:bg-accent-foreground',
-  indigo: 'bg-indigo-500 dark:bg-accent-foreground',
+export const colorSchemeBgClassMap: Record<ColorSchemeEnum, string> = {
+  gray: 'bg-gray-500 dark:bg-gray-600',
+  blue: 'bg-blue-500 dark:bg-blue-600',
+  green: 'bg-green-500 dark:bg-green-600',
+  red: 'bg-red-500 dark:bg-red-600',
+  pink: 'bg-pink-500 dark:bg-pink-600',
+  orange: 'bg-orange-500 dark:bg-orange-600',
+  yellow: 'bg-yellow-500 dark:bg-yellow-600',
+  purple: 'bg-purple-500 dark:bg-purple-600',
+  teal: 'bg-teal-500 dark:bg-teal-600',
+  indigo: 'bg-indigo-500 dark:bg-indigo-600',
 };

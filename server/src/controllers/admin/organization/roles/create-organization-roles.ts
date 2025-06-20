@@ -58,6 +58,8 @@ export const createOrganizationRole = async (req: Request, res: Response) => {
       data: role,
     });
   } catch (error) {
+    console.log(error);
+
     if (error instanceof AppError) {
       throw error;
     }

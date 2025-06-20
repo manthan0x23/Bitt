@@ -17,7 +17,7 @@ import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { MultiSelect } from '@/components/ui/multi-select';
+import MultiSelect from '@/components/ui/multi-select';
 import { AlgoTags } from '@/integrations/data/algo-tags';
 import {
   Select,
@@ -345,13 +345,14 @@ export const ProblemBuilder = ({ problem }: Props) => {
                   className="w-full"
                   placeholder="Select tags"
                   options={AlgoTags}
-                  variant={'default'}
-                  maxCount={5}
-                  value={field.state.value}
-                  defaultValue={field.state.value}
-                  onValueChange={field.handleChange}
+                  maxSelected={5}
+                  value={AlgoTags.filter((opt) =>
+                    field.state.value.includes(opt.value),
+                  )}
+                  onChange={(opts) =>
+                    field.handleChange(opts.map((opt) => opt.value))
+                  }
                   aria-invalid={field.state.meta.errors.length > 0}
-                  onBlur={field.handleBlur}
                 />
                 {field.state.meta.errors.length > 0 && (
                   <p className="text-sm text-destructive">
