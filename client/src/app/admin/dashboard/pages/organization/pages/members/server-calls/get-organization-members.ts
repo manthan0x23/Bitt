@@ -11,5 +11,5 @@ export const GetOrganizationMembersCall = () => {
 
 export type GetOrganizationMembersCallResponseT = {
   message: string;
-  data: (AdminSchemaT | { role: RoleSchemaT })[];
+  data: ({ role: RoleSchemaT } & AdminSchemaT)[];
 };

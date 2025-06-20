@@ -119,7 +119,7 @@ export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
                   <Input
                     id="tag"
                     minLength={2}
-                    placeholder="e.g., Senior Frontend Engineer"
+                    placeholder="e.g., Moderator"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
@@ -146,8 +146,8 @@ export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
                       field.handleChange(v as ColorSchemeEnum)
                     }
                   >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a job type" />
+                    <SelectTrigger onBlur={field.handleBlur} className="w-full">
+                      <SelectValue placeholder="Select a identifying color" />
                     </SelectTrigger>
                     <SelectContent className="max-h-[250px]">
                       {colorSchemeEnum.options.map((color) => (
@@ -165,6 +165,11 @@ export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
                       ))}
                     </SelectContent>
                   </Select>
+                  {field.state.meta.errors.length > 0 && (
+                    <p className="text-sm text-destructive">
+                      {field.state.meta.errors[0]?.message}
+                    </p>
+                  )}
                 </div>
               )}
             </form.Field>
@@ -177,12 +182,12 @@ export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
                   Define what actions this role is allowed to perform.
                 </p>
                 <MultiSelect
+                  className="max-h-[200px] overflow-y-scroll"
                   placeholder="Select tags"
                   options={capabilities.map((cap) => ({
                     value: cap,
                     label: cap,
                   }))}
-
                   value={field.state.value.map((cap) => ({
                     value: cap,
                     label: cap,
@@ -190,8 +195,7 @@ export const CreateRoleForm = ({ open, onOpenChange }: Props) => {
                   onChange={(e) =>
                     field.handleChange(e.map((e) => e.value) as Capability[])
                   }
-                   aria-invalid={field.state.meta.errors.length > 0}
-            
+                  aria-invalid={field.state.meta.errors.length > 0}
                 />
                 {field.state.meta.errors.length > 0 && (
                   <p className="text-sm text-destructive">

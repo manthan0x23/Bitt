@@ -1,22 +1,49 @@
 // components/columns.tsx
 import { Badge } from '@/components/ui/badge';
 import { format } from 'date-fns';
-import type { OrganizationInviteSchema } from '@/lib/types/organization-invite';
+import type {
+  OrganizationInviteSchema,
+  OrganizationInviteStatus,
+} from '@/lib/types/organization-invite';
 import type { ColumnDef } from '@tanstack/react-table';
+import {
+  colorSchemeBgClassMap,
+  type ColorSchemeEnum,
+} from '@/integrations/theme/colors/scheme';
+import { cn } from '@/lib/utils';
+
+const inviteStatusToColor: Record<OrganizationInviteStatus, ColorSchemeEnum> = {
+  active: 'green',
+  closed: 'purple',
+  expired: 'red',
+  limit_reached: 'yellow',
+  deleted: 'gray',
+} as const;
 
 export const inviteColumns: ColumnDef<OrganizationInviteSchema>[] = [
   {
     accessorKey: 'code',
     header: 'Invite Code',
     cell: ({ row }) => (
-      <span className="font-mono text-xs">{row.original.code}</span>
+      <Badge
+        className={cn('font-mono text-xs font-medium')}
+        variant={'secondary'}
+      >
+        {row.original.code}
+      </Badge>
     ),
   },
   {
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => (
-      <Badge variant="outline" className="capitalize">
+      <Badge
+        variant="outline"
+        className={cn(
+          'capitalize text-white dark:text-white',
+          colorSchemeBgClassMap[inviteStatusToColor[row.original.status]],
+        )}
+      >
         {row.original.status.replace('_', ' ')}
       </Badge>
     ),

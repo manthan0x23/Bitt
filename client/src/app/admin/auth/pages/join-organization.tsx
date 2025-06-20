@@ -3,7 +3,7 @@ import { LogoHeader } from '@/components/ui/logo-header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Link } from '@tanstack/react-router';
+import { Link, useRouter } from '@tanstack/react-router';
 import { ArrowLeft } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -12,16 +12,53 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from '@/components/ui/input-otp';
+import { useMutation } from '@tanstack/react-query';
+import {
+  JoinOrganizationCall,
+  type JoinOrgBody,
+  type JoinOrganizationCallResponseT,
+} from '../server-calls/join-organization-call';
+import type { ApiError } from '@/lib/error';
+import { toast } from 'sonner';
 
 export const JoinOrganization = () => {
+  const router = useRouter();
   const [inviteLink, setInviteLink] = useState('');
   const [inviteCode, setInviteCode] = useState('');
 
   const handleJoin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: Handle organization joining logic
-    console.log({ inviteLink, inviteCode });
+    console.log(inviteCode, inviteCode.length);
+
+    joinOrgMutation.mutate({ code: inviteCode, link: inviteLink });
   };
+
+  const joinOrgMutation = useMutation<
+    JoinOrganizationCallResponseT,
+    ApiError,
+    JoinOrgBody
+  >({
+    mutationFn: async (body) => (await JoinOrganizationCall(body)).data,
+    onMutate: () => {
+      toast.loading('Joining org....', {
+        id: 'join-org',
+      });
+    },
+    onSuccess: ({ message }) => {
+      toast.success(message, {
+        id: 'join-org',
+      });
+      router.navigate({
+        to: '/admin',
+        reloadDocument: true,
+      });
+    },
+    onError: ({ response }) => {
+      toast.error(response?.data.error, {
+        id: 'join-org',
+      });
+    },
+  });
 
   return (
     <div className="screen-full  flex justify-center items-center relative px-4 py-10">
@@ -63,7 +100,7 @@ export const JoinOrganization = () => {
             <Label htmlFor="invite-code">Invite Code</Label>
             <div className="w-full flex items-center justify-center">
               <InputOTP
-                maxLength={9}
+                maxLength={6}
                 id="invite-code"
                 value={inviteCode}
                 onChange={setInviteCode}
@@ -73,14 +110,12 @@ export const JoinOrganization = () => {
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
                   <InputOTPSlot index={2} />
-                  <InputOTPSlot index={3} />
                 </InputOTPGroup>
                 <InputOTPSeparator />
                 <InputOTPGroup>
+                  <InputOTPSlot index={3} />
                   <InputOTPSlot index={4} />
                   <InputOTPSlot index={5} />
-                  <InputOTPSlot index={6} />
-                  <InputOTPSlot index={7} />
                 </InputOTPGroup>
               </InputOTP>
             </div>
@@ -90,7 +125,7 @@ export const JoinOrganization = () => {
             <Button
               type="submit"
               className="tracking-wide text-sm font-normal cursor-pointer"
-              disabled={!inviteLink.trim() && inviteCode.length < 8}
+              disabled={!inviteLink.trim() && inviteCode.length < 6}
             >
               Join
             </Button>

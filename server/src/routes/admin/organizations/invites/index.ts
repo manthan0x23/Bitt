@@ -13,29 +13,29 @@ const inviteRouter = Router();
 
 inviteRouter
   .post(
-    "/create",
+    "/",
     requiresCapability(capabilitiesMap.invite.create),
     asyncHandler(createOrganizationInvite)
   )
   .put(
-    "/update",
+    "/",
     requiresCapability(capabilitiesMap.invite.update),
     asyncHandler(updateOrganizationInvite)
   )
   .delete(
-    "/delete/:id",
+    "/:id",
     requiresCapability(capabilitiesMap.invite.delete),
     asyncHandler(deleteOrganizationInvite)
-  )
-  .get(
-    "/get/:id",
-    requiresCapability(capabilitiesMap.invite.read),
-    asyncHandler(getOrganizationInviteById)
   )
   .get(
     "/",
     requiresCapability(capabilitiesMap.invite.read),
     asyncHandler(getAllOrganizationInvites)
+  )
+  .get(
+    "/:id",
+    requiresCapability(capabilitiesMap.invite.read),
+    asyncHandler(getOrganizationInviteById)
   );
 
 export { inviteRouter };

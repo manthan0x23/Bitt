@@ -15,26 +15,22 @@ export const updateOrganizationInvite = async (
 ): Promise<any> => {
   const parsed = zUpdateOrganizationInviteInput.safeParse(req.body);
   if (!parsed.success) {
-    throw new BadRequestError(JSON.stringify(parsed.error.errors.flat()));
+    throw new BadRequestError(JSON.stringify(parsed.error.message));
   }
 
   if (!req.user || req.user.type !== "admin") {
     throw new UnauthorizedError("Unauthorized to update invite");
   }
 
-  const { id, endDate, ...rest } = parsed.data;
-
   try {
+    const { id, ...rest } = parsed.data;
+
     const updateData: any = {
       ...rest,
       updatedAt: new Date(),
     };
 
-    if (endDate) {
-      updateData.endDate = new Date(endDate);
-    }
-
-    const updated = await db
+    const [updated] = await db
       .update(organizationInvite)
       .set(updateData)
       .where(eq(organizationInvite.id, id))
@@ -42,7 +38,7 @@ export const updateOrganizationInvite = async (
 
     return res.status(200).json({
       message: "Invite updated successfully",
-      data: updated[0],
+      data: updated,
     });
   } catch (error) {
     throw new InternalServerError();

@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { IoCheckmarkOutline } from 'react-icons/io5';
 import { RxCross2 } from 'react-icons/rx';
 import { UpdateRoleForm } from '../update-role-form';
+import { MdEdit } from 'react-icons/md';
 
 export const roleColumns: ColumnDef<RoleSchemaT>[] = [
   {
@@ -46,15 +47,15 @@ export const roleColumns: ColumnDef<RoleSchemaT>[] = [
             onOpenChange={setOpen}
             role={row.original}
           />
-          <Button
-            type="button"
+          <p
             onClick={() => setOpen((v) => !v)}
-            variant={open ? 'default' : 'outline'}
-            className="cursor-pointer"
-            size={'sm'}
+            className={cn(
+              'cursor-pointer text-xs  flex justify-end pr-5 font-medium',
+              !open && 'text-muted-foreground font-normal',
+            )}
           >
-            {!open ? <>Edit</> : <>Cancel</>}
-          </Button>
+            {open ? 'cancel' : 'edit'}
+          </p>
         </>
       );
     },

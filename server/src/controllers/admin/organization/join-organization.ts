@@ -19,7 +19,7 @@ export const joinOrganization = async (
   const parsed = zJoinOrganizationInput.safeParse(req.body);
 
   if (parsed.error) {
-    throw new BadRequestError(JSON.stringify(parsed.error.errors.flat()));
+    throw new BadRequestError(JSON.stringify(parsed.error.message));
   }
 
   if (!req.user || req.user.type !== "admin") {
