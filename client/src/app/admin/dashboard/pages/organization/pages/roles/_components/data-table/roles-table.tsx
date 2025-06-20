@@ -74,7 +74,7 @@ export const RolesDataTable = ({ data }: RolesDataTableProps) => {
           }
           placeholder="Filter by capabilities"
           badgeClassName="bg-background text-secondary-foreground dark:text-secondary border-secondary"
-          className="min-w-[250px] max-w-full w-auto"
+          className="min-w-[250px] max-w-full w-auto m-1"
         />
         <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <span>

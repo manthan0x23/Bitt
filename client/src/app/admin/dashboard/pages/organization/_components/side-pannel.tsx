@@ -70,9 +70,7 @@ export const OrganizationSettingsSidePannel = () => {
               key={label}
               className={cn(
                 'flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors cursor-pointer',
-                isActive
-                  ? 'bg-primary text-accent dark:text-accent-foreground font-medium'
-                  : 'hover:bg-muted',
+                isActive ? 'bg-secondary  font-medium ' : 'hover:bg-muted text-muted-foreground',
               )}
             >
               <Link
@@ -83,9 +81,7 @@ export const OrganizationSettingsSidePannel = () => {
                   size={16}
                   className={cn(
                     'transition-colors',
-                    isActive
-                      ? 'text-accent dark:text-accent-foreground'
-                      : 'text-muted-foreground',
+                    !isActive && 'text-muted-foreground',
                   )}
                 />
                 <span>{label}</span>

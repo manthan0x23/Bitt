@@ -4,10 +4,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import type { ColumnDef } from '@tanstack/react-table';
 import { cn } from '@/lib/utils';
 import { colorSchemeBgClassMap } from '@/integrations/theme/colors/scheme';
-import { CheckCircle2, XCircle } from 'lucide-react';
 import type { GetOrganizationMembersCallResponseT } from '../../server-calls/get-organization-members';
 import { RxCross2 } from 'react-icons/rx';
 import { IoCheckmarkOutline } from 'react-icons/io5';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/drop-down';
 
 type MemberRowT = GetOrganizationMembersCallResponseT['data'][number];
 
@@ -55,7 +60,7 @@ export const memberColumns: ColumnDef<MemberRowT>[] = [
     ),
   },
   {
-    accessorKey: 'roleDetails.tag',
+    accessorKey: 'role.tag',
     header: 'Role',
     cell: ({ row }) => {
       const role = row.original.role;
@@ -71,6 +76,23 @@ export const memberColumns: ColumnDef<MemberRowT>[] = [
         >
           {role.tag}
         </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: 'dropdown',
+    header: '',
+    cell: () => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger className="cursor-pointer text-center align-middle pb-2 focus:outline-none">
+            ...
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem>View</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       );
     },
   },

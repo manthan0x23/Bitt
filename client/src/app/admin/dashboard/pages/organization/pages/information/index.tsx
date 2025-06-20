@@ -99,13 +99,13 @@ export const OrganizationInfo = () => {
           e.stopPropagation();
           if (edit) form.handleSubmit();
         }}
-        className="w-full space-y-6 mt-5 px-2"
+        className="w-full space-y-6 "
       >
         {/* Header */}
         <div className="flex items-center justify-between">
-          <span>
+          <span className='space-y-1'>
             <h4 className="text-2xl font-bold ">Organization Profile</h4>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-muted-foreground">
               Manage your organization's basic information and branding
             </p>
           </span>

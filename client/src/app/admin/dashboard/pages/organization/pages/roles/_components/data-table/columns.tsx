@@ -9,6 +9,12 @@ import { IoCheckmarkOutline } from 'react-icons/io5';
 import { RxCross2 } from 'react-icons/rx';
 import { UpdateRoleForm } from '../update-role-form';
 import { MdEdit } from 'react-icons/md';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/drop-down';
 
 export const roleColumns: ColumnDef<RoleSchemaT>[] = [
   {
@@ -25,38 +31,23 @@ export const roleColumns: ColumnDef<RoleSchemaT>[] = [
       </Badge>
     ),
   },
-  {
-    accessorKey: 'isTemplate',
-    header: 'Template',
-    cell: ({ row }) => (
-      <span>
-        {row.original.isTemplate ? <IoCheckmarkOutline /> : <RxCross2 />}
-      </span>
-    ),
-  },
-  {
-    accessorKey: 'Edit',
-    header: ' ',
-    cell: ({ row }) => {
-      const [open, setOpen] = useState(false);
 
+  {
+    accessorKey: 'dropdown',
+    header: '',
+    cell: () => {
       return (
-        <>
-          <UpdateRoleForm
-            open={open}
-            onOpenChange={setOpen}
-            role={row.original}
-          />
-          <p
-            onClick={() => setOpen((v) => !v)}
-            className={cn(
-              'cursor-pointer text-xs  flex justify-end pr-5 font-medium',
-              !open && 'text-muted-foreground font-normal',
-            )}
-          >
-            {open ? 'cancel' : 'edit'}
-          </p>
-        </>
+        <div className="w-full text-right pr-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="hover:bg-accent cursor-pointer text-center align-middle pb-2 focus:outline-none">
+              ...
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              <DropdownMenuItem>View</DropdownMenuItem>
+              <DropdownMenuItem>Edit</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       );
     },
   },

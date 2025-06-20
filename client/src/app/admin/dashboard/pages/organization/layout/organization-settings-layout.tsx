@@ -11,9 +11,9 @@ export const OrganizationSettingsLayout = ({ children }: PropsWithChildren) => {
 
   return (
     <div className="max-w-7xl mx-auto h-full px-4 py-6">
-      <section className="w-full mb-6">
-        <h2 className="text-2xl font-semibold">Organization Settings</h2>
-        <p className="text-muted-foreground mt-1">
+      <section className="w-full mb-6 space-y-1">
+        <h3>Organization Settings</h3>
+        <p className="text-muted-foreground text-sm w-1/2 text-wrap">
           Manage your organization’s roles, invites, profile details,
           configurations, and other settings. Use the side panel to navigate
           through the available sections.

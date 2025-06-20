@@ -11,6 +11,12 @@ import {
   type ColorSchemeEnum,
 } from '@/integrations/theme/colors/scheme';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/drop-down';
 
 const inviteStatusToColor: Record<OrganizationInviteStatus, ColorSchemeEnum> = {
   active: 'green',
@@ -72,5 +78,22 @@ export const inviteColumns: ColumnDef<OrganizationInviteSchema>[] = [
     cell: ({ row }) => (
       <span>{format(new Date(row.original.endDate), 'PPP')}</span>
     ),
+  },
+  {
+    accessorKey: 'dropdown',
+    header: '',
+    cell: () => {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger className="cursor-pointer text-center align-middle pb-2 focus:outline-none">
+            ...
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem>View</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
   },
 ];
