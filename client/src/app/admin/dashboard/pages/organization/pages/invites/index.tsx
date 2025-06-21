@@ -15,9 +15,12 @@ import {
   GetOrgRolesCall,
   type GetOrgRolesCallResponseT,
 } from '../roles/server-calls/get-org-roles';
+import { useHasCapability } from '@/hooks/use-has-capability';
+import { capabilitiesMap } from '@/lib/types/capabilities';
 
 export const OrganizationInvites = () => {
   const [openCreate, setOpenCreate] = useState(false);
+  const canCreateInvites = useHasCapability([capabilitiesMap.invite.create]);
 
   const invitesQuery = useQuery<GetOrganizationInvitesCallResponseT, ApiError>({
     queryKey: ['admin', 'organization', 'invites'],
@@ -46,24 +49,26 @@ export const OrganizationInvites = () => {
               View, create, and manage organization invites and their usage.
             </p>
           </span>
-          <Button
-            type="button"
-            onClick={() => setOpenCreate((v) => !v)}
-            variant={openCreate ? 'default' : 'outline'}
-            className="cursor-pointer"
-          >
-            {!openCreate ? (
-              <>
-                <PlusCircle />
-                Create Invite
-              </>
-            ) : (
-              <>
-                <RxCrossCircled />
-                Cancel
-              </>
-            )}
-          </Button>
+          {canCreateInvites && (
+            <Button
+              type="button"
+              onClick={() => setOpenCreate((v) => !v)}
+              variant={openCreate ? 'default' : 'outline'}
+              className="cursor-pointer"
+            >
+              {!openCreate ? (
+                <>
+                  <PlusCircle />
+                  Create Invite
+                </>
+              ) : (
+                <>
+                  <RxCrossCircled />
+                  Cancel
+                </>
+              )}
+            </Button>
+          )}
         </div>
         <div className="h-[90%] w-full">
           {invitesQuery.data?.data && (

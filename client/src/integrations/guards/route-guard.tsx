@@ -3,7 +3,7 @@ import { useRouter } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import { useStore } from '@tanstack/react-store';
 import { authStore } from '@/store/authStore';
-import { useVerifyAuthentication } from '@/hooks/useVerifyAuth';
+import { useVerifyAuthentication } from '@/hooks/us-verify-auth';
 import { GlobalLoadingPage } from '@/components/common/global-loader';
 
 export const RouteGuard = ({ children }: { children: React.ReactNode }) => {

@@ -9,6 +9,7 @@ import { routeTree } from './routeTree.gen';
 
 import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
+import { NotFound } from './components/common/emergency/not-found.tsx';
 
 // Create a new router instance
 const router = createRouter({
@@ -20,6 +21,13 @@ const router = createRouter({
   scrollRestoration: true,
   defaultStructuralSharing: true,
   defaultPreloadStaleTime: 0,
+
+  notFoundMode: 'root',
+  defaultNotFoundComponent: () => (
+    <div className="h-screen w-screen">
+      <NotFound />
+    </div>
+  ),
 });
 
 // Register the router instance for type safety
