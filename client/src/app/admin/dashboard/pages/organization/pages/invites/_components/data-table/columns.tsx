@@ -85,7 +85,7 @@ export const inviteColumns: ColumnDef<OrganizationInviteSchema>[] = [
     cell: () => {
       return (
         <DropdownMenu>
-          <DropdownMenuTrigger className="cursor-pointer text-center align-middle pb-2 focus:outline-none">
+          <DropdownMenuTrigger className="cursor-pointer text-center align-middle pb-2 focus:outline-none hover:bg-none">
             ...
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start">

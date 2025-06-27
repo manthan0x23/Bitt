@@ -111,6 +111,7 @@ export const loginWithGoogleOAuth = async (req: Request, res: Response) => {
       type: "user",
       role: adminRoles.restrict,
       roleId: null,
+      capabilities:[]
     });
 
     res.cookie("token", myToken, {

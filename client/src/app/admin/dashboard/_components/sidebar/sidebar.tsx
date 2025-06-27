@@ -6,7 +6,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { GoHomeFill } from 'react-icons/go';
+import { GoHome, GoHomeFill } from 'react-icons/go';
 import {
   MdOutlineWork,
   MdTask,
@@ -19,6 +19,8 @@ import { RiServerFill } from 'react-icons/ri';
 import { TbInnerShadowTopFilled } from 'react-icons/tb';
 import { SideBarGroupGeneral } from './group-general';
 import { SideBarGroupMain } from './group-main';
+import { LuShapes } from "react-icons/lu";
+import { Calendar, Home, LampDesk, ListChecks, MailOpen, MessagesSquare, PersonStanding, Server, Settings, Shapes, User, Wallet } from 'lucide-react';
 
 export const SideBar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
   return (
@@ -43,10 +45,11 @@ export const SideBar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
         {/* Platform Group */}
         <SideBarGroupMain
           items={[
-            { title: 'Dashboard', url: '/admin', icon: GoHomeFill },
-            { title: 'Jobs Posted', url: '/admin/jobs', icon: MdOutlineWork },
-            { title: 'Tasks', url: '/admin/tasks', icon: MdTask },
-            { title: 'Judge System', url: '/admin/judge', icon: RiServerFill },
+            { title: 'Dashboard', url: '/admin', icon: Home },
+            { title: 'Jobs Posted', url: '/admin/jobs', icon: LampDesk },
+            { title: 'Tasks', url: '/admin/tasks', icon: ListChecks  },
+            { title: 'Judge System', url: '/admin/judge', icon: Server },
+            { title: 'Playground', url: '/admin/playground', icon: Shapes },
           ]}
         />
         {/* Management Group */}
@@ -56,17 +59,17 @@ export const SideBar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
             {
               title: 'Calendar',
               url: '/admin/calendar',
-              icon: MdCalendarMonth,
+              icon: Calendar,
             },
             {
               title: 'Messages',
               url: '/admin/messages',
-              icon: IoChatbubbleSharp,
+              icon: MailOpen,
             },
             {
               title: 'Organization',
               url: '/admin/organization/',
-              icon: MdSettings,
+              icon: Settings,
             },
           ]}
         />
@@ -75,8 +78,8 @@ export const SideBar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
         <SideBarGroupGeneral
           title="Organization"
           items={[
-            { title: 'Billing', url: '/admin/billing', icon: IoWallet },
-            { title: 'Account', url: '/admin/account', icon: MdPerson },
+            { title: 'Billing', url: '/admin/billing', icon: Wallet },
+            { title: 'Account', url: '/admin/account', icon: User },
           ]}
         />
       </SidebarContent>

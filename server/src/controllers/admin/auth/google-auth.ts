@@ -4,7 +4,7 @@ import { Env, GOOGLE_AUTH_SCOPE } from "../../../utils/env";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import { googleJwtPayloadSchema } from "../../../utils/types/google-auth";
-import { admins } from "../../../db/schema";
+import { admins, roles } from "../../../db/schema";
 import { db } from "../../../db/db";
 import { eq } from "drizzle-orm";
 import { JwtService } from "../../../services/jwt";
@@ -105,6 +105,17 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
       )[0];
     }
 
+    let capabilities: string[] = [];
+    if (admin.roleId) {
+      const [role] = await db
+        .selectDistinct()
+        .from(roles)
+        .where(eq(roles.id, admin.roleId))
+        .limit(1);
+
+      if (role) capabilities = role.capabilities;
+    }
+
     const myToken = JwtService.sign({
       email: admin.workEmail,
       name: admin.name,
@@ -114,6 +125,7 @@ export const loginAdminWithGoogle = async (req: Request, res: Response) => {
       role: admin.role,
       roleId: admin.roleId,
       type: "admin",
+      capabilities,
     });
 
     res.cookie("token", myToken, {

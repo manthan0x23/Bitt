@@ -56,14 +56,14 @@ export function JobsTable({ data }: Props) {
           onChange={(e) => setGlobalFilter(e.target.value)}
           className="max-w-sm"
         />
-
         <Button
           onClick={() =>
             router.navigate({
               to: '/admin/jobs/create',
             })
           }
-          className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground min-w-8 duration-200 ease-linear cursor-pointer"
+          variant={'outline'}
+          className="cursor-pointer"
         >
           <FaCirclePlus className="mr-2" />
           <span>Create Job</span>

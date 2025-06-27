@@ -94,7 +94,7 @@ export const createOrganization = async (
         );
       }
 
-      return { newOrg, updatedAdmins };
+      return { newOrg, updatedAdmins, superRole };
     });
 
     const admin = result.updatedAdmins[0];
@@ -107,6 +107,7 @@ export const createOrganization = async (
       role: admin.role,
       roleId: admin.roleId,
       type: "admin",
+      capabilities: result.superRole.capabilities,
     });
 
     res.cookie("token", myToken, {

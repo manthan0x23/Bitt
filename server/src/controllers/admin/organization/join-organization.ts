@@ -86,7 +86,7 @@ export const joinOrganization = async (
       throw new BadRequestError("Invalid invite code/link.");
     }
 
-    const [updatedAdmins] = await db.transaction(async (tx) => {
+    const updatedAdmins = await db.transaction(async (tx) => {
       const now = new Date();
       const newUsageCount = searchInvite.usageCount + 1;
       const newStatus =
@@ -128,10 +128,11 @@ export const joinOrganization = async (
         throw new InternalServerError("Failed to assign organization to admin");
       }
 
-      return adminUpdateResult;
+      return { adminUpdateResult, role };
     });
 
-    const admin = updatedAdmins;
+    const admin = updatedAdmins.adminUpdateResult[0];
+    const role = updatedAdmins.role;
 
     const myToken = JwtService.sign({
       email: admin.workEmail,
@@ -141,6 +142,7 @@ export const joinOrganization = async (
       role: admin.role,
       roleId: admin.roleId,
       type: "admin",
+      capabilities: role?.capabilities ?? [],
     });
 
     res.cookie("token", myToken, {

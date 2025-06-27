@@ -37,6 +37,7 @@ import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { Badge } from '@/components/ui/badge';
 import { TagsInput } from '@/components/ui/tag-input';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
 
 type Props = {
   open: boolean;
@@ -360,6 +361,12 @@ export const CreateInviteForm = ({ open, onOpenChange, roles }: Props) => {
           {/* If custom, show role fields */}
           {form.state.values.roleType === 'custom' && (
             <>
+              <div className="relative my-8">
+                <Separator />
+                <p className="text-sm text-muted-foreground bg-background -top-2.5 left-0 absolute pr-6 font-medium font-sans">
+                  Role
+                </p>
+              </div>
               <form.Field name="roleTag">
                 {(field) => (
                   <div className="space-y-1 w-full">
@@ -478,6 +485,8 @@ export const CreateInviteForm = ({ open, onOpenChange, roles }: Props) => {
                       Define what actions this role is allowed to perform.
                     </p>
                     <MultiSelect
+                      hideClearAllButton
+                      badgeVariant={'outline'}
                       className="max-h-[80px] overflow-y-scroll"
                       placeholder="Select tags"
                       options={capabilities.map((cap) => ({

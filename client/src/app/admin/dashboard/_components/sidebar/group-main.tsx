@@ -12,6 +12,7 @@ import { FaCirclePlus } from 'react-icons/fa6';
 import type { IconType } from 'react-icons/lib';
 import { SideBarDropdownGroup } from './group-dropdown';
 import { MdLayers, MdOutlineLayers } from 'react-icons/md';
+import { cn } from '@/lib/utils';
 
 export function SideBarGroupMain({
   items,
@@ -44,25 +45,28 @@ export function SideBarGroupMain({
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarMenu>
-          {items.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton
-                tooltip={item.title}
-                asChild
-                isActive={
-                  item.title == 'Dashboard'
-                    ? (location.pathname == '/admin' ||
-                      location.pathname == '/admin/')
-                    : pathname.startsWith(item.url)
-                }
-              >
-                <Link to={item.url}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          ))}
+          {items.map((item) => {
+            const active =
+              item.title == 'Dashboard'
+                ? location.pathname == '/admin' ||
+                  location.pathname == '/admin/'
+                : pathname.startsWith(item.url);
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  asChild
+                  size={'sm'}
+                  isActive={active}
+                >
+                  <Link to={item.url}>
+                    {item.icon && <item.icon />}
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
         </SidebarMenu>
         <SidebarMenu>
           <SideBarDropdownGroup
@@ -71,12 +75,21 @@ export function SideBarGroupMain({
             icon_line={MdOutlineLayers}
             url="/admin/stages/"
             children={[
-              { title: 'Interviews', url: '/admin/stages/interviews' },
-              { title: 'Contests', url: '/admin/stages/contests' },
-              { title: 'Quizzes', url: '/admin/stages/quizzes' },
+              {
+                title: 'Interviews',
+                url: '/admin/stages/interviews',
+                stage: 'interview',
+              },
+              {
+                title: 'Contests',
+                url: '/admin/stages/contests',
+                stage: 'contest',
+              },
+              { title: 'Quizzes', url: '/admin/stages/quizzes', stage: 'quiz' },
               {
                 title: 'Resume Filters',
                 url: '/admin/stages/resume-filters',
+                stage: 'resume_filter',
               },
             ]}
           />
