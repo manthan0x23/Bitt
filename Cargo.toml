@@ -1,0 +1,6 @@
+[workspace]
+members = ["server", "database", "worker", "tests", "sfu", "common", "judge"]
+
+default-members = ["server", "database", "worker", "common"]
+
+resolver = "3"
