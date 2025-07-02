@@ -6,15 +6,25 @@ pub mod migration {
 }
 
 pub async fn connect_and_migrate(database_url: &str) -> Result<DbConn, Box<dyn std::error::Error>> {
-    let db = Database::connect(database_url).await?;
+    let db = Database::connect(database_url)
+        .await
+        .expect("Couldn't connect database");
 
-    migration::Migrator::up(&db, None).await?;
+    migration::Migrator::up(&db, None)
+        .await
+        .expect("Couldn't Migrate database");
+
+    println!("Migrated and Connected to Database ");
 
     Ok(db)
 }
 
 pub async fn connect(database_url: &str) -> Result<DbConn, Box<dyn std::error::Error>> {
-    let db = Database::connect(database_url).await?;
+    let db = Database::connect(database_url)
+        .await
+        .expect("Couldn't connect database");
+
+    println!("Connected to Database ");
 
     Ok(db)
 }

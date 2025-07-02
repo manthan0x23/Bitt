@@ -2654,6 +2654,8 @@ dependencies = [
  "database",
  "dotenv",
  "env_logger",
+ "lazy_static",
+ "sea-orm",
  "serde",
  "serde_json",
 ]
