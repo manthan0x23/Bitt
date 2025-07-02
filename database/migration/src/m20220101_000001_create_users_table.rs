@@ -37,12 +37,16 @@ impl MigrationTrait for Migration {
                     .col(string(Users::Password))
                     .col(string(Users::PictureUrl))
                     .col(boolean(Users::EmailVerified).default(false).not_null())
-                    .col(enumeration_null(
-                        Users::AccountSource,
-                        AccountSourceEnum,
-                        AccountSourceVariants::iter(),
-                    ))
-                    .col(string(Users::Resume).default("").not_null())
+                    .col(
+                        enumeration(
+                            Users::AccountSource,
+                            AccountSourceEnum,
+                            AccountSourceVariants::iter(),
+                        )
+                        .default(AccountSourceVariants::Credentials.to_string())
+                        .not_null(),
+                    )
+                    .col(string(Users::Resume).null())
                     .col(
                         date_time(Users::CreatedAt)
                             .not_null()

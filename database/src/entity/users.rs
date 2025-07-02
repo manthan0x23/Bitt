@@ -16,7 +16,7 @@ pub struct Model {
     pub password: String,
     pub picture_url: String,
     pub email_verified: bool,
-    pub account_source: Option<AccountSourceEnum>,
+    pub account_source: AccountSourceEnum,
     pub resume: String,
     pub created_at: DateTime,
     pub updated_at: DateTime,
