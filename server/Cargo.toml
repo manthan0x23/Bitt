@@ -2,5 +2,12 @@
 name = "server"
 version = "0.1.0"
 edition = "2024"
+default-run = "server"
 
 [dependencies]
+database = { version = "0.1.0", path = "../database" }
+actix-web = "4"
+serde = "1.0.219"
+serde_json = "1.0.140"
+env_logger = "0.11.8"
+dotenv = "0.15.0"
