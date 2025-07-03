@@ -1,4 +1,4 @@
-use sea_orm_migration::{prelude::*, schema::*};
+use sea_orm_migration::prelude::*;
 
 use crate::{
     m20250703_070706_create_admin_table::Admins,
@@ -12,7 +12,6 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        // Admins.role_id → Roles.id
         manager
             .create_foreign_key(
                 ForeignKey::create()
@@ -24,7 +23,6 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        // Roles.organization_id → Organizations.id
         manager
             .create_foreign_key(
                 ForeignKey::create()
@@ -36,7 +34,6 @@ impl MigrationTrait for Migration {
             )
             .await?;
 
-        // Organizations.created_by → Admins.id
         manager
             .create_foreign_key(
                 ForeignKey::create()

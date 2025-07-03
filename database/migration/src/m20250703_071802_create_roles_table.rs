@@ -7,8 +7,6 @@ use sea_orm_migration::{
 
 use sea_orm::Iterable;
 
-use crate::m20250703_071756_create_organizations_table::Organizations;
-
 #[derive(DeriveMigrationName)]
 pub struct Migration;
 
