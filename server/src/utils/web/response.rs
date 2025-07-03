@@ -7,10 +7,10 @@ pub struct ApiResponse<T: Serialize> {
     #[serde(skip_serializing_if = "Option::is_none")]
     data: Option<T>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    error: Option<String>,
+    error: Option<Vec<String>>,
 }
 
-impl<T: Serialize> ApiResponse<T> {
+impl<'a, T: Serialize> ApiResponse<T> {
     pub fn ok(message: &str, data: T) -> Self {
         Self {
             message: message.to_string(),
@@ -19,11 +19,11 @@ impl<T: Serialize> ApiResponse<T> {
         }
     }
 
-    pub fn err(message: &str, error: &str) -> ApiResponse<()> {
+    pub fn err(message: &str, error: Vec<String>) -> ApiResponse<()> {
         ApiResponse {
             message: message.to_string(),
             data: None,
-            error: Some(error.to_string()),
+            error: Some(error),
         }
     }
 

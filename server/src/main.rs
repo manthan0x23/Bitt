@@ -1,9 +1,14 @@
-use actix_web::{App, HttpServer, middleware::Logger, web};
+use actix_web::{
+    App, HttpServer,
+    middleware::Logger,
+    web::{self, scope},
+};
 use std::env;
 use tracing::{error, info};
 use tracing_subscriber;
 
 mod health_check;
+mod routes;
 mod utils;
 
 use utils::app_state::AppState;
@@ -67,6 +72,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(app_state.clone())
             .wrap(Logger::default())
             .service(health_check::health_check)
+            .service(scope("api").configure(routes::app_root))
     })
     .workers(2)
     .bind(bind_server)?

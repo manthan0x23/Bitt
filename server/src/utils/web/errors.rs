@@ -32,11 +32,12 @@ impl ResponseError for AppError {
     }
 
     fn error_response(&self) -> HttpResponse {
-        let body = ApiResponse::<()>::err(&self.message, &self.message);
+        let body = ApiResponse::<()>::err(&self.message, vec![self.message.clone()]);
         body.respond(self.status_code)
     }
 }
 
+#[warn(unused_assignments)]
 impl AppError {
     pub fn bad_request(message: &str) -> Self {
         Self::new(StatusCode::BAD_REQUEST, message)
