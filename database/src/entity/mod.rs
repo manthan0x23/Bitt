@@ -2,5 +2,8 @@
 
 pub mod prelude;
 
+pub mod admins;
+pub mod organizations;
+pub mod roles;
 pub mod sea_orm_active_enums;
 pub mod users;

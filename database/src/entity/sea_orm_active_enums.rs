@@ -16,3 +16,29 @@ pub enum AccountSourceEnum {
     #[sea_orm(string_value = "github")]
     Github,
 }
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "color_scheme_enum")]
+pub enum ColorSchemeEnum {
+    #[sea_orm(string_value = "color_scheme")]
+    ColorScheme,
+    #[sea_orm(string_value = "gray")]
+    Gray,
+    #[sea_orm(string_value = "blue")]
+    Blue,
+    #[sea_orm(string_value = "green")]
+    Green,
+    #[sea_orm(string_value = "red")]
+    Red,
+    #[sea_orm(string_value = "pink")]
+    Pink,
+    #[sea_orm(string_value = "orange")]
+    Orange,
+    #[sea_orm(string_value = "yellow")]
+    Yellow,
+    #[sea_orm(string_value = "purple")]
+    Purple,
+    #[sea_orm(string_value = "teal")]
+    Teal,
+    #[sea_orm(string_value = "indigo")]
+    Indigo,
+}
