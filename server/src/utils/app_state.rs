@@ -1,12 +1,8 @@
+use redis::connect::RedisConnectionPool;
 use sea_orm::DatabaseConnection;
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug)]
 pub struct AppState {
     pub database: DatabaseConnection,
-}
-
-impl AppState {
-    pub fn get_db(&self) -> &DatabaseConnection {
-        &self.database
-    }
+    pub redis_pool: RedisConnectionPool,
 }

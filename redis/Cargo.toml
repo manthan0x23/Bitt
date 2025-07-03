@@ -5,3 +5,4 @@ edition = "2024"
 homepage.workspace = true
 
 [dependencies]
+deadpool-redis = { version = "0.21.1", features = ["rt_tokio_1"] }

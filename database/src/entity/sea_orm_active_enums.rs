@@ -17,6 +17,76 @@ pub enum AccountSourceEnum {
     Github,
 }
 #[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "capability_enum")]
+pub enum CapabilityEnum {
+    #[sea_orm(string_value = "capability")]
+    Capability,
+    #[sea_orm(string_value = "update.organizationDetails")]
+    UpdateOrganizationDetails,
+    #[sea_orm(string_value = "create.job")]
+    CreateJob,
+    #[sea_orm(string_value = "update.job")]
+    UpdateJob,
+    #[sea_orm(string_value = "delete.job")]
+    DeleteJob,
+    #[sea_orm(string_value = "create.stage")]
+    CreateStage,
+    #[sea_orm(string_value = "update.stage")]
+    UpdateStage,
+    #[sea_orm(string_value = "delete.stage")]
+    DeleteStage,
+    #[sea_orm(string_value = "update.contest")]
+    UpdateContest,
+    #[sea_orm(string_value = "create.contest_problem")]
+    CreateContestProblem,
+    #[sea_orm(string_value = "update.contest_problem")]
+    UpdateContestProblem,
+    #[sea_orm(string_value = "delete.contest_problem")]
+    DeleteContestProblem,
+    #[sea_orm(string_value = "update.billing")]
+    UpdateBilling,
+    #[sea_orm(string_value = "view.analytics")]
+    ViewAnalytics,
+    #[sea_orm(string_value = "create.invite")]
+    CreateInvite,
+    #[sea_orm(string_value = "read.invite")]
+    ReadInvite,
+    #[sea_orm(string_value = "update.invite")]
+    UpdateInvite,
+    #[sea_orm(string_value = "delete.invite")]
+    DeleteInvite,
+    #[sea_orm(string_value = "assign.task")]
+    AssignTask,
+    #[sea_orm(string_value = "view.task")]
+    ViewTask,
+    #[sea_orm(string_value = "update.task")]
+    UpdateTask,
+    #[sea_orm(string_value = "delete.task")]
+    DeleteTask,
+    #[sea_orm(string_value = "schedule.interview")]
+    ScheduleInterview,
+    #[sea_orm(string_value = "take.interview")]
+    TakeInterview,
+    #[sea_orm(string_value = "pass.candidate.stage")]
+    PassCandidateStage,
+    #[sea_orm(string_value = "view.candidate.submissions")]
+    ViewCandidateSubmissions,
+    #[sea_orm(string_value = "create.quiz_problem")]
+    CreateQuizProblem,
+    #[sea_orm(string_value = "update.quiz_problem")]
+    UpdateQuizProblem,
+    #[sea_orm(string_value = "read.quiz_problem")]
+    ReadQuizProblem,
+    #[sea_orm(string_value = "update.quiz")]
+    UpdateQuiz,
+    #[sea_orm(string_value = "generate.quiz")]
+    GenerateQuiz,
+    #[sea_orm(string_value = "read.quiz")]
+    ReadQuiz,
+    #[sea_orm(string_value = "manage.roles")]
+    ManageRoles,
+}
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum)]
 #[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "color_scheme_enum")]
 pub enum ColorSchemeEnum {
     #[sea_orm(string_value = "color_scheme")]
@@ -41,4 +111,26 @@ pub enum ColorSchemeEnum {
     Teal,
     #[sea_orm(string_value = "indigo")]
     Indigo,
+}
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "invite_status_enum")]
+pub enum InviteStatusEnum {
+    #[sea_orm(string_value = "active")]
+    Active,
+    #[sea_orm(string_value = "closed")]
+    Closed,
+    #[sea_orm(string_value = "expired")]
+    Expired,
+    #[sea_orm(string_value = "limit_reached")]
+    LimitReached,
+    #[sea_orm(string_value = "deleted")]
+    Deleted,
+}
+#[derive(Debug, Clone, PartialEq, Eq, EnumIter, DeriveActiveEnum)]
+#[sea_orm(rs_type = "String", db_type = "Enum", enum_name = "invite_type_enum")]
+pub enum InviteTypeEnum {
+    #[sea_orm(string_value = "open-for-all")]
+    OpenForAll,
+    #[sea_orm(string_value = "strict")]
+    Strict,
 }

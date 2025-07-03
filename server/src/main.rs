@@ -1,43 +1,75 @@
 use actix_web::{App, HttpServer, middleware::Logger, web};
-use core::panic;
+use std::env;
+use tracing::{error, info};
+use tracing_subscriber;
 
-use crate::utils::app_state::AppState;
-
+mod health_check;
 mod utils;
 
-fn env_configure() {
+use utils::app_state::AppState;
+
+fn configure_env() {
     dotenv::dotenv().ok();
 
-    if std::env::var_os("RUST_LOG").is_none() {
+    if env::var_os("RUST_LOG").is_none() {
         unsafe {
-            std::env::set_var("RUST_LOG", "actix_web=info");
+            env::set_var("RUST_LOG", "info,actix_web=info");
         }
     }
 
-    env_logger::init();
+    tracing_subscriber::fmt::init();
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    env_configure();
+    configure_env();
 
-    let database_url = (*utils::env::DATABASE_URL).clone();
+    let database_url = utils::env::DATABASE_URL.clone();
+    let redis_url = utils::env::REDIS_URL.clone();
+    let bind_server = (utils::env::ADDRESS.clone(), utils::env::PORT.clone());
 
-    let db = database::connect::connect_and_migrate(&database_url)
-        .await
-        .unwrap_or_else(|e| {
-            panic!("Error in database connection {}", e.to_string());
-        });
+    let db = match database::connect::connect_and_migrate(&database_url).await {
+        Ok(conn) => {
+            info!("Connected to PostgreSQL");
+            conn
+        }
+        Err(e) => {
+            error!("Failed to connect to PostgreSQL: {}", e);
+            panic!("Postgres connection failed");
+        }
+    };
+
+    let redis_pool = match redis::connect::create_redis_pool(&redis_url) {
+        Ok(pool) => {
+            info!("Created Redis pool");
+            pool
+        }
+        Err(e) => {
+            error!("Failed to create Redis pool: {}", e);
+            panic!("Redis pool creation failed");
+        }
+    };
+
+    if let Err(e) = redis::connect::ping_redis(&redis_pool).await {
+        error!("Redis PING failed: {}", e);
+        panic!("Unable to connect to Redis server");
+    } else {
+        info!("Connected to Redis server");
+    }
+
+    let app_state = web::Data::new(AppState {
+        database: db,
+        redis_pool: redis_pool,
+    });
 
     HttpServer::new(move || {
         App::new()
-            .app_data(web::Data::new(AppState {
-                database: db.clone(),
-            }))
+            .app_data(app_state.clone())
             .wrap(Logger::default())
+            .service(health_check::health_check)
     })
     .workers(2)
-    .bind(("0.0.0.0", 5000))?
+    .bind(bind_server)?
     .run()
     .await
 }

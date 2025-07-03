@@ -44,12 +44,13 @@ impl MigrationTrait for Migration {
                     )
                     .col(string(Roles::Tag).not_null().string_len(64))
                     .col(
-                        enumeration(
+                        array(
                             Roles::Capabilities,
-                            CapabilityEnum,
-                            CapabilityVariants::iter(),
+                            ColumnType::Enum {
+                                name: CapabilityEnum.into_iden(),
+                                variants: CapabilityVariants::iter().map(SeaRc::new).collect(),
+                            },
                         )
-                        .array(ColumnType::Text)
                         .not_null()
                         .default("{}"),
                     )

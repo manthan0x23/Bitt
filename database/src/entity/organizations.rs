@@ -35,6 +35,8 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Admins,
+    #[sea_orm(has_many = "super::organization_invite::Entity")]
+    OrganizationInvite,
     #[sea_orm(has_many = "super::roles::Entity")]
     Roles,
 }
@@ -42,6 +44,12 @@ pub enum Relation {
 impl Related<super::admins::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Admins.def()
+    }
+}
+
+impl Related<super::organization_invite::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::OrganizationInvite.def()
     }
 }
 

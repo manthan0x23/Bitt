@@ -46,7 +46,7 @@ impl MigrationTrait for Migration {
                         .default(AccountSourceVariants::Credentials.to_string())
                         .not_null(),
                     )
-                    .col(string(Users::Resume).null())
+                    .col(string(Users::Resume))
                     .col(
                         date_time(Users::CreatedAt)
                             .not_null()
