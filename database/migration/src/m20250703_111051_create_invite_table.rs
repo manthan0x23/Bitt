@@ -1,4 +1,4 @@
-use common::id::short_id::short_id;
+use common::id::short_id;
 use sea_orm::Iterable;
 use sea_orm_migration::{
     prelude::{extension::postgres::Type, *},
@@ -98,8 +98,8 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(Expr::current_timestamp()),
                     )
-                    .col(timestamp(OrganizationInvite::DeletedAt))
-                    .col(timestamp(OrganizationInvite::UpdatedAt))
+                    .col(timestamp_null(OrganizationInvite::DeletedAt))
+                    .col(timestamp_null(OrganizationInvite::UpdatedAt))
                     // Foreign keys
                     .foreign_key(
                         ForeignKey::create()

@@ -10,16 +10,16 @@ pub struct Model {
     pub name: String,
     #[sea_orm(column_type = "Text")]
     pub slug: String,
-    #[sea_orm(column_type = "Text")]
-    pub description: String,
-    #[sea_orm(column_type = "Text")]
-    pub logo_url: String,
+    #[sea_orm(column_type = "Text", nullable)]
+    pub description: Option<String>,
+    #[sea_orm(column_type = "Text", nullable)]
+    pub logo_url: Option<String>,
     #[sea_orm(column_type = "Text")]
     pub billing_email_address: String,
     pub billing_email_verified: bool,
     #[sea_orm(column_type = "Text")]
     pub origin: String,
-    pub start_date: Date,
+    pub start_date: Option<Date>,
     pub created_at: DateTime,
     pub updated_at: DateTime,
     pub created_by: String,

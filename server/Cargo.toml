@@ -7,6 +7,8 @@ default-run = "server"
 [dependencies]
 database = { version = "0.1.0", path = "../database" }
 redis = { version = "0.1.0", path = "../redis" }
+common = { version = "0.1.0", path = "../common" }
+
 sea-orm = { version = "1.1.0", features = [
     "sqlx-postgres",
     "runtime-tokio-rustls",
@@ -21,3 +23,5 @@ lazy_static = "1.5.0"
 tracing = "0.1.41"
 tracing-subscriber = "0.3.19"
 validator = { version = "0.19", features = ["derive"] }
+reqwest = { version = "0.11", features = ["rustls-tls", "json"] }
+serde_urlencoded = "0.7.1"

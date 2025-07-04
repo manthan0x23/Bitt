@@ -13,6 +13,8 @@ mod utils;
 
 use utils::app_state::AppState;
 
+use crate::utils::app_state::AppEnv;
+
 fn configure_env() {
     dotenv::dotenv().ok();
 
@@ -29,11 +31,11 @@ fn configure_env() {
 async fn main() -> std::io::Result<()> {
     configure_env();
 
-    let database_url = utils::env::DATABASE_URL.clone();
-    let redis_url = utils::env::REDIS_URL.clone();
-    let bind_server = (utils::env::ADDRESS.clone(), utils::env::PORT.clone());
+    let app_env = AppEnv::from_lazy();
 
-    let db = match database::connect::connect_and_migrate(&database_url).await {
+    let bind_server = (app_env.address.clone(), app_env.port.clone());
+
+    let db = match database::connect::connect_and_migrate(&app_env.database_url.clone()).await {
         Ok(conn) => {
             info!("Connected to PostgreSQL");
             conn
@@ -44,7 +46,7 @@ async fn main() -> std::io::Result<()> {
         }
     };
 
-    let redis_pool = match redis::connect::create_redis_pool(&redis_url) {
+    let redis_pool = match redis::connect::create_redis_pool(&app_env.redis_url.clone()) {
         Ok(pool) => {
             info!("Created Redis pool");
             pool
@@ -65,6 +67,7 @@ async fn main() -> std::io::Result<()> {
     let app_state = web::Data::new(AppState {
         database: db,
         redis_pool: redis_pool,
+        env: app_env.clone(),
     });
 
     HttpServer::new(move || {

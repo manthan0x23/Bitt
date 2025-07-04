@@ -1,4 +1,4 @@
-use common::id::short_id::short_id;
+use common::id::short_id;
 use sea_orm_migration::{
     prelude::{extension::postgres::Type, *},
     schema::*,
@@ -31,11 +31,11 @@ impl MigrationTrait for Migration {
                             .default(short_id(None))
                             .primary_key(),
                     )
-                    .col(string(Users::Name).not_null())
+                    .col(string(Users::Name))
                     .col(string(Users::Usersname).not_null().unique_key())
                     .col(string(Users::Email).not_null().unique_key())
-                    .col(string(Users::Password))
-                    .col(string(Users::PictureUrl))
+                    .col(string_null(Users::Password))
+                    .col(string_null(Users::PictureUrl))
                     .col(boolean(Users::EmailVerified).default(false).not_null())
                     .col(
                         enumeration(
@@ -46,7 +46,7 @@ impl MigrationTrait for Migration {
                         .default(AccountSourceVariants::Credentials.to_string())
                         .not_null(),
                     )
-                    .col(string(Users::Resume))
+                    .col(string_null(Users::Resume))
                     .col(
                         date_time(Users::CreatedAt)
                             .not_null()

@@ -21,8 +21,8 @@ pub struct Model {
     pub status: InviteStatusEnum,
     pub end_date: DateTime,
     pub created_at: DateTime,
-    pub deleted_at: DateTime,
-    pub updated_at: DateTime,
+    pub deleted_at: Option<DateTime>,
+    pub updated_at: Option<DateTime>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

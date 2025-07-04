@@ -8,21 +8,21 @@ use sea_orm::entity::prelude::*;
 pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub id: String,
-    pub name: String,
+    pub name: Option<String>,
     #[sea_orm(unique)]
     pub username: String,
     #[sea_orm(unique)]
     pub work_email: String,
-    pub password: String,
+    pub password: Option<String>,
     pub email_verified: bool,
-    pub avatar_url: bool,
+    pub avatar_url: Option<String>,
     pub account_source: AccountSourceEnum,
-    pub role: String,
+    pub role: Option<String>,
     pub created_at: DateTime,
     pub updated_at: DateTime,
     pub is_deleted: bool,
-    pub role_id: String,
-    pub organization_id: String,
+    pub role_id: Option<String>,
+    pub organization_id: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

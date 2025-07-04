@@ -20,7 +20,7 @@ export const RegisterAdmin = () => {
   };
 
   const handleGoogleRegister = () => {
-    window.location.assign(`${Env.server_url}/api/admin/auth/google`);
+    window.location.assign(`${Env.server_url}/api/admin/auth/google/login`);
   };
 
   return (

@@ -1,4 +1,4 @@
-use common::id::short_id::short_id;
+use common::id::short_id;
 use sea_orm_migration::prelude::*;
 use sea_orm_migration::schema::*;
 
@@ -22,8 +22,8 @@ impl MigrationTrait for Migration {
                     )
                     .col(string(Organizations::Name).not_null())
                     .col(text(Organizations::Slug).not_null())
-                    .col(text(Organizations::Description))
-                    .col(text(Organizations::LogoUrl))
+                    .col(text_null(Organizations::Description))
+                    .col(text_null(Organizations::LogoUrl))
                     .col(text(Organizations::BillingEmailAddress).not_null())
                     .col(
                         boolean(Organizations::BillingEmailVerified)
@@ -31,7 +31,7 @@ impl MigrationTrait for Migration {
                             .not_null(),
                     )
                     .col(text(Organizations::Origin).not_null())
-                    .col(date(Organizations::StartDate))
+                    .col(date_null(Organizations::StartDate))
                     .col(
                         date_time(Organizations::CreatedAt)
                             .not_null()

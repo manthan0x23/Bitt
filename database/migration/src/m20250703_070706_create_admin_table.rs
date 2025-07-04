@@ -1,5 +1,5 @@
 use crate::m20220101_000001_create_users_table::{AccountSourceEnum, AccountSourceVariants};
-use common::id::short_id::short_id;
+use common::id::short_id;
 use sea_orm_migration::{prelude::*, schema::*, sea_orm::Iterable};
 
 #[derive(DeriveMigrationName)]
@@ -20,12 +20,12 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .default(short_id(None)),
                     )
-                    .col(string(Admins::Name))
+                    .col(string_null(Admins::Name))
                     .col(string(Admins::Username).not_null().unique_key())
                     .col(string(Admins::WorkEmail).not_null().unique_key())
-                    .col(string(Admins::Password))
+                    .col(string_null(Admins::Password))
                     .col(boolean(Admins::EmailVerified).default(false).not_null())
-                    .col(boolean(Admins::AvatarUrl))
+                    .col(string_null(Admins::AvatarUrl))
                     .col(
                         enumeration(
                             Admins::AccountSource,
@@ -35,7 +35,7 @@ impl MigrationTrait for Migration {
                         .default(AccountSourceVariants::Credentials.to_string())
                         .not_null(),
                     )
-                    .col(string(Admins::Role))
+                    .col(string_null(Admins::Role))
                     .col(
                         date_time(Admins::CreatedAt)
                             .not_null()
@@ -47,8 +47,8 @@ impl MigrationTrait for Migration {
                             .default(Expr::current_timestamp()),
                     )
                     .col(boolean(Admins::IsDeleted).default(false).not_null())
-                    .col(string(Admins::RoleId).not_null())
-                    .col(string(Admins::OrganizationId))
+                    .col(string_null(Admins::RoleId))
+                    .col(string_null(Admins::OrganizationId))
                     .index(
                         Index::create()
                             .name("admin-organization-idx")

@@ -1,4 +1,4 @@
-use common::id::short_id::short_id;
+use common::id::short_id;
 use sea_orm_migration::{
     prelude::{extension::postgres::Type, *},
     schema::*,

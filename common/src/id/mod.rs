@@ -1,1 +1,4 @@
-pub mod short_id;
+mod short_id;
+
+
+pub use short_id::*;

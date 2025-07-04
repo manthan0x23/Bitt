@@ -4,19 +4,19 @@ use crate::utils::{
     web::{errors::AppError, response::ApiResponse},
 };
 use actix_web::{
-    HttpRequest, HttpResponse,
+    HttpResponse,
     cookie::{self, Cookie},
     http::StatusCode,
     post, web,
 };
-use common::{hashing::HashService, id::short_id, types::session::SessionClaim};
+use common::{hashing::HashService, types::session::SessionClaim};
 use database::entity::admins as Admins;
-use sea_orm::{ActiveModelTrait, ActiveValue::Set, ColumnTrait, EntityTrait, QueryFilter};
+use sea_orm::{ColumnTrait, EntityTrait, QueryFilter};
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
 #[derive(Debug, Validate, Deserialize, Clone)]
-struct RegisterInput {
+struct LoginInput {
     #[validate(email(message = "Invalid email format"))]
     pub email: String,
 
@@ -25,50 +25,43 @@ struct RegisterInput {
 }
 
 #[derive(Debug, Serialize, Clone)]
-struct RegisterReponse {
+struct LoginReponse {
     #[serde(rename = "sessionId")]
     pub session_id: String,
 }
 
-#[post("register")]
-pub async fn register(
-    req: HttpRequest,
-    register_input: web::Json<RegisterInput>,
+#[post("login")]
+pub async fn login(
+    req: actix_web::HttpRequest,
+    login_input: web::Json<LoginInput>,
     app_state: web::Data<AppState>,
 ) -> Result<HttpResponse, AppError> {
-    let input = register_input.into_inner();
+    let input = login_input.into_inner();
     let db = &app_state.database;
     let redis_pool = &app_state.redis_pool;
 
     validate_or_bad_request(&input)?;
 
-    if Admins::Entity::find()
+    let admin = Admins::Entity::find()
         .filter(Admins::Column::WorkEmail.eq(input.email.clone()))
         .one(db)
         .await
-        .map_err(|e| AppError::internal_server_error(&e.to_string()))?
-        .is_some()
-    {
-        return Err(AppError::conflict("Email already registered"));
-    }
+        .map_err(|e| AppError::internal_server_error(&e.to_string()))?;
 
-    let username = input
-        .email
-        .split('@')
-        .next()
-        .unwrap_or(&input.email)
-        .to_string();
+    let admin = match admin {
+        Some(a) => a,
+        None => {
+            return Err(AppError::not_found(
+                "Admin not found in the database please register first.",
+            ));
+        }
+    };
 
-    let hashed_password = HashService::encode(&input.password).map_err(|e| {
-        AppError::unprocessable_entity(&format!("Password text not supported :: {}", e.to_string()))
-    })?;
-
-    let active: Admins::ActiveModel = Admins::ActiveModel {
-        id: Set(short_id(None)),
-        work_email: Set(input.email.clone()),
-        username: Set(username),
-        password: Set(Some(hashed_password)),
-        ..Default::default()
+    let db_password = match admin.password {
+        Some(ref p) => p,
+        None => {
+            return Err(AppError::forbidden("Incorrect login attempt!"));
+        }
     };
 
     let ip_address = req
@@ -76,13 +69,15 @@ pub async fn register(
         .map(|addr| addr.ip().to_string())
         .unwrap_or_else(|| "unknown".to_string());
 
-    let inserted = active
-        .insert(db)
-        .await
-        .map_err(|e| AppError::internal_server_error(&e.to_string()))?;
+    let cmp_password = HashService::compare(&input.password, db_password)
+        .map_err(|_| AppError::internal_server_error("Internal Server Error"))?;
+
+    if !cmp_password {
+        return Err(AppError::forbidden("Incorrect login credentials"));
+    }
 
     let session = SessionClaim::new(
-        inserted.id.clone(),
+        admin.id.clone(),
         common::types::session::UserType::Admin,
         None,
         ip_address,
@@ -99,14 +94,14 @@ pub async fn register(
         .same_site(cookie::SameSite::None)
         .finish();
 
-    let response: ApiResponse<RegisterReponse> = ApiResponse::ok(
-        "Admin registered successfully",
-        RegisterReponse {
+    let response: ApiResponse<LoginReponse> = ApiResponse::ok(
+        "Admin logged in successfully",
+        LoginReponse {
             session_id: session_id.clone(),
         },
     );
 
-    let mut http_response = response.respond(StatusCode::CREATED);
+    let mut http_response = response.respond(StatusCode::ACCEPTED);
     http_response
         .add_cookie(&cookie)
         .map_err(|e| AppError::internal_server_error(&e.to_string()))?;
